@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How I Built a Professional Website for Free — Scott Curtner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0B1F3A;
+      --navy2:  #132b50;
+      --accent: #2A7FD4;
+      --accent2:#1a6abf;
+      --silver: #A8B8CC;
+      --light:  #F2F6FA;
+      --white:  #FFFFFF;
+      --text:   #1a2638;
+      --muted:  #5a7190;
+      --border: rgba(42,127,212,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "DM Sans", sans-serif;
+      font-weight: 400;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+      background: rgba(11,31,58,0.97);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo {
+      font-family: "DM Serif Display", serif;
+      font-size: 20px;
+      color: var(--white);
+      letter-spacing: 0.01em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--silver);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* ARTICLE HERO */
+    .article-hero {
+      background: var(--navy);
+      padding: 120px 80px 72px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .article-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .article-hero h1 {
+      font-family: "DM Serif Display", serif;
+      font-size: clamp(30px, 3.5vw, 48px);
+      color: var(--white);
+      line-height: 1.15;
+      max-width: 780px;
+      margin-bottom: 24px;
+    }
+    .article-hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .article-subtitle {
+      font-size: 17px;
+      color: var(--silver);
+      max-width: 660px;
+      line-height: 1.85;
+      margin-bottom: 36px;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .article-meta .meta-divider { color: rgba(255,255,255,0.15); }
+    .meta-tag {
+      background: rgba(42,127,212,0.14);
+      border: 1px solid rgba(42,127,212,0.28);
+      color: #6eb3f7;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    /* ARTICLE BODY */
+    .article-body {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 72px 48px 96px;
+    }
+
+    .article-body p {
+      font-size: 17px;
+      color: #2d3f55;
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+
+    .article-body h2 {
+      font-family: "DM Serif Display", serif;
+      font-size: 28px;
+      color: var(--navy);
+      line-height: 1.2;
+      margin: 56px 0 20px;
+      padding-top: 8px;
+      border-top: 2px solid var(--light);
+    }
+
+    .article-body h2:first-of-type { margin-top: 8px; }
+
+    .article-body h3 {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--navy);
+      margin: 32px 0 12px;
+      letter-spacing: 0.01em;
+    }
+
+    .article-body blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 4px 0 4px 24px;
+      margin: 32px 0;
+      font-family: "DM Serif Display", serif;
+      font-style: italic;
+      font-size: 20px;
+      color: var(--navy);
+      line-height: 1.6;
+    }
+
+    /* STEPS */
+    .step {
+      display: flex;
+      gap: 24px;
+      margin: 40px 0;
+      padding: 32px;
+      background: var(--light);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .step-number {
+      font-family: "DM Serif Display", serif;
+      font-size: 32px;
+      color: var(--accent);
+      line-height: 1;
+      min-width: 36px;
+      padding-top: 4px;
+    }
+    .step-content h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--navy);
+    }
+    .step-content p {
+      font-size: 15px;
+      color: #4a607a;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .step-content p:last-child { margin-bottom: 0; }
+    .step-content ol, .step-content ul {
+      font-size: 15px;
+      color: #4a607a;
+      line-height: 1.8;
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+    .step-content li { margin-bottom: 6px; }
+
+    /* CODE / INLINE */
+    code {
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      background: rgba(42,127,212,0.08);
+      color: var(--accent2);
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid rgba(42,127,212,0.15);
+    }
+
+    /* DNS TABLE */
+    .dns-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 14px;
+    }
+    .dns-table th {
+      background: var(--navy);
+      color: var(--silver);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+    }
+    .dns-table th:first-child { border-radius: 8px 0 0 0; }
+    .dns-table th:last-child { border-radius: 0 8px 0 0; }
+    .dns-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(11,31,58,0.07);
+      color: #2d3f55;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+    }
+    .dns-table tr:last-child td { border-bottom: none; }
+    .dns-table tr:nth-child(even) td { background: var(--light); }
+    .dns-table .highlight td {
+      background: rgba(42,127,212,0.06);
+      font-weight: 500;
+      color: var(--accent2);
+    }
+
+    /* CALLOUT BOXES */
+    .callout {
+      padding: 24px 28px;
+      border-radius: 10px;
+      margin: 32px 0;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .callout-warning {
+      background: rgba(186,117,23,0.08);
+      border: 1px solid rgba(186,117,23,0.25);
+      color: #5a3a08;
+    }
+    .callout-warning strong {
+      color: #7a4e0a;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .callout-success {
+      background: rgba(29,158,117,0.07);
+      border: 1px solid rgba(29,158,117,0.22);
+      color: #0d4a34;
+    }
+    .callout-success strong {
+      color: #0f6e56;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .callout-info {
+      background: rgba(42,127,212,0.07);
+      border: 1px solid rgba(42,127,212,0.2);
+      color: #0c3060;
+    }
+    .callout-info strong {
+      color: var(--accent2);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* PHASE CARDS */
+    .phases {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 28px 0;
+    }
+    .phase-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--light);
+    }
+    .phase-card.done {
+      background: rgba(29,158,117,0.06);
+      border-color: rgba(29,158,117,0.2);
+    }
+    .phase-badge {
+      font-family: "DM Serif Display", serif;
+      font-size: 22px;
+      color: var(--silver);
+      min-width: 32px;
+    }
+    .phase-card.done .phase-badge { color: #1D9E75; }
+    .phase-text {
+      font-size: 15px;
+      color: #4a607a;
+      line-height: 1.6;
+    }
+    .phase-card.done .phase-text { color: #0f5a3a; }
+    .phase-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .phase-card.done .phase-label { color: #1D9E75; }
+
+    /* AUTHOR BIO */
+    .author-bio {
+      margin-top: 64px;
+      padding: 36px 40px;
+      background: var(--navy);
+      border-radius: 12px;
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+    }
+    .author-name {
+      font-family: "DM Serif Display", serif;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .author-creds {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .author-cred-pill {
+      background: rgba(42,127,212,0.14);
+      border: 1px solid rgba(42,127,212,0.28);
+      color: #6eb3f7;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .author-desc {
+      font-size: 14px;
+      color: var(--silver);
+      line-height: 1.8;
+    }
+    .author-desc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .author-desc a:hover { text-decoration: underline; }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 48px;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover { opacity: 0.75; }
+
+    /* FOOTER */
+    footer {
+      background: #060f1e;
+      padding: 28px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo {
+      font-family: "DM Serif Display", serif;
+      font-size: 16px;
+      color: var(--silver);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { font-size: 12px; color: #2a3f58; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { gap: 16px; }
+      .article-hero { padding: 100px 28px 56px; }
+      .article-body { padding: 48px 24px 72px; }
+      .step { flex-direction: column; gap: 12px; padding: 24px; }
+      .author-bio { flex-direction: column; gap: 16px; padding: 28px; }
+      footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Scott <span>Curtner</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#experience">Experience</a></li>
+    <li><a href="index.html#credentials">Credentials</a></li>
+    <li><a href="index.html#writing">Writing</a></li>
+    <li><a href="index.html#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- ARTICLE HERO -->
+<div class="article-hero">
+  <p class="article-eyebrow">Writing &nbsp;·&nbsp; Technology &nbsp;·&nbsp; Web Development</p>
+  <h1>How I Built a Professional Website for Free<br><em>(And the DNS Problem Nobody Warns You About)</em></h1>
+  <p class="article-subtitle">A step-by-step guide for non-developers — from zero to live on your own domain using Claude, GitHub Pages, and Network Solutions.</p>
+  <div class="article-meta">
+    <span>Scott Curtner</span>
+    <span class="meta-divider">·</span>
+    <span>April 2026</span>
+    <span class="meta-divider">·</span>
+    <span class="meta-tag">GitHub Pages</span>
+    <span class="meta-tag">DNS</span>
+    <span class="meta-tag">AI Tools</span>
+  </div>
+</div>
+
+<!-- ARTICLE BODY -->
+<div class="article-body">
+
+  <a href="index.html#writing" class="back-link">← Back to writing</a>
+
+  <h2>What we built</h2>
+  <p>A fully custom professional website — no templates, no monthly fees, no drag-and-drop builder — hosted free on GitHub Pages, live at my own domain (scottcurtner.com). Total cost: $0 beyond the domain registration I already had.</p>
+  <p>If I can do this as a Technology Auditor who knew "a little HTML," you probably can too.</p>
+
+  <h2>What you'll need before you start</h2>
+  <ul style="padding-left:20px; font-size:17px; color:#2d3f55; line-height:2; margin-bottom:28px;">
+    <li>A domain registered somewhere (I use Network Solutions)</li>
+    <li>A free GitHub account at <a href="https://github.com" target="_blank" style="color:var(--accent);">github.com</a></li>
+    <li>Access to Claude at <a href="https://claude.ai" target="_blank" style="color:var(--accent);">claude.ai</a></li>
+    <li>A folder on your desktop to hold your website files</li>
+    <li>About 2–3 hours of focused time</li>
+  </ul>
+
+  <h2>The steps</h2>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h3>Build your site with Claude</h3>
+      <p>Rather than writing HTML from scratch, I had a conversation with Claude about my professional background, goals, and visual preferences. Claude asked me targeted questions, I pasted in my LinkedIn content, uploaded my headshot, and Claude produced a complete, polished <code>index.html</code> file — one single file containing all the HTML, CSS, and my photo embedded directly in it.</p>
+      <p>I downloaded that file and saved it to a folder on my desktop called <code>scottcurtner-website</code>.</p>
+      <div class="callout callout-info"><strong>Tip</strong>Double-click the file to preview it in your browser before uploading anything. It works completely offline and you can catch any issues before going live.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h3>Create a GitHub repository</h3>
+      <ol>
+        <li>Go to <a href="https://github.com" target="_blank" style="color:var(--accent);">github.com</a> and sign in (or create a free account)</li>
+        <li>Click the <strong>+</strong> icon in the top right → <strong>New repository</strong></li>
+        <li>Name it something like <code>scottcurtner-website</code></li>
+        <li>Set it to <strong>Public</strong> — this is required for free GitHub Pages hosting</li>
+        <li>Click <strong>Create repository</strong></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h3>Upload your file</h3>
+      <ol>
+        <li>Inside your new empty repository, click <strong>uploading an existing file</strong></li>
+        <li>Drag your <code>index.html</code> file into the upload area</li>
+        <li>Scroll down and click <strong>Commit changes</strong></li>
+      </ol>
+      <p>Your file is now on GitHub.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h3>Enable GitHub Pages</h3>
+      <ol>
+        <li>Go to your repository's <strong>Settings</strong> tab</li>
+        <li>Click <strong>Pages</strong> in the left sidebar</li>
+        <li>Under "Branch," select <strong>main</strong> and click <strong>Save</strong></li>
+        <li>GitHub gives you a preview URL like <code>yourname.github.io/repo-name</code></li>
+      </ol>
+      <p>Visit that preview URL to confirm your site renders correctly before touching any DNS settings.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h3>Add your custom domain in GitHub</h3>
+      <ol>
+        <li>Still in Settings → Pages, find the <strong>Custom domain</strong> field</li>
+        <li>Type your domain: <code>scottcurtner.com</code></li>
+        <li>Click <strong>Save</strong></li>
+      </ol>
+      <p>GitHub will now attempt to verify your DNS settings. This is where the challenge begins.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h3>Configure DNS at Network Solutions — read this carefully</h3>
+      <p>GitHub Pages requires two types of DNS records. You'll set these at Network Solutions under <strong>Domain Details → Manage DNS</strong>.</p>
+
+      <h3>The easy part — add 4 A records</h3>
+      <p>These point your root domain to GitHub's servers. Add all four:</p>
+      <table class="dns-table">
+        <tr><th>Type</th><th>Name</th><th>Value</th></tr>
+        <tr><td>A</td><td>@</td><td>185.199.108.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.109.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.110.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.111.153</td></tr>
+      </table>
+      <p>You can add these yourself through the self-service interface without any trouble.</p>
+
+      <h3>The hard part — the WWW CNAME record</h3>
+      <p>GitHub also needs a CNAME record for <code>www</code> pointing to your GitHub Pages URL.</p>
+
+      <div class="callout callout-warning">
+        <strong>⚠ The gotcha nobody warns you about</strong>
+        Network Solutions ships every domain with a default WWW A record already in place — and their self-service UI will not let you delete it and replace it with a CNAME record. The edit is simply blocked.
+      </div>
+
+      <p>I spent significant time trying to make this change myself before GitHub showed me this error:</p>
+
+      <blockquote>"Both www.scottcurtner.com and its alternate name are improperly configured. Your site's DNS settings are using a custom subdomain, www.scottcurtner.com, that is set up as an A record. We recommend you change this to a CNAME record pointing to [your GitHub Pages URL]."</blockquote>
+
+      <p>GitHub was right. The A record for WWW had to become a CNAME. But the self-service UI blocked every attempt.</p>
+
+      <div class="callout callout-success">
+        <strong>✓ The fix</strong>
+        Contact Network Solutions support chat. A human agent can make this change directly. When you reach them, say exactly: <em>"Please convert my WWW A record to a CNAME record pointing to [yourname].github.io."</em> It was done in minutes.
+      </div>
+
+      <p>Your final DNS table should look like this:</p>
+      <table class="dns-table">
+        <tr><th>Type</th><th>Name</th><th>Value</th></tr>
+        <tr><td>A</td><td>@</td><td>185.199.108.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.109.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.110.153</td></tr>
+        <tr><td>A</td><td>@</td><td>185.199.111.153</td></tr>
+        <tr class="highlight"><td>CNAME</td><td>www</td><td>yourname.github.io</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h3>Confirm DNS and enforce HTTPS</h3>
+      <p>Go back to GitHub Settings → Pages. Once your DNS records propagate you'll see a green <strong>"DNS check successful"</strong> message next to your custom domain.</p>
+      <p>At that point, one final step that's easy to miss: <strong>check the "Enforce HTTPS" box.</strong> GitHub provides a free SSL certificate for your site automatically — but it does not activate until you manually check that box.</p>
+      <div class="callout callout-info"><strong>Why this matters</strong>HTTPS is what gives visitors the padlock icon in their browser and ensures their connection to your site is encrypted. Without it, some browsers will flag your site as "not secure." Don't skip this step.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">8</div>
+    <div class="step-content">
+      <h3>Verify everything</h3>
+      <p>Visit both <code>yourdomain.com</code> and <code>www.yourdomain.com</code> in your browser. Both should load your site with a padlock icon in the address bar. You're done.</p>
+      <div class="callout callout-success"><strong>✓ You're live</strong>Your professional site is now published, secured with HTTPS, hosted free on GitHub, and visible to the world at your own domain.</div>
+    </div>
+  </div>
+
+  <h2>What this costs</h2>
+  <p>GitHub Pages hosting: <strong>free.</strong> SSL certificate: <strong>free.</strong> The only ongoing cost is your domain registration, which you likely already have.</p>
+
+  <h2>What's next — a three-phase learning arc</h2>
+  <p>This whole process was Phase 1 of how I'm learning modern web publishing. Here's the full arc:</p>
+
+  <div class="phases">
+    <div class="phase-card done">
+      <div class="phase-badge">1</div>
+      <div>
+        <div class="phase-label">Complete</div>
+        <div class="phase-text"><strong>Phase 1:</strong> Download file from Claude → upload via GitHub browser → configure DNS → live site. No terminal required.</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-badge">2</div>
+      <div>
+        <div class="phase-label">Up next</div>
+        <div class="phase-text"><strong>Phase 2:</strong> Install GitHub Desktop app for one-click syncing whenever you update your site. Still no terminal.</div>
+      </div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-badge">3</div>
+      <div>
+        <div class="phase-label">Optional</div>
+        <div class="phase-text"><strong>Phase 3:</strong> Learn 3–4 basic Git terminal commands for full version control. At this point you have a genuine developer workflow.</div>
+      </div>
+    </div>
+  </div>
+
+  <p>I'll be writing about each phase as I go. If you're a professional who wants a polished personal site without a monthly subscription and without hiring a developer, this approach is worth your time.</p>
+
+  <!-- AUTHOR BIO -->
+  <div class="author-bio">
+    <div>
+      <div class="author-name">Scott Curtner</div>
+      <div class="author-creds">
+        <span class="author-cred-pill">CIA</span>
+        <span class="author-cred-pill">CISA</span>
+        <span class="author-cred-pill">MCSE</span>
+        <span class="author-cred-pill">ITIL</span>
+      </div>
+      <div class="author-desc">
+        Technology Audit Manager and GRC leader based in the San Francisco Bay Area. Writing about technology, audit practice, and what happens when a tech auditor goes deep on AI tools.<br><br>
+        <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank">Connect on LinkedIn</a> &nbsp;·&nbsp;
+        <a href="index.html">scottcurtner.com</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">Scott <span>Curtner</span></a>
+  <div class="footer-copy">© 2026 Scott Curtner · San Francisco Bay Area</div>
+</footer>
+
+</body>
+</html>

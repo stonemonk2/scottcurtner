@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>I Gave My AI the Ability to Edit Its Own Memory | Scott Curtner</title>
+  <meta name="description" content="A Technology Auditor's guide to extending an Open Brain MCP server with update and delete tools — and what happens when AI can rewrite its own past.">
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1a2540;
+      --blue:   #2e6fce;
+      --light:  #f4f7fb;
+      --text:   #2d3748;
+      --muted:  #718096;
+      --border: #e2e8f0;
+      --code-bg:#eef2f9;
+      --max:    720px;
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #fff;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    /* ── Nav (mirrors scottcurtner.com) ── */
+    nav {
+      background: var(--navy);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand { color: #fff; font-family: 'Arial', sans-serif; font-size: 1.1rem; font-weight: 700; text-decoration: none; }
+    .nav-brand span { color: var(--blue); }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,0.8); text-decoration: none; font-family: 'Arial', sans-serif; font-size: 0.78rem; letter-spacing: .08em; text-transform: uppercase; transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--navy);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .hero .tag {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .3rem .8rem;
+      border-radius: 2px;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.7rem, 4vw, 2.6rem);
+      line-height: 1.25;
+      max-width: 680px;
+      margin: 0 auto 1rem;
+      font-weight: 700;
+    }
+    .hero .subtitle {
+      color: rgba(255,255,255,0.7);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+      font-family: 'Arial', sans-serif;
+    }
+    .hero .meta {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: .04em;
+    }
+
+    /* ── Article body ── */
+    article {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    article p { margin-bottom: 1.4rem; font-size: 1.05rem; }
+
+    article h2 {
+      font-family: 'Arial', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 2.5rem 0 .8rem;
+      padding-bottom: .4rem;
+      border-bottom: 2px solid var(--blue);
+    }
+
+    article h3 {
+      font-family: 'Arial', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 1.8rem 0 .5rem;
+    }
+
+    article ul, article ol {
+      margin: .5rem 0 1.4rem 1.5rem;
+    }
+    article li { margin-bottom: .5rem; font-size: 1.05rem; }
+
+    /* ── Pull quote ── */
+    blockquote {
+      border-left: 4px solid var(--blue);
+      background: var(--light);
+      margin: 2rem 0;
+      padding: 1.2rem 1.5rem;
+      font-style: italic;
+      color: var(--navy);
+      font-size: 1.1rem;
+      border-radius: 0 6px 6px 0;
+    }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--navy);
+      color: #a8d8a8;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      overflow-x: auto;
+      font-size: .85rem;
+      line-height: 1.6;
+      margin: 1rem 0 1.8rem;
+      font-family: 'Courier New', monospace;
+    }
+    code {
+      background: var(--code-bg);
+      color: var(--navy);
+      padding: .15em .4em;
+      border-radius: 3px;
+      font-size: .9em;
+      font-family: 'Courier New', monospace;
+    }
+    pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+    /* ── Callout box ── */
+    .callout {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 2rem 0;
+      font-family: 'Arial', sans-serif;
+      font-size: .95rem;
+    }
+    .callout strong { color: var(--navy); display: block; margin-bottom: .4rem; }
+
+    /* ── Tool diagram ── */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .tool-card {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+    }
+    .tool-card .icon { font-size: 1.6rem; margin-bottom: .4rem; }
+    .tool-card .name { font-weight: 700; font-size: .85rem; color: var(--navy); }
+    .tool-card .desc { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+    .tool-card.new { border-color: var(--blue); background: #eef4fc; }
+    .tool-card.new .name { color: var(--blue); }
+
+    /* ── Takeaway box ── */
+    .takeaway {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      margin: 3rem 0 1rem;
+    }
+    .takeaway h3 { color: var(--blue); font-family: 'Arial', sans-serif; margin-bottom: .8rem; font-size: 1rem; letter-spacing: .06em; text-transform: uppercase; }
+    .takeaway p { margin-bottom: .8rem; font-size: 1rem; color: rgba(255,255,255,.85); }
+    .takeaway p:last-child { margin-bottom: 0; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--navy);
+      color: rgba(255,255,255,.5);
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Arial', sans-serif;
+      font-size: .8rem;
+    }
+    footer strong { color: #fff; }
+    footer span { color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a class="nav-brand" href="/">Scott <span>Curtner</span></a>
+  <ul class="nav-links">
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#experience">Experience</a></li>
+    <li><a href="/#credentials">Credentials</a></li>
+    <li><a href="/#writing">Writing</a></li>
+    <li><a href="/#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="tag">Tech Auditor Goes Deep on AI Tools</div>
+  <h1>I Gave My AI the Ability to Edit Its Own Memory</h1>
+  <p class="subtitle">What happens when you extend an Open Brain MCP server with update and delete tools — and why an auditor's instinct made all the difference.</p>
+  <p class="meta">Scott Curtner &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; 6 min read</p>
+</div>
+
+<!-- Article -->
+<article>
+
+  <p>There's a moment in every audit when you realize a system has a gap so obvious you can't believe nobody fixed it sooner. That moment happened to me while working with my Open Brain memory server — a Supabase-backed, AI-connected personal memory system I built following Nate's newsletter guides.</p>
+
+  <p>The system was working well. Every time I had a conversation with Claude, important context got saved — tasks, project notes, decisions, ideas. Claude could search and retrieve them later. It was, for the first time, an AI that actually remembered me between sessions.</p>
+
+  <p>But there was a problem. A fundamental one.</p>
+
+  <blockquote>"The system could only add. It had no ability to update what was wrong or remove what was outdated."</blockquote>
+
+  <p>In audit terms: write-only access with no remediation path. If a task was completed, it lived in the database forever as still open. If a note was wrong, it stayed wrong. The AI was working from a memory that could only accumulate — never correct itself.</p>
+
+  <p>So I fixed it. Here's how.</p>
+
+  <h2>What Open Brain Is (Quick Background)</h2>
+
+  <p>Open Brain is a personal memory layer for AI tools. It runs as an MCP (Model Context Protocol) server — which means Claude can call it as a tool, just like searching the web or reading a file. Every thought you save gets stored in a Supabase database with a vector embedding, enabling semantic search across everything you've ever told it.</p>
+
+  <p>Out of the box, Open Brain ships with four tools:</p>
+
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="icon">🔍</div>
+      <div class="name">search_thoughts</div>
+      <div class="desc">Semantic search across all memories</div>
+    </div>
+    <div class="tool-card">
+      <div class="icon">📋</div>
+      <div class="name">list_thoughts</div>
+      <div class="desc">Browse by type, topic, or date</div>
+    </div>
+    <div class="tool-card">
+      <div class="icon">📊</div>
+      <div class="name">thought_stats</div>
+      <div class="desc">Summary counts and top topics</div>
+    </div>
+    <div class="tool-card">
+      <div class="icon">💾</div>
+      <div class="name">capture_thought</div>
+      <div class="desc">Save a new memory entry</div>
+    </div>
+  </div>
+
+  <p>Notice what's missing? There's no <code>update_thought</code>. No <code>delete_thought</code>. The database has rows. Claude can read them. Claude can add to them. But Claude cannot touch what's already there.</p>
+
+  <p>For a personal memory system meant to track your life's ongoing projects, this is a serious gap.</p>
+
+  <h2>The Audit Finding: Write-Only Memory Is a Control Weakness</h2>
+
+  <p>Let me frame this the way I think about it professionally. In any data system, you need four basic operations: Create, Read, Update, Delete — CRUD. A system missing Update and Delete isn't a memory system. It's an append log.</p>
+
+  <p>Append logs have their place. But a personal AI memory layer isn't one of them. Your tasks get completed. Your opinions change. Your projects evolve. A memory system that can't reflect those changes will gradually drift from reality — feeding your AI increasingly stale context that it treats as current truth.</p>
+
+  <p>That's not a minor inconvenience. It's a reliability problem.</p>
+
+  <h2>Building the Fix: Two New Tools</h2>
+
+  <p>The Open Brain server runs on Deno, and the main file is <code>index.ts</code>. Each tool is registered using a <code>server.registerTool()</code> pattern with a Zod schema for input validation. Once I understood the pattern from the existing tools, adding new ones was straightforward — though there were a couple of gotchas worth knowing.</p>
+
+  <h3>Tool 1: update_thought</h3>
+
+  <p>This tool takes a thought ID and new content, then updates the database record — including regenerating the vector embedding so search still works correctly on the updated text.</p>
+
+<pre><code>server.registerTool("update_thought", {
+  description: "Update an existing thought by ID",
+  inputSchema: z.object({
+    id: z.string().describe("The UUID of the thought to update"),
+    content: z.string().describe("The new content to replace the existing thought")
+  })
+}, async ({ id, content }) => {
+  // Generate new embedding for updated content
+  const embedding = await generateEmbedding(content);
+
+  const { error } = await supabase
+    .from("thoughts")
+    .update({ content, embedding })
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+  return { success: true, id };
+});</code></pre>
+
+  <h3>Tool 2: delete_thought</h3>
+
+  <p>Simpler — takes an ID, removes the row. Permanent, so Claude is instructed to confirm with the user before calling it.</p>
+
+<pre><code>server.registerTool("delete_thought", {
+  description: "Permanently delete a thought by ID. Confirm with user first.",
+  inputSchema: z.object({
+    id: z.string().describe("The UUID of the thought to delete")
+  })
+}, async ({ id }) => {
+  const { error } = await supabase
+    .from("thoughts")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw new Error(error.message);
+  return { success: true, deleted: id };
+});</code></pre>
+
+  <h2>The Critical Gotcha: --no-verify-jwt</h2>
+
+  <div class="callout">
+    <strong>⚠️ If you're extending your own Open Brain server, don't skip this.</strong>
+    When you deploy to Supabase Edge Functions, the default configuration requires a valid JWT on every request. Your MCP client won't send one — so every tool call will fail with a 401 error. The fix is to deploy with the <code>--no-verify-jwt</code> flag: <code>supabase functions deploy open-brain-mcp --no-verify-jwt</code>. This tripped me up until I caught it.
+  </div>
+
+  <h2>The Result: Full CRUD Memory</h2>
+
+  <p>After deploying, my Open Brain went from four tools to six:</p>
+
+  <div class="tool-grid">
+    <div class="tool-card">
+      <div class="icon">🔍</div>
+      <div class="name">search_thoughts</div>
+      <div class="desc">Semantic search</div>
+    </div>
+    <div class="tool-card">
+      <div class="icon">📋</div>
+      <div class="name">list_thoughts</div>
+      <div class="desc">Browse memories</div>
+    </div>
+    <div class="tool-card">
+      <div class="icon">📊</div>
+      <div class="name">thought_stats</div>
+      <div class="desc">Memory summary</div>
+    </div>
+    <div class="tool-card">
+      <div class="icon">💾</div>
+      <div class="name">capture_thought</div>
+      <div class="desc">Save new memory</div>
+    </div>
+    <div class="tool-card new">
+      <div class="icon">✏️</div>
+      <div class="name">update_thought</div>
+      <div class="desc">Edit existing memory</div>
+    </div>
+    <div class="tool-card new">
+      <div class="icon">🗑️</div>
+      <div class="name">delete_thought</div>
+      <div class="desc">Remove stale memory</div>
+    </div>
+  </div>
+
+  <p>Claude can now do what any good system should be able to do: not just remember, but remember <em>accurately</em>. When a task is complete, I tell Claude and it finds the entry and marks it done or removes it. When a project changes direction, the memory reflects the new direction — not the old one.</p>
+
+  <h2>Why This Matters Beyond the Technical Fix</h2>
+
+  <p>There's a broader principle here that applies well beyond Open Brain. AI tools are increasingly being given persistent context — memory, history, notes. But most of that infrastructure is designed with a single direction in mind: accumulation. Add more. Save more. Remember more.</p>
+
+  <p>That's only half the picture. Any auditor will tell you that a system without a correction mechanism is a liability, not an asset. Stale data that looks authoritative is worse than no data at all — because your AI will act on it confidently.</p>
+
+  <p>Giving your AI the ability to edit its own memory isn't just a convenience feature. It's a data integrity control.</p>
+
+  <div class="takeaway">
+    <h3>The Auditor's Takeaway</h3>
+    <p>If you're running an AI memory system — Open Brain or otherwise — ask yourself: what happens when something in there is wrong? If the answer is "it stays wrong forever," you have a control gap worth closing.</p>
+    <p>The fix doesn't have to be complicated. Two tools, maybe 40 lines of code, one deployment flag. But the difference between an append log and a true memory system is enormous — especially as your AI accumulates months or years of context about your life and work.</p>
+    <p>Build the correction path from the start. Your future self will thank you.</p>
+  </div>
+
+  <p>If you're running your own Open Brain instance and want to add these tools, I'm happy to share the full extended <code>index.ts</code>. Find me on LinkedIn or reach out through the Connect section below.</p>
+
+</article>
+
+<!-- Footer -->
+<footer>
+  <strong>Scott <span>Curtner</span></strong><br><br>
+  Personal professional website &nbsp;·&nbsp; Technology Audit and GRC leadership &nbsp;·&nbsp; San Francisco Bay Area<br><br>
+  © 2026 Scott Curtner · San Francisco Bay Area
+</footer>
+
+</body>
+</html>

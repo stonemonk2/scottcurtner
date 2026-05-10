@@ -699,6 +699,56 @@
     .tools-grid { grid-template-columns: 1fr; }
     .photo-pair { grid-template-columns: 1fr; }
   }
+
+
+
+.cta-box {
+  background: #f0f7f9;
+  border-left: 4px solid var(--sage);
+  border-radius: 8px;
+  padding: 36px 40px;
+  margin: 48px 0;
+  text-align: center;
+}
+.cta-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 12px;
+}
+.cta-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--brown);
+  margin-bottom: 12px;
+}
+.cta-body {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto 24px;
+}
+.cta-button {
+  display: inline-block;
+  background: var(--brown);
+  color: var(--cream);
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.cta-button:hover { opacity: 0.85; }
+
+  
+
+
 </style>
 </head>
 <body>
@@ -1002,7 +1052,14 @@
         </figure>
       </div>
 
-      <div class="ornament">· · ·</div>
+<div class="cta-box">
+  <p class="cta-label">FREE DOWNLOAD</p>
+  <h3 class="cta-headline">Want to set this up for yourself or someone you love?</h3>
+  <p class="cta-body">I built a step-by-step setup guide — the exact same process I used with Clarice. Enter your email and I'll send it straight to your inbox. Your personalized prompt guide arrives the next day.</p>
+  <a href="https://2nd-brain-community.beehiiv.com/subscribe" target="_blank" class="cta-button">Get the Free Setup Guide →</a>
+</div>
+
+<div class="ornament">· · ·</div>
 
       <h2 id="dad">The Part That Actually Matters</h2>
 
@@ -1052,7 +1109,7 @@
         <div class="sidebar-card-title">Get the Setup Guide</div>
         <p>The <strong>2nd Brain: Personal Setup Guide</strong> — a structured Excel workbook with every step, SQL block, command, and verification checkpoint.</p>
         <p>Includes a section for installing for friends and loved ones, plus how to build custom starter prompts.</p>
-        <a class="sidebar-link" href="#">↓ Download Free Guide →</a>
+        <a class="sidebar-link" href="https://2nd-brain-community.beehiiv.com/subscribe" target="_blank">↓ Download Free Guide →</a>
       </div>
 
       <div class="sidebar-card">
@@ -1124,7 +1181,7 @@
 <section class="cta-section">
   <h2>Build a 2nd Brain for Someone You Love</h2>
   <p>The setup guide is free. The technology is nearly free. The value — having an AI that actually knows you — lasts forever.</p>
-  <a href="#" class="cta-btn">Get the Setup Guide</a>
+  <a href="https://2nd-brain-community.beehiiv.com/subscribe" target="_blank" class="cta-btn">Get the Setup Guide</a>
   <a href="https://scottcurtner.com" class="cta-btn secondary">Read More at scottcurtner.com</a>
 </section>
 

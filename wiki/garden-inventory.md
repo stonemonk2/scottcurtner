@@ -1,7 +1,8 @@
 # Garden Inventory Wiki
-**Scott Curtner | 2260 Charleston Ave, San Bruno, CA | Last compiled: May 2026**
+**Scott Curtner | 2260 Charleston Ave, San Bruno, CA | Last compiled: May 17, 2026**
 *Source: Open Brain entries. Update source entries in Open Brain, not this document.*
-*Note: Pest control events (gopher trapping) are logged in Open Brain only — not included here.*
+*Note: Pest control events logged in Open Brain only — not included here.*
+*Wiki compiler: update_wiki tool v1.2.0 — direct GitHub write, no copy/paste required.*
 
 ---
 
@@ -16,14 +17,13 @@
 ---
 
 ## FRONT YARD BED — By Front Window
-*Last updated: May 2026*
 
 | Plant | Botanical Name | Notes |
 |-------|---------------|-------|
-| Cordyline 'Red Star' | *Cordyline australis* | Central specimen. Single trunk, dramatic starburst of deep burgundy/bronze sword-shaped leaves. |
-| White Rose | Hybrid tea or grandiflora | Large fully double blooms, pristine white with blush pink tinge on outer petals. Blooming May 2026. |
-| Pink Shrub Rose | Floribunda (possibly Knock Out) | Dense clusters of medium pink blooms with white petal edges. Blooming heavily May 2026. |
-| California Poppy | *Eschscholzia californica* | State flower. Vivid orange buds. Self-seeding annual — thrives with minimal care in coastal CA. |
+| Cordyline 'Red Star' | *Cordyline australis* | Central specimen. Deep burgundy/bronze sword-shaped leaves. |
+| White Rose | Hybrid tea or grandiflora | Pristine white blooms with blush pink tinge. Blooming May 2026. |
+| Pink Shrub Rose | Floribunda (possibly Knock Out) | Dense clusters of medium pink blooms. Blooming heavily May 2026. |
+| California Poppy | *Eschscholzia californica* | State flower. Vivid orange buds. Self-seeding annual. |
 
 *SBEF yard sign displayed in this bed.*
 
@@ -33,29 +33,28 @@
 
 | Plant | Botanical Name | Notes |
 |-------|---------------|-------|
-| Boston Fern | *Nephrolepis exaltata* | In pot by front door. Healthy overall — brown fronds mixed in suggesting it wants more humidity or more consistent watering. |
+| Boston Fern | *Nephrolepis exaltata* | In pot by front door. Brown fronds mixed in — wants more humidity or consistent watering. |
 
 ---
 
 ## FRONT CENTER BED — Sidewalk Strip
-*Narrow bed between sidewalk and driveway. Mulched with redwood mulch May 3, 2026.*
+*Mulched with redwood mulch May 3, 2026.*
 
 | Plant | Botanical Name | Notes |
 |-------|---------------|-------|
-| African Daisy | *Osteospermum* | Yellow blooms. Established in bed. |
-| SuperTrouper Pink Dianthus | *Dianthus caryophyllus* | Monrovia. 10–14"H x 10–12"W. Perennial, fragrant, blooms spring–summer. Full sun, semi-moist. Planted April 2026. $13.98. |
-| Jelly Bean Blueberry | *Vaccinium corymbosum* hybrid | Bushel and Berry brand. In blue pot at front of bed. 1–2' mounded. Full sun, acidic soil pH 4.5–5.5. Self-pollinating. Sweet jelly-like flavor. Planted April 2026. |
+| African Daisy | *Osteospermum* | Yellow blooms. Established. |
+| SuperTrouper Pink Dianthus | *Dianthus caryophyllus* | Perennial, fragrant. Full sun. Planted April 2026. |
+| Jelly Bean Blueberry | *Vaccinium corymbosum* hybrid | Blue pot. 1–2' mounded. Acidic pH 4.5–5.5. Self-pollinating. Planted April 2026. |
 
 ---
 
 ## FRONT SIDE ENTRYWAY — Freddy's Fence Side
-*Narrow walkway garden along fence. Several pots plus in-ground plantings.*
 
 | Plant | Botanical Name | Notes |
 |-------|---------------|-------|
-| Abutilon (Flowering Maple) | *Abutilon × hybridum* | Trained upright against fence using straps — essentially espalier in a narrow space. Natural habit is a massive spreading bush. Lateral branches trimmed May 2026. Re-strap fence several times/year. Large pink blooms. pH 6.0–7.0. |
-| O'Neal Blueberry | *Vaccinium corymbosum* 'O'Neal' | Split into two plants May 16, 2026 (multiple root systems found). One in large green glazed pot, one in blue glazed pot. Was struggling from iron chlorosis (pH too high). Treated with: 50% peat moss / 50% existing soil, Astevora 8-4-8 acid fertilizer. Monitor for new growth. |
-| Hibiscus (likely) | *Hibiscus rosa-sinensis* or *H. syriacus* | Large established shrub against fence. Bright green ovate leaves, pink/red-tipped buds forming. **ID to confirm** — photograph open flower, leaf detail, seed pods. pH 6.0–6.5. |
+| Abutilon (Flowering Maple) | *Abutilon × hybridum* | Espalier-trained upright against fence. Lateral branches trimmed May 2026. Re-strap several times/year. |
+| O'Neal Blueberry | *Vaccinium corymbosum* 'O'Neal' | Split into two plants May 16, 2026. Treated for iron chlorosis with peat moss + Astevora 8-4-8. Monitor for new growth. |
+| Hibiscus (likely) | *Hibiscus rosa-sinensis* or *H. syriacus* | Large established shrub. Pink/red-tipped buds forming. **ID to confirm.** |
 | Moonflower / Datura (possible) | TBD | White flowering plant in adjacent pot. ID to confirm. |
 
 ---
@@ -77,17 +76,17 @@
 
 | Plant | Botanical Name | Notes |
 |-------|---------------|-------|
-| Aloe | *Aloe* sp. | In large pot. Impressive tall yellow flower spikes blooming April 2026. |
-| Pink Lemonade Blueberry | *Vaccinium* 'Pink Lemonade' (rabbiteye) | Pink/fuchsia berries (not blue). Full sun, acidic pH 4.5–5.5. Sweet, slightly citrusy. |
-| Banana Plant | *Musa* sp. | ~15–20 ft tall. Believed ornamental or non-fruiting due to height/age. |
-| Cabernet Grapes | *Vitis vinifera* 'Cabernet' | Wired against east exterior wall of rear office shed. Not on a trellis. |
+| Aloe | *Aloe* sp. | Large pot. Yellow flower spikes blooming April 2026. |
+| Pink Lemonade Blueberry | *Vaccinium* 'Pink Lemonade' | Pink/fuchsia berries. Acidic pH 4.5–5.5. |
+| Banana Plant | *Musa* sp. | ~15–20 ft tall. Believed ornamental/non-fruiting. |
+| Cabernet Grapes | *Vitis vinifera* 'Cabernet' | Wired against east wall of rear office shed. |
 | Onions | *Allium cepa* | In ground. |
 | Strawberries | *Fragaria × ananassa* | In ground. |
 | Fennel | *Foeniculum vulgare* | In ground. |
-| Mint (multiple varieties) | *Mentha* sp. | Multiple varieties in backyard. |
+| Mint (multiple varieties) | *Mentha* sp. | Multiple varieties. |
 | Ginger | *Zingiber officinale* | In ground. |
-| Oregano | *Origanum vulgare* | Bushy, healthy patch. Full sun, drier conditions. Trim regularly to prevent early flowering. |
-| Rosemary | *Salvia rosmarinus* | Needle-like leaves, purple/blue flowers. Full sun, drought-tolerant once established. Can grow large/shrubby. |
+| Oregano | *Origanum vulgare* | Bushy, healthy. Trim regularly to prevent early flowering. |
+| Rosemary | *Salvia rosmarinus* | Drought-tolerant once established. |
 
 ---
 
@@ -95,9 +94,9 @@
 
 | Plant | Botanical Name | Date | Notes |
 |-------|---------------|------|-------|
-| Myoporum (white flowering) | *Myoporum* sp. | Tree-formed prior to April 2026 by gardener Guadalupe. Deep trim April 19, 2026. Landmark: Buddha statue nearby. |
-| Tiny Double Dutch Lily (3x) | *Lilium* 'Tiny Double Dutch' | April 26, 2026 | Monrovia 2qt, $14.98 each. Vivid orange double flowers. Perennial, full sun/partial sun. Planted around myoporum base. |
-| Marguerite Daisy (4x) | *Argyranthemum frutescens* | April 26, 2026 | Lowe's/Altman Plants 2.5qt, $9.98 each. Blooming pink/lavender (label shows white — color variant). Full sun, water 2x/week. Annual, non-hardy below 32°F. Mix of in-ground and pots. |
+| Myoporum (white flowering) | *Myoporum* sp. | Prior to April 2026 | Tree-formed by Guadalupe. Deep trim April 19, 2026. |
+| Tiny Double Dutch Lily (3x) | *Lilium* 'Tiny Double Dutch' | April 26, 2026 | Orange double flowers. Perennial. Around myoporum base. |
+| Marguerite Daisy (4x) | *Argyranthemum frutescens* | April 26, 2026 | Pink/lavender blooms. Annual, non-hardy below 32°F. |
 
 ---
 
@@ -106,9 +105,8 @@
 - [ ] Confirm Hibiscus ID — photograph open bloom, leaf detail, seed pods
 - [ ] Confirm Moonflower/Datura ID in entryway pot
 - [ ] Monitor O'Neal Blueberry split plants for new growth (treated May 16, 2026)
-- [ ] Re-strap Abutilon to fence (several times/year — check regularly)
-- [ ] Identify backyard third blueberry variety if any remain unlogged
-- [ ] Boston Fern — assess humidity/watering cadence, reduce brown fronds
+- [ ] Re-strap Abutilon to fence (several times/year)
+- [ ] Boston Fern — assess humidity/watering cadence
 
 ---
 
@@ -118,4 +116,5 @@
 
 ---
 
-*To update this wiki: log new garden events in Open Brain tagged "gardening," then ask Claude to recompile this page.*
+*To update: log garden events in Open Brain tagged "gardening," then ask Claude to recompile.*
+*Last compiled: May 17, 2026 via update_wiki tool v1.2.0*

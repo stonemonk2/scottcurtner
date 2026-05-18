@@ -1,54 +1,53 @@
 # Scott Curtner — Wiki Index
-**Last updated: May 2026**
-*Fetch this page to find the right wiki for any topic.*
+**Last updated:** May 18, 2026
 
----
-
-## How to Use This Index
-
-When a conversation involves one of the topics below, fetch the corresponding raw URL and use it as context before responding. Fetching takes priority over reconstructing from individual Open Brain entries — the wiki is already synthesized.
+This index lists all wiki pages in the `stonemonk2/scottcurtner` GitHub repo under `/wiki/`. Each page is a reference document Claude loads on demand when relevant keywords appear in conversation.
 
 ---
 
 ## Wiki Pages
 
-### 🏠 Real Estate Portfolio
-**Keywords:** real estate, rental, property, tenant, rent, renovation, triplex, Richmond, Centennial, Livermore, Gilbert, Humboldt, Fremont, San Angelo, Leslie, GreatHome, landlord, vacancy, Sterling Young, Conrad, Maricella
-**Raw URL:** https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/real-estate-portfolio.md
-
-### 💼 Tech Audit Accomplishments
-**Keywords:** resume, job, career, accomplishment, STAR, interview, promotion, ED, executive director, Wells Fargo, ETAG, audit, GRC, TTR, WORM, Knowledge Nuggets, Tim Murphy, LinkedIn recommendation, AAIA, CIA, CISA
-**Raw URL:** https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/tech-audit-accomplishments.md
-
 ### 🌿 Garden Inventory
-**Keywords:** garden, plant, backyard, front yard, blueberry, rose, fig, orange, apricot, pear, apple, plum, mint, rosemary, oregano, Guadalupe, Abutilon, Cordyline, mulch, fertilizer, pruning, watering
-**Raw URL:** https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/garden-inventory.md
-
-### 🧠 Open Brain Project
-**Keywords:** Open Brain, 2nd Brain, MCP, Supabase, install, keep-alive, connector, Clarice, Cashton, Tiffany, Debbie, stonemonk2, OB1, deployment, gotcha, index.ts, update_wiki
-**Raw URL:** https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/open-brain-project.md
-
-### ✍️ Blog Post Pipeline
-**Keywords:** blog, article, LinkedIn, post, publish, scottcurtner.com, content, writing, 50 posts, pipeline, series, Tech Auditor Goes Deep
-**Raw URL:** https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/blog-pipeline.md
-
-### 📊 Bookkeeping Project
-**Keywords:** bookkeeping, Excel, Python, wf_import, Plaid, RentTracker, Schedule E, transaction, CSV, Wells Fargo import, Quicken, budget, tax, rental income
-**Raw URL:** https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/bookkeeping-project.md
+**File:** `garden-inventory.md`
+**Load when:** garden, plants, planting, harvest, pruning, Guadalupe, backyard, front yard, front bed, blueberry, fruit trees, myoporum, jasmine, lily, daisy, avocado, agapanthus, gladiolus, roses, azalea, abutilon, cordyline, fern, orchid
+**Description:** Complete plant inventory for 2260 Charleston Ave — all zones (backyard, front yard, front bed, front side entryway). Includes plant IDs, care notes, planting dates, observations, and open tasks. Guadalupe gardening service log also tracked here.
 
 ---
 
-## Fetch Instructions for Claude
-
-1. Identify which wiki(s) are relevant based on keywords in the conversation
-2. Fetch the raw URL(s) using Tavily extract
-3. Use the compiled content as context — do not ask Scott to re-explain what's already in the wiki
-4. If multiple wikis are relevant (e.g. real estate + bookkeeping), fetch both
-5. After fetching, confirm briefly: "I've loaded your [topic] wiki — ready to help."
+### 🏠 Home Maintenance
+**File:** `home-maintenance.md`
+**Load when:** home maintenance, perimeter spray, pest control, bifenthrin, Western Exterminators, pump sprayer, hazmat, eaves, foundation, house structure, shed, contracted services, DIY spray
+**Description:** Home maintenance programs and equipment for 2260 Charleston Ave. Currently covers: DIY perimeter pest spraying program (replacing Western Exterminators), full equipment inventory, PPE protocol, application procedure, and open tasks. Contracted services log (excluding Guadalupe, who is tracked in garden-inventory.md).
 
 ---
 
-## Wiki Index URL (this file)
-https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/wiki-index.md
+### 💼 Resume & Career
+**File:** `resume.md` *(if exists)*
+**Load when:** resume, career, job search, AAIA, audit, GRC, Wells Fargo, Bank of America, technology audit, ISACA, CIA, CISA
 
-*To add a new wiki page: compile it via update_wiki tool, then update this index.*
+---
+
+### 🏡 Real Estate
+**File:** `real-estate.md` *(if exists)*
+**Load when:** real estate, rental, property, tenant, Schedule E, bookkeeping, Zelle, rent, 330 Leslie, 8178, 8173, 7587, 492, 121, portfolio, Colorado, Arizona
+
+---
+
+### 🌐 Websites & Content
+**File:** `websites.md` *(if exists)*
+**Load when:** scottcurtner.com, scurtner.com, stonemonk.com, GreatHome.us, GitHub Pages, DNS, article, blog, content pipeline, Cloudflare
+
+---
+
+### 🧠 Open Brain & MCP
+**File:** `open-brain.md` *(if exists)*
+**Load when:** Open Brain, MCP, Supabase, memory, wiki protocol, agent index, capture thought, save protocol
+
+---
+
+## Load Protocol
+When Scott says **"check the wiki"** or **"load my [topic] wiki"** — fetch immediately and confirm: *"I've loaded your [topic] wiki."*
+
+When keywords from the trigger list above appear in conversation — fetch the relevant wiki page before responding. Never ask Scott to re-explain what's in a wiki.
+
+**Wiki base URL:** `https://raw.githubusercontent.com/stonemonk2/scottcurtner/main/wiki/`

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>I Built My Daughter an AI Brain Before She Leaves for College | Scott Curtner</title>
+<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -699,6 +700,56 @@
     .tools-grid { grid-template-columns: 1fr; }
     .photo-pair { grid-template-columns: 1fr; }
   }
+
+
+
+.cta-box {
+  background: #f0f7f9;
+  border-left: 4px solid var(--sage);
+  border-radius: 8px;
+  padding: 36px 40px;
+  margin: 48px 0;
+  text-align: center;
+}
+.cta-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 12px;
+}
+.cta-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--brown);
+  margin-bottom: 12px;
+}
+.cta-body {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto 24px;
+}
+.cta-button {
+  display: inline-block;
+  background: var(--brown);
+  color: var(--cream);
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.cta-button:hover { opacity: 0.85; }
+
+  
+
+
 </style>
 </head>
 <body>
@@ -773,16 +824,18 @@
 
       <p>A <strong>2nd Brain</strong> is a persistent AI memory system that connects to Claude — Anthropic's AI assistant — and remembers everything across every single conversation. Forever.</p>
 
-      <p>Most people use AI like a whiteboard: you write something, have a conversation, and when you close the tab... it's gone. The AI starts fresh every time. No memory of who you are, what you care about, or what you told it last week.</p>
+      <p>Now — Claude and other AI assistants do have some built-in memory. If you've used Claude regularly, you've probably noticed it picks up a few things about you over time. That's real, and it's useful. But it's also selective, limited, and you can't fully control what it retains or how it's organized.</p>
 
-      <p>The 2nd Brain solves that. It's a private database that lives in the cloud, stores your thoughts, notes, and memories as intelligent searchable entries, and makes them available to Claude every time you start a new conversation. You never have to re-introduce yourself. You never lose context. Your AI actually knows you.</p>
-
+      <p>A 2nd Brain takes that to a completely different level. It's a private cloud database that connects to Claude and lets you deliberately store everything you want Claude to know — your apartment details, your car maintenance history, your goals, your family context, your preferences — organized exactly the way you want, searchable by meaning rather than keywords, and available to Claude the moment any new conversation starts.</p>
+      
+      <p>The difference between Claude's built-in memory and a 2nd Brain is a bit like the difference between someone who vaguely remembers things about you... and someone who actually knows you </p>
+      
       <div class="tech-callout">
         <div class="tech-callout-label">🧠 Under the Hood</div>
         <p>The system uses <strong>Supabase</strong> (your private database), <strong>OpenRouter</strong> (AI gateway for embeddings and metadata), and a custom <strong>MCP server</strong> (the bridge that connects everything to Claude). All free or near-free tiers. All yours. All private.</p>
       </div>
 
-      <p>I built my own version of this about a year ago following <a href="https://promptkit.natebjones.com" target="_blank">Nate Jones' guide</a>. Then I extended it — adding the ability to edit entries, delete duplicates, filter by category, and track tasks with status. Then I set it up for a few friends. And then... it was Clarice's turn.</p>
+      <p>I built my own version of this on April 3, 2026 following <a href="https://promptkit.natebjones.com" target="_blank">Nate Jones' guide</a>. Then I extended it — adding the ability to edit entries, delete duplicates, filter by category, and track tasks with status. Then I set it up for a few friends. And then... it was Clarice's turn.</p>
 
       <div class="ornament">· · ·</div>
 
@@ -793,8 +846,8 @@
       <p>So I built her 30 starter prompts — a custom onboarding kit that would pre-load her 2nd Brain with everything important about her life right now:</p>
 
       <ul class="prompt-list">
-        <li>"Remember this: My apartment is Studio Unit at 123 Cool Studio Way, San Luis Obispo CA 93405. Lease July 1 2026 to June 30 2027. Rent is $1,980/month. Property manager is Andrew Jones..."</li>
-        <li>"Remember this: I drive a 2014 Mercedes E-Class 350 2D. I want to track all repairs, maintenance, and service history here."</li>
+        <li>"Remember this: My apartment is Studio Unit at 123 Cool Studio Way, San Luis Obispo CA 93405. Lease July 1 2026 to June 30 2027. Rent is $#,###/month. Property manager is John Smith..."</li>
+        <li>"Remember this: I drive this make, model, and year of a car. I want to track all repairs, maintenance, and service history here."</li>
         <li>"Remember this: I'm starting at Cal Poly SLO as a junior in fall 2026, pursuing a Bachelor's in Finance at the Orfalea College of Business..."</li>
         <li>"I saved notes on 3 car repairs I've done — what were they, when did I do them, and when does Claude think my next maintenance task will be due and what might it cost?"</li>
         <li>"Quiz me on what I've been studying — ask me one question at a time, wait for my answer, tell me if I'm right and explain why, then move to the next question."</li>
@@ -885,7 +938,6 @@
           <p class="gotcha-desc">Supabase defaults the project name to "ClariceCurtner's Project." You must manually change it to "open-brain" before clicking Create.</p>
         </div>
         <div class="gotcha-item">
-          <div class="gotcha-num">Gotcha 02</div>
           <div class="gotcha-num">Gotcha 02</div>
           <div class="gotcha-title">SQL Copy/Paste Quotes</div>
           <p class="gotcha-desc">Excel wraps SQL in quotes when copied. Delete the opening and closing quote before running in Supabase SQL Editor or you'll get a syntax error on Line 1.</p>
@@ -1002,7 +1054,14 @@
         </figure>
       </div>
 
-      <div class="ornament">· · ·</div>
+<div class="cta-box">
+  <p class="cta-label">FREE DOWNLOAD</p>
+  <h3 class="cta-headline">Want to set this up for yourself or someone you love?</h3>
+  <p class="cta-body">I built a step-by-step setup guide — the exact same process I used with Clarice. Enter your email and I'll send it straight to your inbox. Your personalized prompt guide arrives the next day.</p>
+  <a href="https://2nd-brain-community.beehiiv.com/" target="_blank" class="cta-button">Get the Free Setup Guide →</a>
+</div>
+
+<div class="ornament">· · ·</div>
 
       <h2 id="dad">The Part That Actually Matters</h2>
 
@@ -1010,7 +1069,7 @@
 
       <p>But building something for Clarice felt different.</p>
 
-      <p>She's 19. She wakeboards at Lake Almanor, crushes it at SF Giants games, skis at Northstar, and is about to walk into the Orfalea College of Business as a junior Finance student. She doesn't need a dad who hovers. She needs one who shows up in useful ways.</p>
+      <p>She's 19. She wakeboards at Lake Almanor, loves her hometown San Francisco Giants, skis at Northstar, and is about to walk into the Orfalea College of Business. She doesn't need a dad who hovers. She needs one who shows up in useful ways.</p>
 
       <p>So yes, I set up a Supabase database and deployed an MCP server and wrote 30 custom prompts and documented every gotcha. But really what I did was make sure that when she's sitting in her SLO studio at 11pm, trying to figure out when her Mercedes needs its next oil change or how to budget for the month... she has a thinking partner who already knows her.</p>
 
@@ -1052,7 +1111,7 @@
         <div class="sidebar-card-title">Get the Setup Guide</div>
         <p>The <strong>2nd Brain: Personal Setup Guide</strong> — a structured Excel workbook with every step, SQL block, command, and verification checkpoint.</p>
         <p>Includes a section for installing for friends and loved ones, plus how to build custom starter prompts.</p>
-        <a class="sidebar-link" href="#">↓ Download Free Guide →</a>
+        <a class="sidebar-link" href="https://2nd-brain-community.beehiiv.com/" target="_blank">↓ Download Free Guide →</a>
       </div>
 
       <div class="sidebar-card">
@@ -1124,7 +1183,7 @@
 <section class="cta-section">
   <h2>Build a 2nd Brain for Someone You Love</h2>
   <p>The setup guide is free. The technology is nearly free. The value — having an AI that actually knows you — lasts forever.</p>
-  <a href="#" class="cta-btn">Get the Setup Guide</a>
+  <a href="https://2nd-brain-community.beehiiv.com/" target="_blank" class="cta-btn">Get the Setup Guide</a>
   <a href="https://scottcurtner.com" class="cta-btn secondary">Read More at scottcurtner.com</a>
 </section>
 

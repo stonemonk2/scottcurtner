@@ -28,13 +28,14 @@ This index lists all wiki pages in the `stonemonk2/scottcurtner` GitHub repo und
 
 ### 🏡 Real Estate
 **File:** `real-estate.md` *(if exists)*
-**Load when:** real estate, rental, property, tenant, Schedule E, Zelle, rent, 330 Leslie, 8178, 8173, 7587, 492, 121, portfolio, Colorado, Arizona
+**Load when:** real estate, rental, property, tenant, rent, 330 Leslie, 8178, 8173, 7587, 492, 121, portfolio, Colorado, Arizona
+**Note:** Bookkeeping, Schedule E, and Zelle are intentionally excluded here — those trigger the bookkeeping wiki instead.
 
 ---
 
 ### 💰 Bookkeeping System
 **File:** `bookkeeping.md`
-**Load when:** bookkeeping, wf_import, wf_importer, CSV_Import, AllTransactions_Input, Plaid, plaid_link_server, plaid_to_import, plaid_sandbox_test, RentTracker, Schedule E, categorize, RULES, rngLedger, tblInput, Python bookkeeping, Excel ledger, transaction import, auto-categorization, plaid-python, StoneMonk, sandboxSecret
+**Load when:** bookkeeping, wf_import, wf_importer, CSV_Import, AllTransactions_Input, Plaid, plaid_link_server, plaid_to_import, plaid_sandbox_test, RentTracker, Schedule E, categorize, RULES, rngLedger, tblInput, Python bookkeeping, Excel ledger, transaction import, auto-categorization, plaid-python, StoneMonk, sandboxSecret, Zelle
 **Description:** Complete reference for Scott's Python + Excel + Plaid bookkeeping system. Covers: Excel workbook architecture (AllTransactions_Input schema, named ranges, property tab LET formulas), wf_import.py (CSV auto-detection, categorization rules, SKIP logic, change log), Plaid setup (sandbox tested, production approved, Trial plan), multi-agent build plan for production connector, blog post notes, and property reference.
 
 ---

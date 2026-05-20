@@ -11,11 +11,13 @@
 | Property | Type | Location | Tenant | Rent/mo | Status |
 |---|---|---|---|---|---|
 | 121 Santa Fe Ave | Triplex | Richmond, CA 94801 | Unit A: Vacant (June 2026) / Unit B: Conrad / Unit C: unknown | Unit A: $1,591 / Unit B: $1,787 | Unit A vacating May/June 2026 |
-| 492 W San Angelo St | SFR | Gilbert, AZ 85233 | Abby Lawrence | Market rate | Occupied |
-| 330 Leslie | TBD | TBD | TBD | TBD | TBD |
-| 8178 / 8173 / 7587 | TBD | Colorado | TBD | TBD | TBD |
+| 492 W San Angelo St | SFR | Gilbert, AZ 85233 | Abby Lawrence | TBD | Occupied |
+| 330 Leslie St | TBD | TBD | TBD | TBD | TBD |
+| 7587 E Fremont Dr | TBD | Centennial, CO 80112 | TBD | TBD | TBD |
+| 8178 S Humboldt Cir | TBD | Centennial, CO 80122 | TBD | TBD | TBD |
+| 8173 S Humboldt Cir | TBD | Centennial, CO 80122 | TBD | TBD | TBD |
 
-> Portfolio detail to be expanded. Add addresses, purchase dates, and rent amounts as confirmed.
+> Portfolio detail to be expanded. Add property types, purchase dates, tenant names, and rents as confirmed.
 
 ---
 
@@ -126,10 +128,28 @@ Scott's standard approach when a long-term tenant vacates:
 | Water heater anode rod | May 2025 | ~1 yr | N/A (maintenance item) |
 
 ### HVAC Notes
-Goettl membership plan covers seasonal tune-ups at $0. Multiple visits have found duct system and coil getting dirty — duct cleaning and coil cleaning were performed Jan 2025. Hard start kit installed 2022; upgraded to EasyStart soft starter Apr 2026 due to high compressor inrush current. Attic insulation noted as insufficient at Apr 2026 visit — upgrade declined for now, worth revisiting.
+Goettl membership plan covers seasonal tune-ups at $0. Multiple visits found duct system and coil getting dirty — duct cleaning and coil cleaning performed Jan 2025. Hard start kit installed 2022; upgraded to EasyStart soft starter Apr 2026 due to high compressor inrush current. Attic insulation noted as insufficient at Apr 2026 visit — upgrade declined for now, worth revisiting.
 
 ### Garage Door Notes
 Sun City repaired springs, drums, and rollers in Feb 2024 ($1,605 — Abby paid, deducted from rent). Same Day Garage Door inspected Sep 2024 and found all 4 panels cracked beyond repair — full door replaced Oct 2024 ($3,254, paid in full). Follow-up track/sensor adjustment by Same Day in Jan 2025 at no charge.
+
+---
+
+## Colorado Properties (Centennial)
+
+### 7587 E Fremont Dr, Centennial CO 80112
+> Detail to be added.
+
+### 8178 S Humboldt Cir, Centennial CO 80122
+> Detail to be added.
+
+### 8173 S Humboldt Cir, Centennial CO 80122
+> Detail to be added.
+
+---
+
+## 330 Leslie St
+> Address, location, tenant, and detail to be added.
 
 ---
 
@@ -144,11 +164,12 @@ Scott invests in tenant relationships — prompt deposit returns, rebate offers 
 ### Maintenance Tracking System
 - **Open Brain:** Granular invoice-level records per property (contractor, invoice #, line items, amounts, dates)
 - **This wiki:** Summary-level reference, contractor contacts, strategy notes, system ages
+- **Wiki — bookkeeping.md:** Financial system, Schedule E workflow, Plaid integration, Excel workbook architecture
 - **Google Drive (per property folder):** Source PDF invoices and quotes
 - **Goal:** After 2–3 years of logged data, use historical maintenance costs per property to build predictive budget models
 
 ### Rent Collection
-Tenants pay via Zelle. (Expand this section with bookkeeping workflow when real estate bookkeeping wiki is built out.)
+Tenants pay via Zelle. See bookkeeping.md for full financial workflow.
 
 ---
 
@@ -161,6 +182,6 @@ Tenants pay via Zelle. (Expand this section with bookkeeping workflow when real 
 - [ ] 492 San Angelo: pay Re-Bath balance (~$6,625) when remodel completes July 2026
 - [ ] 492 San Angelo: reassess attic insulation upgrade (declined Apr 2026, flagged for future)
 - [ ] 492 San Angelo: Goettl HVAC membership — confirm renewal status and annual cost
-- [ ] All properties: expand portfolio table with full addresses, purchase dates, rents
-- [ ] Build out CO properties section (330 Leslie, 8178, 8173, 7587)
-- [ ] Set up real estate bookkeeping wiki page (Schedule E workflow, Zelle tracking, Plaid integration)
+- [ ] All properties: expand portfolio table with property types, purchase dates, tenant names, rents
+- [ ] Build out CO properties section (7587 Fremont, 8178 Humboldt, 8173 Humboldt)
+- [ ] Build out 330 Leslie section

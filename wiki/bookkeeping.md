@@ -1,10 +1,10 @@
 # Bookkeeping System Wiki
-Last updated: May 22, 2026
+Last updated: May 23, 2026
 
 ## Overview
-Scott's personal bookkeeping system for a multi-property real estate rental portfolio. Built as a Quicken replacement using Python, Excel 365, and Plaid API. Manages 17 Wells Fargo accounts (plus Chase and BofA pending) across 7 rental properties plus personal finances.
+Scott's personal bookkeeping system for a multi-property real estate rental portfolio. Built as a Quicken replacement using Python, Excel 365, and Plaid API. Manages 17+ accounts across Wells Fargo, Chase, and Bank of America covering 7 rental properties plus personal finances.
 
-**Current status:** Plaid production live ✅ | Agents 1 + 2 complete ✅ | 100% auto-categorization achieved ✅
+**Current status:** Plaid production live ✅ | All agents complete ✅ | 100% auto-categorization ✅ | WF + BofA connected ✅ | Chase pending OAuth approval (est. 24hrs from May 23)
 
 ---
 
@@ -12,67 +12,62 @@ Scott's personal bookkeeping system for a multi-property real estate rental port
 | Date | Milestone |
 |------|-----------|
 | Early 2026 | Manual Excel bookkeeping — data entry by hand |
-| May 3, 2026 | Built wf_import.py — CSV import with auto-categorization. 100% hit rate on checking + CC CSVs |
-| May 3, 2026 | Added Source + PlaidTxnID columns to AllTransactions_Input. Ledger tab deleted — AllTransactions_Input is single source of truth |
-| May 3, 2026 | Plaid Sandbox tested — 16 mock transactions pulled successfully |
-| May 22, 2026 | Plaid Production live — plaid_link_server.py built, WF OAuth completed, 17 accounts connected under WellsFargo_All token |
-| May 22, 2026 | plaid_to_import.py built — 299 transactions pulled, 100% auto-categorized |
-| May 22, 2026 | AllTransactions_Input cleaned — unified single table, date-sorted, all property tabs updating correctly |
+| May 3, 2026 | Built wf_import.py — CSV import with 100% auto-categorization |
+| May 3, 2026 | Added Source + PlaidTxnID columns. Ledger tab deleted — AllTransactions_Input is single source of truth |
+| May 3, 2026 | Plaid Sandbox tested successfully |
+| May 22, 2026 | Plaid Production live — WF OAuth completed, 17 accounts under WellsFargo_All token |
+| May 22, 2026 | plaid_to_import.py built — 299 WF transactions, 100% auto-categorized |
+| May 22, 2026 | AllTransactions_Input cleaned — unified single table, all property tabs updating |
+| May 23, 2026 | Agent 4 (duplicate detection) complete — PlaidTxnID checked before import |
+| May 23, 2026 | BofA connected — BofA_All token, 2 accounts (both SKIP — minimal activity) |
+| May 23, 2026 | Chase OAuth submitted for review — est. 24 hours. 492 San Angelo lives at Chase (...3979) |
+| May 23, 2026 | Scheduler (Agent 3) cancelled — manual weekend workflow is sufficient |
 
 ---
 
-## Current State (May 22, 2026)
-- **AllTransactions_Input:** Clean, unified single Excel table. ~500 rows covering Jan 1 – May 22, 2026
+## Current State (May 23, 2026)
+- **AllTransactions_Input:** Clean unified single table, ~500 rows, Jan 1 – May 23, 2026
 - **Property tabs:** All updating correctly via LET formulas from rngLedger
 - **WF accounts:** All 17 connected via Plaid Production (WellsFargo_All token)
+- **BofA accounts:** Connected (BofA_All token) — both accounts SKIPped (minimal activity)
+- **Chase:** OAuth in review — connect after approval, will add 492 San Angelo (...3979)
 - **Auto-categorization:** 100% on both CSV and Plaid imports
-- **Chase + BofA:** Not yet connected (includes 492 San Angelo account)
-- **Scheduler:** Not yet built (Agent 3)
-- **Duplicate detection in Plaid:** Not yet built (Agent 4)
+- **Duplicate detection:** Active — PlaidTxnID checked against AllTransactions_Input col B before import
+
+---
+
+## Weekend Bookkeeping Workflow
+1. Close Excel workbook
+2. `cd "C:\Users\stone\OneDrive\Desktop\Stuff\open-brain\Plaid\Sandbox"`
+3. `python plaid_to_import.py --days 90`
+4. If "Writing to Excel: 0" → nothing new, done
+5. If new rows → open Excel, review CSV_Import tab (red = needs review)
+6. Copy cols A–L → paste values only → AllTransactions_Input (skip col M AcctMask)
+7. Property tabs auto-update
 
 ---
 
 ## File Locations
 - **Excel workbook:** `C:\Users\stone\OneDrive\Desktop\Stuff\Backup\Finances\00-Bookkeeping\Bookkeeping-2026-claude.xlsx`
-- **Python scripts (bookkeeping):** same folder as workbook
+- **Bookkeeping scripts:** same folder as workbook (`wf_import.py`, `wf_importer_app.py`, `WF_Importer.bat`)
 - **Plaid scripts:** `C:\Users\stone\OneDrive\Desktop\Stuff\open-brain\Plaid\Sandbox\`
-- **Plaid credentials:** `sandboxSecret.env` (Sandbox), `productionSecret.env` (Production)
-- **Plaid tokens:** `tokens.json` (in Sandbox folder — contains live Production access tokens, never commit to GitHub)
+- **Plaid files:** `sandboxSecret.env`, `productionSecret.env`, `tokens.json` (NEVER commit to GitHub)
 
 ---
 
 ## Excel Workbook Architecture
 
-### Named Ranges (Name Manager)
-- `rngLedger` → `=AllTransactions_Input!$A:$K` ← CRITICAL: must point here, not to old Ledger sheet
+### Named Ranges (Name Manager — Ctrl+F3)
+- `rngLedger` → `=AllTransactions_Input!$A:$K` ← CRITICAL: must point here
 - `tblInput` → `=AllTransactions_Input!$C$2:$KS...`
 - `EntityList` → `=Setup!$A$2:$A$9`
-
-### Sheet List
-| Sheet | Purpose |
-|-------|---------|
-| `AllTransactions_Input` | Master ledger — single source of truth |
-| `CSV_Import` | Staging tab — review before pasting to AllTransactions_Input |
-| `121SantaFe` | Property view — LET formula filter |
-| `8178Humboldt` | Property view |
-| `8173Humboldt` | Property view |
-| `7587Fremont` | Property view |
-| `492SanAngelo` | Property view |
-| `330Leslie` | Property view |
-| `JointRental` | Property view |
-| `Personal` | Personal finances view |
-| `RentTracker` | Dashboard — monthly cash flow |
-| `Schedule_E` | Tax export |
-| `Categories` | Category taxonomy |
-| `Setup` | EntityList and config |
-| `BalanceSheet` | Balance sheet |
 
 ### AllTransactions_Input Column Schema (A through K)
 | Col | Field | Notes |
 |-----|-------|-------|
 | A | Source | WF_CSV, PLAID, MANUAL |
-| B | PlaidTxnID | Blank for CSV imports; populated by Plaid — enables duplicate detection |
-| C | Date | m/d/yyyy — apply consistent format via Ctrl+1 → Number → Date |
+| B | PlaidTxnID | Blank for CSV; populated by Plaid — enables duplicate detection |
+| C | Date | m/d/yyyy — format all dates consistently via Ctrl+1 |
 | D | BaseEntity | Property name or Personal |
 | E | Type | Income or Expense |
 | F | Category | From Categories sheet taxonomy |
@@ -89,177 +84,159 @@ Replace `[PROPERTY]` with exact property name in two places:
 ```
 Property names: `121 Santa Fe`, `8178 Humboldt`, `8173 Humboldt`, `7587 Fremont`, `492 San Angelo`, `330 Leslie`, `Joint Rental`, `Personal`
 
-**Troubleshooting property tabs not updating:**
-1. Check Name Manager (Ctrl+F3) — rngLedger must point to `=AllTransactions_Input!$A:$K`
-2. Check formula column indices — Date=col 3, BaseEntity=col 4, Type=col 5, Category=col 6, Description=col 7, Amount=col 8, Method=col 9
-3. Check AllTransactions_Input is a single unified table (not two separate tables) — if two tables exist, Table Design → Convert to Range on each, then delete blank rows between them
+### Troubleshooting Property Tabs Not Updating
+1. Check Name Manager (Ctrl+F3) — rngLedger must = `=AllTransactions_Input!$A:$K`
+2. Check formula column indices — Date=3, BaseEntity=4, Type=5, Category=6, Description=7, Amount=8, Method=9
+3. Check AllTransactions_Input is ONE unified table (not two) — Table Design → Convert to Range on each, delete blank rows between them, re-add filter with Ctrl+Shift+L
 
 ---
 
 ## Python Scripts
 
 ### wf_import.py — CSV Import Engine
-**Purpose:** Reads WF CSV exports, auto-categorizes, writes CSV_Import staging sheet to Excel.
-**Run:** `python wf_import.py YourExport.csv` or via WF_Importer.bat (drag-and-drop GUI)
 **Location:** Same folder as Excel workbook
+**Run:** `python wf_import.py YourExport.csv` or via WF_Importer.bat
 
-**CSV Format Detection:**
-- Both checking and CC CSVs use same WF header: `DATE, DESCRIPTION, AMOUNT, CHECK #, STATUS`
-- Credit card detected by filename containing "credit", "visa", or "creditcard"
-- Amounts kept as original sign — no flipping needed
+**CSV format:** Both checking and CC use same WF header (DATE, DESCRIPTION, AMOUNT, CHECK #, STATUS). CC detected by filename containing "credit"/"visa"/"creditcard".
 
-**SKIP rules (silently dropped):**
-- `ONLINE PAYMENT THANK YOU` — CC payments already in checking
-- `ONLINE TRANSFER TO CURTNER` — internal WF account transfers
+**SKIP rules:** ONLINE PAYMENT THANK YOU, ONLINE TRANSFER TO CURTNER
 
-**RULES change log:**
+**RULES changelog:**
 - 2026-04-20: Initial rules
-- 2026-05-03: CC/checking format auto-detect; Source/PlaidTxnID columns; SKIP rules; 15+ new merchants; fixed categorize() missing return bug; tightened double-space patterns
-- 2026-05-22: Added Plaid clean-name variants (Best Buy, Lowe's Home Improvement, CVS, Google One, Shake Shack, Philz Coffee, Ulta); JPMORGAN CHASE CHASE ACH (mortgage); DEPOSIT MADE IN A BRANCH (Jerry Downer rent); Singer Lewak (accounting); Information System Audit (ISACA); The Melt, Lunardi's (dining); Republic Trash (121 Santa Fe utilities); Comcast alternate format
+- 2026-05-03: CC/checking auto-detect; Source/PlaidTxnID; SKIP rules; 15+ new merchants; fixed categorize() return bug; double-space patterns
+- 2026-05-22: Plaid clean-name variants (Best Buy, Lowe's, CVS, Google One, Shake Shack, Philz, Ulta); JPMORGAN CHASE ACH; DEPOSIT MADE IN A BRANCH; Singer Lewak; ISACA; The Melt; Lunardi's; Republic Trash; Comcast alternate format
 
-**Workflow:**
-1. Export CSV from Wells Fargo online banking
-2. Drag onto WF_Importer app or run via command line
-3. Review CSV_Import tab (red = needs review, orange = duplicate)
-4. Copy columns A–L → paste values only → AllTransactions_Input
-5. Property tabs auto-update
-
-### wf_importer_app.py — GUI Wrapper
-Tkinter drag-and-drop GUI. Double-click WF_Importer.bat to launch.
+**Workflow:** Export CSV → drag to WF_Importer app → review CSV_Import (red=review, orange=dupe) → copy cols A–L → paste values only → AllTransactions_Input
 
 ### plaid_link_server.py — Plaid OAuth Connector
-**Purpose:** One-time authentication per bank institution. Launches local Flask web server at http://localhost:5000
-**Run:** `python plaid_link_server.py` from Sandbox folder
-**Saves to:** `tokens.json` — one entry per institution, covers all accounts at that institution
+**Location:** Plaid Sandbox folder
+**Run:** `python plaid_link_server.py` → open http://localhost:5000
+**Purpose:** One-time authentication per bank institution. Saves access tokens to tokens.json.
 
-**WF connection status:**
-- Nickname: `WellsFargo_All`
-- Institution: Wells Fargo
-- Accounts: 17 (all WF accounts)
-- Connected: May 22, 2026
-
-**WF Account Map (mask → BaseEntity):**
-| Mask | Entity | Notes |
-|------|--------|-------|
-| 1283 | 8178 Humboldt | |
-| 1424 | 8173 Humboldt | Jerry Downer deposits direct |
-| 1432 | 7587 Fremont | |
-| 1658 | SKIP | Old SBEF account — not Scott's |
-| 3669 | 121 Santa Fe | Maricella moving out May 2026 |
-| 3775 | Personal | Scott Only |
-| 3817 | Personal | Jill and Scott (Premier Checking) |
-| 7451 | Personal | Visa Signature credit card |
-| 6346,9471,2091,6726,6875,7217,7658,7834,8223 | SKIP | Savings/investment/brokerage |
-
-**Important WF note:** Account 1658 is an old SBEF (San Bruno Education Foundation) account Scott previously had access to. All transactions must be skipped — not personal bookkeeping.
+**OAuth notes:**
+- Redirect URI registered: `http://localhost:5000/oauth-callback`
+- Data Transparency use cases published: "Track and manage your finances", "Prepare your taxes", "Do business accounting and tax preparation"
+- Chase requires OAuth registration (submitted May 23, est. 24hr review)
+- BofA and WF connect without extra steps
 
 ### plaid_to_import.py — Plaid Transaction Importer
-**Purpose:** Pulls real transactions from Plaid Production, categorizes, writes CSV_Import staging sheet.
-**Run:** `python plaid_to_import.py --days 90` (Plaid default limit is 90 days)
-**Location:** Sandbox folder (alongside tokens.json)
+**Location:** Plaid Sandbox folder
+**Run:** `python plaid_to_import.py --days 90` (Plaid limit = 90 days)
 
 **Key behaviors:**
-- Reads WellsFargo_All access token from tokens.json
-- Plaid sign convention: positive = debit (expense), negative = credit (income) — opposite of WF CSV
-- Uses same categorize() engine as wf_import.py
-- Populates PlaidTxnID column B for future duplicate detection
-- Adds AcctMask column (col M) for debugging — exclude when pasting to AllTransactions_Input (copy cols A–L only)
-- Source field = "PLAID"
+- Reads all tokens from tokens.json
+- Checks PlaidTxnID against AllTransactions_Input col B — skips dupes
+- Plaid sign convention: positive=debit(expense), negative=credit(income) — opposite of WF CSV
+- AcctMask col M is debug only — exclude when pasting to AllTransactions_Input (copy A–L only)
+- Source = "PLAID"
 
-**Achieved:** 299/299 = 100% auto-categorization (May 22, 2026)
-
-**Workflow:**
-1. Run script (Excel must be closed)
-2. Review CSV_Import tab
-3. Copy columns A–L → paste values only → AllTransactions_Input (skip col M AcctMask)
-4. Property tabs auto-update
+**Output counters:**
+- Skipped (invest): brokerage/IRA/savings accounts
+- Skipped (dupes): already in AllTransactions_Input ← key metric
+- Skipped (rules): SKIP rules (CC payments, internal transfers)
+- Writing to Excel: new transactions to review
 
 ---
 
 ## Plaid Integration
 
-### Account Status
-- **Team:** StoneMonk
-- **Client ID:** 69de90dffe8792000e47340b
-- **Status:** Production approved
-- **Trial plan:** Up to 10 Items free (post April 15, 2026)
-- **Pricing:** Subscription per Item (not per API call) — pull frequency doesn't affect cost
-- **90-day limit:** Plaid default transaction history = 90 days. Historical Update access needed for further back.
-
-### Connections
+### Connected Tokens (tokens.json)
 | Nickname | Institution | Accounts | Status |
 |----------|------------|----------|--------|
 | WellsFargo_All | Wells Fargo | 17 | ✅ Live |
-| Chase_All | Chase | TBD | ⏳ Pending |
-| BofA_All | Bank of America | TBD | ⏳ Pending |
+| BofA_All | Bank of America | 2 | ✅ Connected (both SKIP) |
+| Chase_All | Chase | ~3 | ⏳ OAuth in review (submitted May 23) |
 
-### Plaid → AllTransactions_Input Field Mapping
-| Plaid field | Column | Notes |
-|-------------|--------|-------|
-| `PLAID` literal | A: Source | |
-| `transaction_id` | B: PlaidTxnID | |
-| `date` | C: Date | |
-| ACCOUNT_MAP lookup | D: BaseEntity | by account mask |
-| sign of amount | E: Type | |
-| categorize() engine | F: Category | |
-| `name` | G: Description | Plaid returns clean merchant names |
-| `abs(amount)` | H: Amount | |
-| categorize() engine | I: Method | |
-| categorize() engine | J: SplitRule | |
-| blank | K: Notes | |
+### WF Account Map (mask → BaseEntity)
+| Mask | Entity | Notes |
+|------|--------|-------|
+| 1283 | 8178 Humboldt | |
+| 1424 | 8173 Humboldt | Jerry Downer deposits direct at branch |
+| 1432 | 7587 Fremont | |
+| 1658 | SKIP | Old SBEF account |
+| 3669 | 121 Santa Fe | Maricella moved out May 2026 |
+| 3775 | Personal | Scott Only checking |
+| 3817 | Personal | Jill and Scott Premier Checking |
+| 7451 | Personal | Visa Signature CC |
+| 6346,9471,2091,6726,6875,7217,7658,7834,8223 | SKIP | Savings/investment/brokerage |
 
-**Critical note — Plaid vs WF CSV merchant names:**
-Plaid returns clean merchant names (`Best Buy`, `Lowe's Home Improvement`, `CVS`) while WF CSV returns raw bank strings (`BESTBUY`, `LOWES SAN BRUNO`, `CVS/PHARMACY`). Both scripts have parallel rules for both formats.
+### BofA Account Map
+| Mask | Entity | Notes |
+|------|--------|-------|
+| 3153 | SKIP | Adv Tiered Interest Chkg — personal, minimal activity |
+| 4123 | SKIP | Advantage Savings — personal, minimal activity |
+
+### Chase Account Map (add after OAuth approved)
+| Mask | Entity | Notes |
+|------|--------|-------|
+| 3979 | 492 San Angelo | Total Checking — operating account |
+| 5022 | SKIP | Mortgage Loan — 7587 Fremont ($122k, $1,659/mo) |
+| 2020 | SKIP | Mortgage Loan — 8173 Humboldt ($135k, $1,810/mo) |
+
+**To activate Chase after OAuth approved:**
+1. Run plaid_link_server.py → connect Chase → nickname Chase_All
+2. Verify masks in tokens.json
+3. Uncomment Chase entries in ACCOUNT_MAP in plaid_to_import.py
+4. Run `python plaid_to_import.py --days 90` — 492 San Angelo transactions will appear
+
+### Plaid Dashboard Settings
+- **Redirect URI:** http://localhost:5000/oauth-callback (saved)
+- **Data Transparency:** Published with 3 use cases
+- **Client ID:** 69de90dffe8792000e47340b
+- **Pricing:** Subscription per Item — pull frequency doesn't affect cost
+- **Trial plan:** Up to 10 Items free
 
 ---
 
-## Properties Reference
-| Property | Entity Name | Notes |
-|----------|-------------|-------|
-| 2260 Charleston Ave, San Bruno CA | Joint Rental | 6-unit, shared utility splits (2260/6) |
-| 330 Leslie St | 330 Leslie | |
-| 492 San Angelo Ave | 492 San Angelo | HOA property — account at Chase or BofA |
-| 121 Santa Fe Ave | 121 Santa Fe | Richmond CA — rent control applies |
-| 7587 Fremont Blvd | 7587 Fremont | Chase mortgage |
-| 8178 Humboldt Ave | 8178 Humboldt | |
-| 8173 Humboldt Ave | 8173 Humboldt | Jerry Downer — deposits direct to WF ...1424 |
+## Properties & Mortgages Reference
+| Property | Entity | Bank | Notes |
+|----------|--------|------|-------|
+| 2260 Charleston Ave, San Bruno CA | Joint Rental | WF | 6-unit, splits 2260/6 |
+| 330 Leslie St | 330 Leslie | WF | |
+| 492 San Angelo Ave | 492 San Angelo | Chase (...3979) | HOA property |
+| 121 Santa Fe Ave | 121 Santa Fe | WF (...3669) | Richmond CA rent control |
+| 7587 Fremont Blvd | 7587 Fremont | WF (...1432) | Chase mortgage ...5022 |
+| 8178 Humboldt Ave | 8178 Humboldt | WF (...1283) | |
+| 8173 Humboldt Ave | 8173 Humboldt | WF (...1424) | Chase mortgage ...2020; Jerry Downer deposits direct |
 
 **Tenant notes:**
-- Jerry Downer (8173 Humboldt): 3% annual rent increase. Deposits cash/check directly at WF branch — shows as "DEPOSIT MADE IN A BRANCH/STORE"
+- Jerry Downer (8173 Humboldt): 3% annual increase. Deposits at WF branch → "DEPOSIT MADE IN A BRANCH/STORE"
 - Maricella (121 Santa Fe): Moved out end of May 2026
-- 121 Santa Fe: Richmond CA rent control — check allowable increase each year before raising rent
-- All leases have automatic annual increases (3–5%) except 121 Santa Fe
-
-**WF follow-up:** Call Wells Fargo about BUSINESS CHECKING ...1658 — may be a closed account, currently SKIPped in Plaid import
-
----
-
-## Roadmap
-
-### Phase 1 — Complete Agents (current)
-- [ ] Agent 3: Scheduler — automate Plaid pulls 2x/week (GitHub Actions or Windows Task Scheduler)
-- [ ] Agent 4: Duplicate detection in plaid_to_import.py — check PlaidTxnID against AllTransactions_Input before writing
-- [ ] Connect Chase + BofA via plaid_link_server.py
-- [ ] Confirm 492 San Angelo appears in Chase or BofA
-
-### Phase 2 — Blog Post + LinkedIn
-- [ ] HTML article on scottcurtner.com: story arc + architecture overview, audit lens, cost comparison vs Quicken
-- [ ] LinkedIn article teaser + supporting post
-- [ ] Auditability section required per content pipeline protocol
-- [ ] Tipping point trigger for Phase 3: TBD (define what "significant interest" looks like)
-
-### Phase 3 — Only if demand warrants
-- [ ] Config-driven refactor: personal data → config.json (gitignored) + config.template.json (public)
-- [ ] Create public repo: stonemonk2/plaid-excel-bookkeeping (sanitized template, no personal data)
-- [ ] README.md install guide with screenshots (in public repo)
-- [ ] Private live system stays in stonemonk2/scottcurtner under /bookkeeping subfolder
+- 121 Santa Fe: Richmond CA rent control — check allowable % before raising rent
+- All leases: 3–5% automatic annual increases except 121 Santa Fe
+- WF follow-up: Call about BUSINESS CHECKING ...1658 — may be closed account
 
 ---
 
-## Blog Post Plan
+## Future Tasks
+- [ ] Connect Chase_All after OAuth approved (est. May 24) — activate 492 San Angelo
+- [ ] Consider closing BofA accounts (minimal activity, separate from main WF relationship)
+- [ ] Bank Account Dashboard — all accounts with balances + transaction subview (discuss architecture)
+- [ ] Windows Desktop App — one-click bookkeeping session launcher with guided checklist post-sync
+- [ ] Call WF about BUSINESS CHECKING ...1658
+
+## Roadmap Phases
+**Phase 1 — Complete (May 23, 2026)** ✅
+- wf_import.py at 100% categorization
+- Plaid production live (WF, BofA connected; Chase pending)
+- All 4 agents complete (connector, normalizer, scheduler cancelled, duplicate detection)
+
+**Phase 2 — Blog Post + LinkedIn**
+- HTML article on scottcurtner.com after Chase connected
+- Story arc: tech auditor builds Quicken replacement with Claude + Plaid
+- Audit lens + architecture overview + cost comparison vs Quicken ~$12/month
+- LinkedIn article teaser + supporting post
+- Tipping point for Phase 3: someone reaches out wanting to build it
+
+**Phase 3 — Only if demand warrants**
+- Config-driven refactor (personal data → config.json, gitignored)
+- Public repo: stonemonk2/plaid-excel-bookkeeping (sanitized template)
+- README install guide in public repo
+
+---
+
+## Blog Post Notes
 **Title:** "Building a Quicken Replacement with Python, Excel, and Plaid"
-**Status:** Draft — publish after Phase 1 complete
-**Format:** HTML article on scottcurtner.com (not Google Docs)
-**Story arc:** Technology auditor builds Quicken replacement for 17-20 account real estate portfolio using Python, Excel, and Plaid. Architecture overview just detailed enough for technical reader to pursue with their own AI. Cost comparison vs Quicken ~$12/month.
-**Auditability section:** Required
-**LinkedIn:** Article teaser + supporting post after publish
+**Format:** HTML on scottcurtner.com (not Google Docs)
+**Publish trigger:** After Chase connected and first 492 San Angelo transactions imported
+**Must include:** Auditability section per content pipeline protocol

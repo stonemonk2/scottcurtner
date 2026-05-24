@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From My Grandfather's Ledger to the Plaid API | Scott Curtner</title>
+  <meta name="description" content="In memory of Dr. Raymond M. Curtner, Army Captain, WWII. For nearly 30 years I kept my real estate books the way he taught me — pen, paper, and a ledger. This Memorial Day, I am finally letting go.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Memorial banner ─────────────────────────────────────────────────────── */
+    .memorial-banner {
+      background: var(--ink);
+      color: #c8b99a;
+      text-align: center;
+      padding: 10px 40px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    /* ── Opening photo ───────────────────────────────────────────────────────── */
+    .opening-photo {
+      max-width: 480px;
+      margin: 56px auto 0;
+      padding: 0 40px;
+      text-align: center;
+    }
+    .opening-photo img {
+      width: 100%;
+      max-width: 320px;
+      filter: grayscale(20%) sepia(10%);
+      display: block;
+      margin: 0 auto;
+    }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.05em;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 48px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .deck {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: var(--ink-light);
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 2.2em 0 0.6em;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+
+    /* ── Inline photo ────────────────────────────────────────────────────────── */
+    .inline-photo {
+      margin: 2.5em 0;
+    }
+    .inline-photo img {
+      width: 100%;
+      display: block;
+      filter: grayscale(15%) sepia(8%);
+    }
+    .inline-photo.portrait img {
+      max-width: 280px;
+      margin: 0 auto;
+    }
+    .inline-photo.color img {
+      filter: none;
+    }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote ──────────────────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Ledger-style note ───────────────────────────────────────────────────── */
+    .ledger-note {
+      background: var(--paper-aged);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--gold);
+      padding: 22px 28px;
+      margin: 2.2em 0;
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.65;
+    }
+
+    /* ── Standard callout ────────────────────────────────────────────────────── */
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-size: 0.95rem;
+      color: var(--ink-light);
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── Architecture block ──────────────────────────────────────────────────── */
+    .arch {
+      background: #1c1917;
+      border-radius: 4px;
+      padding: 28px 32px;
+      margin: 2em 0;
+      overflow-x: auto;
+    }
+    .arch pre {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #d6cfc4;
+      white-space: pre;
+    }
+    .arch .dim { color: #57534e; }
+    .arch .grn { color: #6ee7b7; }
+    .arch .yel { color: #fcd34d; }
+    .arch .blu { color: #93c5fd; }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Time comparison ─────────────────────────────────────────────────────── */
+    .time-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 2em 0;
+    }
+    .time-card {
+      padding: 20px 24px;
+      border: 1px solid var(--rule);
+    }
+    .time-card.before { background: var(--paper-aged); }
+    .time-card.after  { background: var(--paper-warm); border-color: var(--accent); }
+    .time-label {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .time-number {
+      font-family: 'Lora', serif;
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--ink);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .time-card.after .time-number { color: var(--accent); }
+    .time-desc { font-size: 0.85rem; color: var(--ink-light); }
+
+    /* ── Auditability section ────────────────────────────────────────────────── */
+    .audit-section {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 28px 32px;
+      margin: 3em 0;
+    }
+    .audit-section h3 { color: var(--accent-warm); margin-top: 0; }
+    .audit-section ul { padding-left: 1.2em; margin-top: 0.5em; }
+    .audit-section li { margin-bottom: 0.6em; font-size: 0.95rem; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+      .time-compare { grid-template-columns: 1fr; }
+      .opening-photo { padding: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+
+<div class="memorial-banner">
+  In memory of Dr. Raymond M. Curtner &mdash; Army Captain, WWII &mdash; August 6, 1909 &ndash; January 7, 2004
+</div>
+
+<div class="opening-photo">
+  <img src="images/raymond-curtner-portrait.jpg" alt="Dr. Raymond M. Curtner">
+  <p class="photo-caption">Dr. Raymond M. Curtner &mdash; San Francisco, CA</p>
+</div>
+
+<article>
+  <div class="hero">
+    <span class="eyebrow">Memorial Day 2026 &middot; Technology &middot; Real Estate &middot; Personal Story</span>
+    <h1>From My Grandfather&rsquo;s Ledger to the Plaid API</h1>
+    <p class="deck">For nearly 30 years, I kept my real estate books the way my grandfather taught me &mdash; pen, paper, and a ledger. This Memorial Day, I am finally letting go. Here is the story of what I built instead.</p>
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>May 26, 2026</span>
+      <span>12 min read</span>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <p>My grandfather, Dr. Raymond M. Curtner, was born in Pittsburgh in 1909 and died in San Francisco in 2004 at the age of 94. In between those two dates, he served as an Army Captain in World War II &mdash; leading teams that set up medical facilities in the Pacific theater &mdash; earned his dental degree from UC San Francisco, practiced orthodontics for 30 years, was elected a Fellow of the American College of Dentists for his advocacy of water fluoridation, served as president of the UC Alumni Association, chaired the Council on Dental Health for the California Dental Association, sailed out of the St. Francis Yacht Club, skied into his old age, and somewhere in the middle of all of that, taught his grandson how to keep a ledger.</p>
+
+    <div class="inline-photo portrait">
+      <img src="images/raymond-curtner-jeep.jpg" alt="Captain Raymond Curtner, WWII">
+      <p class="photo-caption">Captain Raymond Curtner, WWII &mdash; the man who taught me discipline has a form.</p>
+    </div>
+
+    <p>He kept his books by hand. Neat columns, careful ink, a running balance updated with the kind of deliberate attention that made you feel the numbers actually mattered. When I became a real estate investor in 1999, I kept my books the same way. It felt right. It felt like something he taught me &mdash; that doing a thing carefully, consistently, by hand, was a form of respect for the thing itself.</p>
+
+    <p>I have been doing it that way for nearly 30 years.</p>
+
+    <p>I should probably mention that for all of those same 30 years, I have also been working in technology. First at Bank of America, then at Wells Fargo, where I have spent decades as a technology auditor examining some of the most complex financial systems in the world. I know what good technology looks like. I have audited it. I have helped build frameworks to evaluate it.</p>
+
+    <p>And yet, every weekend, I would sit down with my paper ledger.</p>
+
+    <div class="ledger-note">
+      There is something I still love about those old annual ledgers. Flipping back through them now, I can see not just the numbers but the notes I wrote to myself &mdash; a circled entry with a question mark, a small exclamation point next to a good month, a tenant&rsquo;s name written in a slightly different hand because I was writing fast, excited, nervous. The paper remembers more than the numbers. Ray would have understood that.
+    </div>
+
+    <div class="inline-photo">
+      <img src="images/curtner-men-napili-1995.jpg" alt="The Curtner men, Napili Kai, Maui, 1995" class="color">
+      <p class="photo-caption">Napili Kai, Maui, 1995. Left to right: Ray Curtner (85), Mat Curtner, baby Jake Curtner, Scott Curtner, Walt Curtner. Four generations &mdash; the family has grown considerably since.</p>
+    </div>
+
+    <p>That photograph was taken in 1995. Ray was 85 years old, still standing tall, still with that posture of someone completely at ease with himself. I am in the tie. That is my dad Walt on the right, Ray&rsquo;s son. Mat is holding his baby Jake &mdash; Ray&rsquo;s great-grandchild. Four generations of Curtner men in Maui, and the oldest one was probably the steadiest one in the frame.</p>
+
+    <p>He lived nine more years after that photo was taken. I am glad we had them.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>The habit I could not break</h2>
+
+    <p>I tried digital bookkeeping twice in my twenties. It never stuck. Life happened &mdash; a move, a marriage, new properties &mdash; and I always came back to the ledger. The habit was comfortable. The excuses were easy. &ldquo;The subscription apps charge too much.&rdquo; &ldquo;None of them work exactly the way I want.&rdquo; &ldquo;My system is fine.&rdquo;</p>
+
+    <p>My system was not fine. My system was costing me dozens of hours every year that I will never get back.</p>
+
+    <p>Near the end of 2025, my annual dread arrived on schedule: April tax season. Twelve-ish hours of pulling together paper records, manila folders, handwritten summaries, and trying to reconstruct a year&rsquo;s worth of property income and expenses into something my accountant could actually use. I have done this so many times that I have a system for my system &mdash; a specific order, specific folders, a specific sequence of banks to call. It works. It is also exhausting and increasingly absurd for someone who spends his professional life evaluating financial technology controls.</p>
+
+    <p>While putting together my 2025 taxes, I started a spreadsheet. Just to see. &ldquo;Maybe I&rsquo;ll actually use this in 2026,&rdquo; I told myself &mdash; the same thing I had told myself roughly six times before.</p>
+
+    <p>This time, something was different. Around the same time, I started using Claude.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>The conversation that changed everything</h2>
+
+    <p>It started with small questions. &ldquo;What&rsquo;s the best Excel formula for a running balance?&rdquo; &ldquo;How should I structure tabs for multiple properties?&rdquo; &ldquo;Knowing what you now know about how my rental income, investment accounts, and W-2 income look &mdash; should I stay in Excel or move to Google Sheets?&rdquo;</p>
+
+    <p>Claude answered everything. Patiently. Immediately. Without judgment about the fact that I was a technology auditor who had been keeping books by hand for three decades.</p>
+
+    <p>The spreadsheet evolved. Manual entries became a single transaction log. The log grew into per-property views driven by Excel&rsquo;s modern formula engine. Then I learned I could download CSV exports from Wells Fargo and import them automatically. Then I learned about the Plaid API &mdash; a way to connect to my banks programmatically and pull transaction data without ever logging into a portal or clicking a download button.</p>
+
+    <div class="pull">
+      <p>Each new capability landed like a small revelation. In 2025, I would have expected to pay thousands of dollars for the design and development work I was now doing myself, with Claude, for $20 a month.</p>
+    </div>
+
+    <p>I have been excited about technology for my entire career. But the way AI is teaching me to build things &mdash; patiently, always available, meeting me exactly where I am &mdash; I felt more energized about learning and creating than I ever had. I was burning through my usage limits every weekend and counting the days until I could get back to the project. My AI collaborators &mdash; Claude, Gemini, Copilot, and others &mdash; were teaching me at a pace no classroom or colleague ever matched.</p>
+
+    <p>This was decades of deferred intention accelerating into reality, all at once, in 2026.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>What I built</h2>
+
+    <p>I want to be honest about my situation before describing the system: I manage seven rental properties, 17 Wells Fargo accounts, Chase and Bank of America accounts, and one Visa Signature card. Roughly 400&ndash;500 transactions per quarter that need to be categorized, assigned to the right property, and eventually reconciled against a Schedule E. This is not a simple personal finance problem. It is a small business bookkeeping problem, and the system I built reflects that.</p>
+
+    <div class="arch">
+      <pre><span class="dim">  DATA SOURCES               ENGINE                  EXCEL OUTPUT</span>
+
+<span class="grn">  Wells Fargo CSV</span>  ------>  <span class="yel">wf_import.py</span>
+<span class="grn">  Credit Card CSV</span>  ------>  <span class="dim">(GUI + drag-drop)</span>  ----->  <span class="grn">CSV_Import</span> (staging)
+                                                             |
+<span class="grn">  Plaid API</span>        ------>  <span class="yel">plaid_to_import.py</span> ----->  <span class="dim">review + paste</span>
+<span class="dim">  17 WF accounts</span>                                           |
+<span class="dim">  Chase, BofA</span>                                              v
+                                                   <span class="grn">AllTransactions_Input</span>
+                                                             |
+                                        <span class="dim">automatic formula cascade</span>
+                                                             |
+                   <span class="blu">492SanAngelo  121SantaFe  7587Fremont  Personal  JointRental</span>
+                              |
+                   <span class="blu">RentTracker  Schedule_E  BalanceSheet</span></pre>
+    </div>
+
+    <h3>The categorization engine</h3>
+
+    <p>At the center is a Python script that auto-categorizes every transaction using a rules engine I wrote myself. A regex pattern, a transaction type, a property assignment, a payment method, and sometimes a split rule for shared expenses. After tuning the rules across several sessions with Claude, the engine now hits 100% auto-categorization on both checking account imports and credit card imports. Zero manual review on recurring transactions.</p>
+
+    <h3>The Plaid integration</h3>
+
+    <p>Plaid is the fintech infrastructure layer that connects to banks on your behalf. You authenticate once per institution through a standard browser login, and from that point forward you can pull transaction data programmatically. My entire Wells Fargo relationship &mdash; all 17 accounts &mdash; connects through a single Plaid token. One authentication, one access token, one connection that persists indefinitely.</p>
+
+    <div class="callout">
+      <strong>On security, because it matters:</strong> Plaid connections are read-only &mdash; they can see transaction data but cannot move money. Access tokens live in a local encrypted file, never in source control or any cloud service. The system has no web-facing components. As a technology auditor who has spent decades evaluating financial system controls, I would not have built this any other way.
+    </div>
+
+    <h3>The desktop launcher</h3>
+
+    <p>A small Python desktop application lives as a shortcut on my desktop. One click launches my bookkeeping session: it runs the Plaid sync in the background, shows colorized output, opens Excel automatically when there are new transactions to review, and walks me through a seven-item post-sync checklist. The whole session takes 5&ndash;10 minutes. Sometimes less.</p>
+
+    <div class="time-compare">
+      <div class="time-card before">
+        <span class="time-label">Before &mdash; biweekly session</span>
+        <span class="time-number">1&ndash;2 hrs</span>
+        <span class="time-desc">Paper ledger, bank portal logins, manual category tracking, running totals by hand</span>
+      </div>
+      <div class="time-card after">
+        <span class="time-label">Now &mdash; biweekly session</span>
+        <span class="time-number">5&ndash;10 min</span>
+        <span class="time-desc">One click, Plaid sync, review, done</span>
+      </div>
+      <div class="time-card before">
+        <span class="time-label">Before &mdash; April tax prep</span>
+        <span class="time-number">~12 hrs</span>
+        <span class="time-desc">Paper records, manila folders, manual reconciliation, reconstructing a year</span>
+      </div>
+      <div class="time-card after">
+        <span class="time-label">2027 April tax prep (projected)</span>
+        <span class="time-number">~1 hr</span>
+        <span class="time-desc">Schedule E already populated, data clean, accountant-ready from day one</span>
+      </div>
+    </div>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>What surprised me most</h2>
+
+    <p>I have spent 25 years inside large financial institutions evaluating technology systems, auditing controls, helping organizations understand what good looks like. I thought I understood what was possible with modern tools.</p>
+
+    <p>I did not understand this.</p>
+
+    <p>The ability to sit down with an AI, explain a problem in plain language, and have it help me build real working software &mdash; Python scripts, a GUI desktop application, banking API integrations, Excel formula architectures &mdash; without a development team, without a project budget, without months of planning... this is a genuinely new thing in the world. I am a technology auditor who now considers himself a fintech developer. I built Windows desktop software. I integrated with banking APIs. I did it in weekends, for $20 a month, because I was curious and finally, after years of excuses, done waiting.</p>
+
+    <p>The AI tools available today are not just automation. They are <em>amplification</em>. They take whatever you already know and know how to do, and multiply it. For someone who has spent a career learning how complex systems work, that amplification is extraordinary.</p>
+
+    <div class="pull">
+      <p>I still have much to learn. That is the other thing that surprised me &mdash; how much I <em>want</em> to keep learning. Each new capability I discover makes me more excited about the next one.</p>
+    </div>
+
+    <div class="audit-section">
+      <h3>An auditor&rsquo;s lens</h3>
+      <p>Any time I build a system that touches financial data, I think about controls. Here is an honest assessment:</p>
+      <ul>
+        <li><strong>Read-only access:</strong> Plaid connections cannot initiate transactions. The system can see your data; it cannot touch your money.</li>
+        <li><strong>Secrets management:</strong> Access tokens and API keys live in local <code>.env</code> files, gitignored, never in source control or cloud storage.</li>
+        <li><strong>Traceability:</strong> Every transaction carries a Source field (WF_CSV, PLAID, or MANUAL) and a unique Plaid transaction ID where applicable. Every row is traceable.</li>
+        <li><strong>Duplicate prevention:</strong> The Plaid importer checks every incoming transaction ID against existing records before writing. Re-running the sync never creates duplicate rows.</li>
+        <li><strong>Categorization transparency:</strong> All rules are explicit, version-logged with dates. No black-box ML &mdash; every categorization decision traces to a specific rule I wrote.</li>
+        <li><strong>Staging before commit:</strong> Transactions pass through a review tab before being promoted to the master ledger. I see them before they count.</li>
+        <li><strong>Known limitations:</strong> No automated reconciliation against bank statements. Manual entries require discipline. Plaid&rsquo;s default history window is 90 days.</li>
+      </ul>
+    </div>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>For Ray, on Memorial Day</h2>
+
+    <p>Ray Curtner served his country, came home, built a career, raised a family, and along the way taught his grandson that keeping careful records was a form of respect &mdash; for the work, for the numbers, for the life you were building.</p>
+
+    <p>He also spent his professional life arguing that dentistry should work to make itself unnecessary. He advocated for water fluoridation because he believed in prevention over intervention. He wanted people to need him less, not more. There is a certain kind of integrity in that &mdash; using your expertise to make the problem smaller, not to make yourself indispensable.</p>
+
+    <p>I think about that when I think about this bookkeeping system. The paper ledger was not the point. The discipline was the point. The attention was the point. The running balance that told you exactly where you stood &mdash; that was the point. The paper was just the medium we had.</p>
+
+    <p>Ray would have found a way to use the tools available to him now. He was someone who learned and adapted his whole life &mdash; from Army field medicine to peacetime orthodontics, from analog practice management to whatever came next. I think he would have been genuinely delighted by what AI can do today. Not because it is impressive technology, but because it helps people do their work better and with more time left over for the things that matter.</p>
+
+    <div class="inline-photo">
+      <img src="images/ray-jean-carmel-1942.jpg" alt="Ray and Jean Curtner, Carmel, 1942">
+      <p class="photo-caption">Ray and Jean Curtner, Carmel / Fort Ord, 1942. Before the Pacific. Before everything.</p>
+    </div>
+
+    <p>The ledger was never about the paper. It was about knowing where you stand.</p>
+
+    <p>I know where I stand, Grandpa. Thank you for teaching me to keep track.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>If you want to build something similar</h2>
+
+    <p>You do not need to be a software engineer. I am not one. What you need is a clear sense of what you want to track, patience for a learning curve that is genuinely shorter than it has ever been, and a good AI collaborator who will meet you where you are.</p>
+
+    <p>Start with the data model. Before you write a single line of code or connect a single API, think through what columns you need, how your properties or accounts map to categories, and what your output needs to look like at tax time. That thinking is the hard part. The rest follows from it.</p>
+
+    <p>If this resonates &mdash; if you have your own version of the paper ledger you have been meaning to leave behind &mdash; I would be glad to talk through the architecture. Reach out on <a href="https://linkedin.com/in/scottcurtner">LinkedIn</a> or through the contact page here.</p>
+
+    <p>The tools are there. The help is available. The moment, as it turns out, has been now for a while. I just needed to finally show up for it.</p>
+
+  </div>
+</article>
+
+<footer class="article-footer">
+  <div class="author-bio">
+    <h4>Scott Curtner</h4>
+    <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+</body>
+</html>

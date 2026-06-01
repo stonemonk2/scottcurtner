@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I Walked Through a Vacant Rental With My Phone. My AI Drafted the Contractor Texts Before I Got Home. | Scott Curtner</title>
+  <meta name="description" content="How an MCP memory server turns sloppy voice notes and phone photos into organized action — and what that means for anyone with a project, a property, or just too much to remember." />
+  <meta name="author" content="Scott Curtner" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:        #1a1a1a;
+      --ink-light:  #555;
+      --rule:       #e0dbd4;
+      --bg:         #faf9f7;
+      --bg-tint:    #f2efe9;
+      --accent:     #2d6a4f;
+      --accent-warm:#b5451b;
+      --max-w:      680px;
+      --serif:      'Lora', Georgia, serif;
+      --sans:       'DM Sans', system-ui, sans-serif;
+    }
+    html { background: var(--bg); color: var(--ink); font-size: 18px; }
+    body { font-family: var(--serif); line-height: 1.75; padding: 0 1.25rem; }
+
+    /* NAV */
+    .site-nav {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 1.5rem 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--rule);
+    }
+    .site-nav a.home {
+      font-family: var(--sans); font-weight: 600; font-size: 0.9rem;
+      color: var(--ink); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .site-nav a.home:hover { color: var(--accent); }
+    .site-nav .tag {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent);
+      background: #e8f4ee; padding: 0.25rem 0.65rem; border-radius: 2rem;
+    }
+
+    /* HERO */
+    .hero-image {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding-top: 2.5rem;
+    }
+    .hero-image img {
+      width: 100%; height: 420px; object-fit: cover;
+      border-radius: 4px; display: block;
+    }
+    .hero-image figcaption {
+      font-family: var(--sans); font-size: 0.75rem; color: var(--ink-light);
+      margin-top: 0.5rem; font-style: italic; text-align: center;
+    }
+
+    /* ARTICLE */
+    article { max-width: var(--max-w); margin: 0 auto; padding: 2.5rem 0 5rem; }
+
+    .article-header { margin-bottom: 2.5rem; }
+    .article-series {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
+    }
+    h1 {
+      font-family: var(--serif); font-size: clamp(1.65rem, 4vw, 2.2rem);
+      font-weight: 600; line-height: 1.25; color: var(--ink); margin-bottom: 1rem;
+    }
+    .article-subtitle {
+      font-family: var(--sans); font-size: 1rem; color: var(--ink-light);
+      line-height: 1.55; margin-bottom: 1.5rem;
+    }
+    .article-meta {
+      font-family: var(--sans); font-size: 0.8rem; color: var(--ink-light);
+      display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
+    }
+    .article-meta .author { font-weight: 600; color: var(--ink); }
+    .article-meta .sep { color: var(--rule); }
+    .article-divider { border: none; border-top: 1px solid var(--rule); margin: 2rem 0; }
+
+    p { margin-bottom: 1.4rem; }
+    p:last-child { margin-bottom: 0; }
+    h2 {
+      font-family: var(--serif); font-size: 1.25rem; font-weight: 600;
+      color: var(--ink); margin: 2.5rem 0 0.75rem; line-height: 1.3;
+    }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+    a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+
+    /* INLINE PHOTOS */
+    .article-photo {
+      margin: 2rem 0;
+    }
+    .article-photo img {
+      width: 100%; border-radius: 4px; display: block;
+      max-height: 480px; object-fit: cover;
+    }
+    .article-photo figcaption {
+      font-family: var(--sans); font-size: 0.75rem; color: var(--ink-light);
+      margin-top: 0.5rem; font-style: italic;
+    }
+
+    /* PHOTO GRID */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 2rem 0;
+    }
+    .photo-grid figure img {
+      width: 100%; border-radius: 4px; display: block;
+      height: 220px; object-fit: cover;
+    }
+    .photo-grid figcaption {
+      font-family: var(--sans); font-size: 0.7rem; color: var(--ink-light);
+      margin-top: 0.35rem; font-style: italic;
+    }
+
+    /* PULL QUOTE */
+    blockquote {
+      border-left: 3px solid var(--accent);
+      margin: 2rem 0;
+      padding: 0.75rem 0 0.75rem 1.5rem;
+      font-style: italic; color: var(--ink-light); font-size: 1.05rem;
+    }
+    blockquote p { margin-bottom: 0; }
+
+    /* PROMPT BOXES */
+    .prompt-section {
+      background: var(--bg-tint); border: 1px solid var(--rule);
+      border-radius: 6px; padding: 1.5rem 1.75rem; margin: 2rem 0;
+    }
+    .prompt-section h3 {
+      font-family: var(--sans); font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;
+    }
+    .prompt-section ul { list-style: none; padding: 0; }
+    .prompt-section ul li {
+      font-family: var(--sans); font-size: 0.9rem; color: var(--ink);
+      line-height: 1.55; padding: 0.5rem 0; border-bottom: 1px solid var(--rule);
+      display: flex; gap: 0.65rem; align-items: flex-start;
+    }
+    .prompt-section ul li:last-child { border-bottom: none; padding-bottom: 0; }
+    .prompt-section ul li::before { content: "›"; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 0.05rem; }
+
+    /* MEMORY LAYERS */
+    .memory-layers { margin: 1.5rem 0 2rem; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+    .memory-layer { display: grid; grid-template-columns: 1fr 2.5fr; border-bottom: 1px solid var(--rule); }
+    .memory-layer:last-child { border-bottom: none; }
+    .layer-label {
+      background: var(--bg-tint); padding: 1rem 1.25rem; font-family: var(--sans);
+      font-size: 0.8rem; font-weight: 600; color: var(--accent); line-height: 1.4;
+      display: flex; align-items: center;
+    }
+    .layer-desc { padding: 1rem 1.25rem; font-family: var(--sans); font-size: 0.875rem; line-height: 1.55; color: var(--ink); }
+    .layer-desc em { display: block; color: var(--ink-light); font-style: normal; font-size: 0.8rem; margin-top: 0.25rem; }
+
+    /* VIGNETTES */
+    .vignettes { margin: 1.5rem 0; }
+    .vignette {
+      display: grid; grid-template-columns: 2.5rem 1fr;
+      gap: 0.5rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); align-items: start;
+    }
+    .vignette:last-child { border-bottom: none; }
+    .vignette-icon { font-size: 1.4rem; line-height: 1.6; }
+    .vignette-text { font-family: var(--sans); font-size: 0.9rem; line-height: 1.6; color: var(--ink); }
+    .vignette-text strong {
+      display: block; font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--accent); margin-bottom: 0.2rem;
+    }
+
+    /* CTA */
+    .cta-box {
+      background: var(--bg-tint); border: 1px solid var(--rule); border-top: 3px solid var(--accent);
+      border-radius: 4px; padding: 1.75rem; margin-top: 3rem; text-align: center;
+    }
+    .cta-box p { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-light); margin-bottom: 1rem; }
+    .cta-box a.btn {
+      display: inline-block; background: var(--accent); color: #fff; font-family: var(--sans);
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.04em; text-decoration: none;
+      padding: 0.7rem 1.5rem; border-radius: 4px; transition: background 0.15s;
+    }
+    .cta-box a.btn:hover { background: #245a40; color: #fff; }
+
+    /* FOOTER */
+    .article-footer {
+      max-width: var(--max-w); margin: 0 auto; padding: 2rem 0 3rem;
+      border-top: 1px solid var(--rule); display: flex;
+      justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+    }
+    .article-footer span { font-family: var(--sans); font-size: 0.8rem; color: var(--ink-light); }
+    .article-footer a { font-family: var(--sans); font-size: 0.8rem; color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .memory-layer { grid-template-columns: 1fr; }
+      .layer-label { border-bottom: 1px solid var(--rule); }
+      .photo-grid { grid-template-columns: 1fr; }
+      .photo-grid figure img { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="https://scottcurtner.com" class="home">Scott Curtner</a>
+    <span class="tag">Tech Auditor Goes Deep</span>
+  </nav>
+
+  <!-- HERO: Kitchen — strongest "before" shot -->
+  <figure class="hero-image">
+    <img src="images/kitchen.jpg" alt="Vacant rental kitchen with dated brown laminate cabinets, dropped fluorescent ceiling, and diamond vinyl floor — before renovation" />
+    <figcaption>The kitchen that almost talked me into a $100,000 mistake.</figcaption>
+  </figure>
+
+  <article>
+
+    <header class="article-header">
+      <p class="article-series">Tech Auditor Goes Deep &nbsp;·&nbsp; AI in the Real World</p>
+      <h1>I Walked Through a Vacant Rental With My Phone. My AI Drafted the Contractor Texts Before I Got Home.</h1>
+      <p class="article-subtitle">How an MCP memory server turns sloppy voice notes and phone photos into organized action — and what that means for anyone with a project, a property, or just too much to remember.</p>
+      <div class="article-meta">
+        <span class="author">Scott Curtner, CIA, CISA</span>
+        <span class="sep">|</span>
+        <span>June 2026</span>
+        <span class="sep">|</span>
+        <span>8 min read</span>
+      </div>
+    </header>
+
+    <hr class="article-divider" />
+
+    <!-- SECTION 1: HOOK -->
+    <p>Saturday morning. Vacant unit. I'm standing in a one-bedroom apartment that my tenant just moved out of after several years, and the mental list is already overwhelming. Brown laminate cabinets from a decade past their prime. A bathroom ceiling with an open drop-panel frame and exposed wiring. Four backyard sheds in varying states of collapse. Overgrown vegetation pressing against the siding. A drainage channel clogged with weeds that nobody will remember to clear before the rains come.</p>
+
+    <p>Two people are waiting to hear from me. A handyman who will be starting the renovation work, and a gardener who will handle the exterior. Neither of them uses email. Both prefer short texts.</p>
+
+    <p>The old version of this day ends with a half-remembered list, a few blurry photos, and a text I write at midnight that makes no sense to anyone receiving it. The new version is what I want to tell you about.</p>
+
+    <!-- Mailbox photo — establishing shot -->
+    <figure class="article-photo">
+      <img src="images/unita-mailbox.jpg" alt="Mailbox for 121 Santa Fe Ave Apt A — the vacant rental unit at the start of the walkthrough" />
+      <figcaption>The starting point. One vacant unit, one Saturday morning, one growing list.</figcaption>
+    </figure>
+
+    <!-- SECTION 2: WHAT HAPPENED -->
+    <h2>What Actually Happened</h2>
+
+    <p>I walked the property with my phone, room by room, dictating observations to Claude as I went. Not structured, not organized — just talking. <em>"The bathroom ceiling has exposed wiring and an open exhaust duct frame, that needs to be closed in before anything cosmetic happens in there..."</em> I uploaded a photo of the collapsed shed. Claude looked at it, described what it saw, and asked me one question: is this a must-fix or an assess-first situation?</p>
+
+    <p>That one question changed the quality of everything that followed. Instead of a flat undifferentiated list of seventy-five things I noticed, the session ended with a sorted punch list: must-do items, strong candidates, and things to assess before deciding. Room by room. Logged to my MCP memory database in real time, tagged and retrievable from any future conversation.</p>
+
+    <!-- Photo grid: bathroom ceiling + shed -->
+    <div class="photo-grid">
+      <figure>
+        <img src="images/bath-drop-ceiling.jpg" alt="Bathroom drop ceiling with exposed wiring and open framing — a must-fix before any cosmetic work" />
+        <figcaption>Exposed wiring above the shower — Claude flagged this as must-fix before any cosmetic work.</figcaption>
+      </figure>
+      <figure>
+        <img src="images/shed4.jpg" alt="Shed 4 barely visible through overgrown vegetation — door frame misaligned from structural failure at rear corner" />
+        <figcaption>Shed 4 — barely visible, doors won't close. Claude asked: repair or demo?</figcaption>
+      </figure>
+    </div>
+
+    <p>Then I asked for the thing I hadn't expected to need: <em>"Draft a text to my handyman. He prefers short messages. Include only the must-do interior items for Unit A."</em></p>
+
+    <p>It worked. Not approximately — it actually worked. Clean, prioritized, ready to send. I did the same for the gardener, and here's where it got interesting: I didn't have to remember to tell Claude that the gardener tends to skip the far back of the property and the curb strip out front. It was already in my notes from a previous session. The draft text included those reminders specifically, without me asking. That's not a notes app. That's memory working the way memory is supposed to work.</p>
+
+    <!-- Front door photo -->
+    <figure class="article-photo">
+      <img src="images/front-door.jpg" alt="Front entry door of Unit A — brass hardware, weathered trim, storm door in decent shape" />
+      <figcaption>The front entry. The storm door is fine — the brass hardware and weathered trim are on the list.</figcaption>
+    </figure>
+
+    <!-- SECTION 3: SCOPE CREEP -->
+    <h2>The Moment Claude Talked Me Out of Something</h2>
+
+    <p>Standing in the kitchen — dropped ceiling, brown laminate, fluorescent box fixture that makes everything feel like a 1987 break room — I started thinking out loud about a bigger idea. What if we demoed the whole thing? Relocated the kitchen. Opened the walls. The apartment has an unusual railroad-car layout with rooms that flow into each other awkwardly, and I've always thought a proper redesign could make it feel like a different place entirely. There's even an architecture firm one block away that works directly with city planners.</p>
+
+    <p>Claude didn't just log the idea. It pushed back.</p>
+
+    <blockquote>
+      <p>There are really two renovation paths in front of you. Path A is cosmetic-plus: new kitchen cabinets and counters, new floors throughout, replace the aluminum windows, update the lighting, fix the bathroom ceiling, paint everything. You get to $20k–$30k, the unit photographs well, and you lease it at $2,200–$2,500. Done in six to eight weeks. Path B is structural: open walls, potentially relocate the kitchen, combine the bedroom and office, raise the dropped ceilings. You're looking at permits, an architect, four to six months minimum, and easily $60k–$100k or more. Your rent might reach $2,800–$3,000 if the result is exceptional — but the return math gets very thin. My honest recommendation: do Path A now, get a tenant in, and treat the architectural consultation as a planning exercise for a future renovation cycle.</p>
+    </blockquote>
+
+    <p>I've owned rental properties since 1999. I know this feeling — the pull toward the grand scope, the redesign that's going to finally make everything right. I also know it's usually a mistake. What I didn't expect was for my AI to be the one to say so, clearly, with the math laid out.</p>
+
+    <p>A notes app stores what you tell it. This pushed back on what I was telling it.</p>
+
+    <!-- SECTION 4: UNDER THE HOOD -->
+    <h2>What's Actually Going On</h2>
+
+    <p>The system I use has three layers. It sounds complicated but the mental model is simple once you see it:</p>
+
+    <div class="memory-layers">
+      <div class="memory-layer">
+        <div class="layer-label">Claude's Built-in Memory</div>
+        <div class="layer-desc">
+          Your preferences, your working style, your recurring instructions — stored in Claude's settings.
+          <em>Like a colleague who knows how you like to work without being reminded every session.</em>
+        </div>
+      </div>
+      <div class="memory-layer">
+        <div class="layer-label">MCP Database (Open Brain / 2nd Brain)</div>
+        <div class="layer-desc">
+          The living record — every note, task, observation, and person, stored in a Supabase database connected to Claude via the Model Context Protocol. Searchable. Permanent. Accessible in any future conversation.
+          <em>The place where "I'll remember that later" actually becomes true.</em>
+        </div>
+      </div>
+      <div class="memory-layer">
+        <div class="layer-label">Wiki</div>
+        <div class="layer-desc">
+          Compiled reference documents stored as markdown files in GitHub. The room-by-room walkthrough synthesized into a document any contractor, any future Claude session, or future-you six months from now can load instantly.
+          <em>The difference between raw notes and usable knowledge.</em>
+        </div>
+      </div>
+    </div>
+
+    <p>The MCP layer is the one most people haven't heard of yet. MCP stands for Model Context Protocol — an open standard that lets Claude connect to external data sources and tools. In this case, it connects Claude to a Supabase database that I own and control. Every thought I log is mine. It lives in my database, retrieved on demand. It's not going to a third-party training dataset.</p>
+
+    <p>Some people call this an Open Brain. Some call it a 2nd Brain. I've started thinking of it less poetically: it's an MCP memory server. That's what it is.</p>
+
+    <!-- SECTION 5: PROMPTS -->
+    <h2>Prompts Worth Trying</h2>
+
+    <p>If you already have a 2nd Brain or MCP memory setup running, these are the prompts that have changed how I use mine:</p>
+
+    <div class="prompt-section">
+      <h3>Capture — In the Field</h3>
+      <ul>
+        <li>"I'm walking through a property. Log everything I say as a task with room labels."</li>
+        <li>"Here's a photo — what do you see that needs attention? Log it to my memory database."</li>
+        <li>"Log this as a technology to evaluate against my work processes when I'm back at my desk." [after photographing a conference slide]</li>
+        <li>"Log this wiring configuration with today's date and location before it gets covered up." [for a tradesperson]</li>
+      </ul>
+    </div>
+
+    <div class="prompt-section">
+      <h3>Organize — Turning Messy Into Structured</h3>
+      <ul>
+        <li>"Sort everything I've logged in the last two hours into: Must Do, Strong Candidate, and Assess First."</li>
+        <li>"Which of these items need a contractor vs. something I can handle myself?"</li>
+        <li>"Group these notes by room and create a master task list."</li>
+      </ul>
+    </div>
+
+    <div class="prompt-section">
+      <h3>Communicate — The Surprise Move</h3>
+      <ul>
+        <li>"Draft a text to my handyman. He prefers short messages. Include only the must-do interior items."</li>
+        <li>"Draft instructions for my gardener. He tends to skip the back of the property — make sure that's explicitly called out."</li>
+        <li>"Write a friendly note to my tenant asking them to clean up the shared utility space."</li>
+      </ul>
+    </div>
+
+    <div class="prompt-section">
+      <h3>Scope Check — Ask for the Pushback</h3>
+      <ul>
+        <li>"I'm thinking about [big idea]. Walk me through the cost and timeline tradeoffs honestly."</li>
+        <li>"What's the minimum investment to get this property photo-ready and rent-ready?"</li>
+        <li>"Am I overbuilding here? What would a disciplined investor do instead?"</li>
+      </ul>
+    </div>
+
+    <div class="prompt-section">
+      <h3>Future Recall — Six Months From Now</h3>
+      <ul>
+        <li>"What did I note about the bathroom at this property?"</li>
+        <li>"What appliances are in the unit and what condition are they in?"</li>
+        <li>"What's the lockbox combination and who has access?"</li>
+        <li>"What did I decide about the kitchen cabinets?"</li>
+      </ul>
+    </div>
+
+    <!-- SECTION 6: NOT JUST LANDLORDS -->
+    <h2>It's Not Just for Landlords</h2>
+
+    <p>The rental walkthrough is where I felt this most concretely. But the underlying capability — capture now, organize later, recall precisely, communicate cleanly — applies to almost any situation where your brain is generating more than it can hold.</p>
+
+    <div class="vignettes">
+      <div class="vignette">
+        <div class="vignette-icon">📸</div>
+        <div class="vignette-text">
+          <strong>The Conference Attendee</strong>
+          You photograph a slide at a tech conference. You tell Claude: "Log this as a regulation to evaluate against our infrastructure when I'm back at work." Six weeks later, when the policy discussion comes up at a meeting, you actually have the notes.
+        </div>
+      </div>
+      <div class="vignette">
+        <div class="vignette-icon">🔌</div>
+        <div class="vignette-text">
+          <strong>The Electrician or Plumber</strong>
+          You photograph a wiring configuration or plumbing layout before drywall covers it forever. You log the location, date, and what's behind the wall. Future-you will thank you. So will the next owner.
+        </div>
+      </div>
+      <div class="vignette">
+        <div class="vignette-icon">🎤</div>
+        <div class="vignette-text">
+          <strong>The Comedian</strong>
+          You overhear something funny at a coffee shop — a phrase, a reaction, a moment. You log it. The bit that you would have lost by the time you got home is waiting for you the next time you open a writing session.
+        </div>
+      </div>
+      <div class="vignette">
+        <div class="vignette-icon">🍎</div>
+        <div class="vignette-text">
+          <strong>The Teacher</strong>
+          A student says something that landed perfectly. A parent sends a note that made your day. A teaching tactic worked in a way you want to repeat. You log it. The institutional knowledge that usually evaporates becomes something you can actually build on.
+        </div>
+      </div>
+      <div class="vignette">
+        <div class="vignette-icon">💡</div>
+        <div class="vignette-text">
+          <strong>The Executive</strong>
+          You hear a marketing idea at a dinner, a competitive move mentioned in passing, a framework that might apply to next quarter's planning. You log it with a tag. It surfaces when you need it — not as a vague memory, but as the actual note.
+        </div>
+      </div>
+      <div class="vignette">
+        <div class="vignette-icon">🏗️</div>
+        <div class="vignette-text">
+          <strong>The Builder</strong>
+          Anyone working on something ambitious across many sessions — a product, a research project, a complex renovation — knows the cost of context loss. When your project lives in a database instead of a chat window that closes, each session starts from where the last one ended. The relationship with your AI accumulates rather than resets.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 7: SETUP + CTA -->
+    <h2>The Setup</h2>
+
+    <p>The system I described here is built on Nate Jones's Open Brain framework, which runs on Supabase and connects to Claude via a self-hosted MCP server. I wrote a full guide on how to build your own on this site — fair warning, it takes longer than the 45 minutes some tutorials suggest. Plan for a few hours the first time, especially if GitHub and command-line tools are new to you.</p>
+
+    <p>But once it's running, it doesn't just remember things. It thinks alongside you. That Saturday walkthrough would have taken two more hours of scattered texting and note-chasing without it. Instead I had organized punch lists, drafted contractor messages, and a full wiki page for the property before I left the parking lot.</p>
+
+    <p>The handyman had his text. The gardener had his. I had lunch.</p>
+
+    <div class="cta-box">
+      <p>Want to build your own AI memory system? I published step-by-step instructions — including what I wish I'd known before I started.</p>
+      <a href="https://scottcurtner.com" class="btn">Read the Setup Guide →</a>
+    </div>
+
+  </article>
+
+  <footer class="article-footer">
+    <span>© 2026 Scott Curtner, CIA, CISA</span>
+    <a href="https://scottcurtner.com">← Back to all articles</a>
+  </footer>
+
+</body>
+</html>

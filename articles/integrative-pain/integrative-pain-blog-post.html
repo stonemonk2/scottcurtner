@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrative Pain vs. Disintegrative Pain in Technical Learning — Scott Curtner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a18;
+    --ink-muted: #5a5a56;
+    --ink-faint: #9a9a94;
+    --surface: #faf9f6;
+    --surface-warm: #f3f0ea;
+    --accent: #2d5a3d;
+    --accent-light: #e8f0eb;
+    --rule: #d8d4cc;
+    --max: 720px;
+  }
+
+  html { font-size: 18px; }
+
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO: image absolute-positioned on right, text uses same centered container as body ── */
+  .hero {
+    width: 100%;
+    background: #0d1710;
+    position: relative;
+    overflow: hidden;
+    min-height: 520px;
+  }
+
+  .hero-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 42%;
+    overflow: hidden;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    display: block;
+  }
+
+  .hero-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #0d1710 0%, rgba(13, 23, 16, 0.4) 15%, transparent 35%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-wrap {
+    max-width: calc(var(--max) + 80px);
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 2;
+    min-height: 520px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .hero-content {
+    max-width: var(--max);
+    padding: 80px 0 64px;
+    width: 100%;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #7ab890;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.2;
+    color: #f0ece4;
+    margin-bottom: 28px;
+    max-width: 480px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: #9fcfaf;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero-meta span {
+    font-size: 0.78rem;
+    color: #888882;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-meta .divider { color: #444440; }
+
+  /* ── ARTICLE BODY ── */
+  .article-wrap {
+    max-width: calc(var(--max) + 80px);
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .article-body {
+    max-width: var(--max);
+    padding: 64px 0 100px;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-bottom: 1.6rem;
+  }
+
+  h2 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 3rem 0 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .lead {
+    font-family: 'Lora', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.7;
+    color: #2e2e2a;
+    margin-bottom: 2.4rem;
+  }
+
+  blockquote {
+    margin: 2.5rem 0;
+    padding: 1.5rem 2rem;
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote p {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    line-height: 1.65;
+  }
+
+  blockquote cite {
+    font-size: 0.8rem;
+    font-style: normal;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .section-break {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 3rem 0;
+  }
+
+  .section-break::before,
+  .section-break::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .section-break span {
+    color: var(--ink-faint);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .callout {
+    background: var(--surface-warm);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    margin: 2.5rem 0;
+  }
+
+  .callout-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .callout p {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--ink-muted);
+    margin-bottom: 0;
+  }
+
+  .harriet-card {
+    background: var(--ink);
+    color: #f0ece4;
+    border-radius: 10px;
+    padding: 2rem 2.25rem;
+    margin: 3rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .harriet-card::before {
+    content: '\201C';
+    position: absolute;
+    top: -20px;
+    left: 20px;
+    font-family: 'Lora', serif;
+    font-size: 120px;
+    color: rgba(154, 207, 175, 0.15);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .harriet-card p {
+    color: #d8d4cc;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+  }
+
+  .harriet-card p:last-child { margin-bottom: 0; }
+
+  .harriet-card .card-label {
+    font-family: 'DM Sans', sans-serif;
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7ab890;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .closing-rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 4rem 0 2rem;
+  }
+
+  .author-footer {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .author-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .author-info p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .author-info strong {
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 800px) {
+    .hero-image { width: 100%; opacity: 0.45; }
+    .hero-image::before {
+      background: linear-gradient(to bottom, rgba(13, 23, 16, 0.5) 0%, rgba(13, 23, 16, 0.85) 100%);
+    }
+    .hero-wrap { padding: 0 24px; }
+    .article-wrap { padding: 0 24px; }
+    .harriet-card { padding: 1.5rem; }
+    blockquote { padding: 1.2rem 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<article>
+
+  <header class="hero">
+    <div class="hero-image">
+      <img src="images/hero.jpg" alt="A man standing on a misty forest trail at dawn">
+    </div>
+    <div class="hero-wrap">
+      <div class="hero-content">
+        <p class="hero-eyebrow">Personal / Leadership</p>
+        <h1 class="hero-title">Integrative pain vs. <em>disintegrative</em> pain in technical learning</h1>
+        <div class="hero-meta">
+          <span>Scott Curtner</span>
+          <span class="divider">·</span>
+          <span>June 8, 2026</span>
+          <span class="divider">·</span>
+          <span>8 min read</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="article-wrap">
+    <div class="article-body">
+
+      <p class="lead">Captain Mark Divine draws a sharp line between pain that makes you stronger and pain that tears you down. I've been thinking about that distinction a lot lately — not in a SEAL training context, but sitting in front of a codebase I barely understand, watching my head spin, and wondering if that feeling means I don't belong.</p>
+
+      <p>It doesn't. And I think a lot of people quietly believe it does.</p>
+
+      <h2>Two kinds of hard</h2>
+
+      <p>In <em>The Way of the SEAL</em>, Divine describes integrative pain as the kind that strengthens — sore muscles after a workout, the cognitive overload of a first day in an unfamiliar environment, the discomfort of being the least experienced person in the room. Disintegrative pain is the kind that damages — blowing out your knees by training through an injury, burning yourself out to the point of breakdown, internalizing the belief that confusion means failure.</p>
+
+      <blockquote>
+        <p>"There's a difference between pain that builds you and pain that breaks you. The warrior learns to tell the difference."</p>
+        <cite>— Mark Divine, The Way of the SEAL</cite>
+      </blockquote>
+
+      <p>The distinction sounds simple. In practice, when you're six hours into something hard and your brain is genuinely struggling to hold the pieces together, it's not obvious which kind you're in. The head-spinning feeling of a first deep day in an unfamiliar codebase — or a first board meeting, or a first time managing people who know more than you do — feels a lot like both.</p>
+
+      <p>Here's what I've learned: the feeling is almost always the integrative kind. The disintegrative kind usually announces itself differently. It feels like shame, not confusion. Like you're wrong for being there, not just new.</p>
+
+      <div class="section-break"><span>&#8258;</span></div>
+
+      <h2>Lightness as leadership</h2>
+
+      <p>When I became president of the San Bruno Education Foundation, I inherited a board of volunteers — working parents, local business owners, retired teachers, community members — none of whom were getting paid to be there. Nobody owed us their Saturday mornings. Nobody had to stay.</p>
+
+      <p>My primary directive, the thing I kept coming back to, was this: the work has to be fun. Not trivial — we were serious about our mission to support the kids in San Bruno's public schools, K through 8. But the meetings had to be light-hearted, transparent, and genuinely welcoming. If they weren't, the smartest, most ambitious, most caring people would find somewhere else to put their energy. And they'd be right to.</p>
+
+      <p>That worked. Over thirteen years, SBEF attracted people I still admire enormously — people who showed up not just because they believed in the mission, but because they liked being in the room. Laughter wasn't a distraction from serious work. It was the thing that made the serious work sustainable.</p>
+
+      <p>That same principle applies to learning. If you make the discomfort of not-knowing into something grim, something to endure with your jaw clenched — you'll burn through people, including yourself. If you can find a way to laugh at the absurdity of how hard it is, you buy yourself more runway.</p>
+
+      <div class="section-break"><span>&#8258;</span></div>
+
+      <h2>Training to build, not to damage</h2>
+
+      <p>I don't work out at a gym. I prefer outdoor spaces, my garage, wherever I happen to be. That means nobody is watching, which means I can be as ridiculous as I want — and I've learned to use that. When a workout gets hard and I feel the grimace tightening in my face, I try to catch it and flip it to a smile. It sounds strange. It works.</p>
+
+      <p>The same principle applies to what you allow into your training. The integrative kind — hard workouts that leave you stronger, learning sessions that leave you more capable — requires investment. The disintegrative kind — training through an injury because you think stopping means weakness, grinding on social media that doesn't move anything forward — quietly costs you more than it gives back.</p>
+
+      <div class="callout">
+        <p class="callout-label">A thought worth sitting with</p>
+        <p>Time spent consuming content that doesn't further your long-term goals isn't neutral. It displaces time you could have spent grinding through something that makes you more capable — a skilled trade, a new tool, a blog post that might inspire one person. I've started asking myself whether what I'm consuming is making me stronger or just passing the time. The answer changes what I do next.</p>
+      </div>
+
+      <p>I'm not preaching. I spend plenty of time on things that don't build anything. But the awareness itself changes things — knowing the difference between integrative and disintegrative inputs, whether in your body, your mind, or your attention, gives you something to choose from.</p>
+
+      <div class="section-break"><span>&#8258;</span></div>
+
+      <h2>The codebase, the head-spin, and the laugh</h2>
+
+      <p>Last week I spent a long day working inside a codebase I'm still very much learning. My technical partner moves fast — he's been doing this for years and he expects collaborative pushback, not passive agreement. At the end of the day I described what I was feeling as my head spinning, and he smiled and said that was exactly right. That's what it's supposed to feel like.</p>
+
+      <p>He recommended a strategy: laugh. Not because it isn't hard. Because laughing at the absurdity of your own suffering — the particular flavor of suffering that comes from genuinely trying to understand something difficult — dims the pain just enough to keep going. Mark Divine said something similar about BUD/S. The people who made it through weren't the ones who never struggled. They were the ones who found a way to keep a light-hearted attitude when everything was trying to take it from them.</p>
+
+      <p>Dave Goggins would call it embracing the suck. I think both traditions are pointing at the same thing — the discipline of not letting hard become impossible in your own mind before it actually is.</p>
+
+      <div class="section-break"><span>&#8258;</span></div>
+
+      <h2>Harriet</h2>
+
+      <div class="harriet-card">
+        <span class="card-label">A story I have not forgotten</span>
+        <p>An old friend named Harriet had lived through more than her share of real pain — including losing a young daughter to illness. She carried that with lightness, somehow. The kind of lightness that comes not from avoiding grief but from having moved through enough of it to understand that you can survive it.</p>
+        <p>One day she was in the car with her husband on the highway when she realized she was having a heart attack. She couldn't speak. What came out instead — involuntarily, almost absurdly — was laughter. Her husband noticed. He knew immediately that something was very wrong. He rerouted to a hospital thirty minutes away. The doctors saved her life.</p>
+        <p>When she recovered, they told her that the movement of her laughing had kept her heart working long enough to get there.</p>
+      </div>
+
+      <p>I don't think of that story as a medical anecdote. I think of it as evidence that a light-hearted way of meeting the world — built over a lifetime, not reached for in the moment — becomes structural. It becomes load-bearing. Harriet didn't decide to laugh because she remembered a framework. She laughed because that's who she was.</p>
+
+      <p>That's the long game. Not just using laughter as a tactic when things get hard. Building the disposition over time, through practice, so that it's there when you need it and don't have time to think.</p>
+
+      <div class="section-break"><span>&#8258;</span></div>
+
+      <h2>What I'm trying to carry forward</h2>
+
+      <p>There are things that can't be laughed at. Real loss, real grief, real harm — those deserve to be met with full weight. I'm not arguing for toxic positivity or the kind of forced cheerfulness that dismisses suffering.</p>
+
+      <p>I'm arguing for something narrower: in the category of integrative pain — the hard day in the codebase, the board meeting where you're out of your depth, the workout where you hit the wall — there are more opportunities to smile through it than we usually take. The suffering doesn't disappear. But it dims. And that's enough to keep going.</p>
+
+      <p>Force a smile when you feel the grimace. Laugh at the absurdity when you can. Build the habit in the small moments so it's available in the big ones. And when someone else is in the middle of their integrative pain, running the room light-hearted isn't weakness. It might be the most important thing you do.</p>
+
+      <hr class="closing-rule">
+
+      <div class="author-footer">
+        <div class="author-avatar">SC</div>
+        <div class="author-info">
+          <strong>Scott Curtner</strong>
+          <p>Technology Audit Manager (VP) at Wells Fargo · Head of Agentic Ops at Vernant · Board member, San Bruno Education Foundation · Real estate investor · Father of two.</p>
+          <p><a href="https://scottcurtner.com" style="color: var(--accent); text-decoration: none;">scottcurtner.com</a></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</article>
+
+</body>
+</html>

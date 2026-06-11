@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>When Does AI Use Become Shadow AI? | Scott Curtner</title>
+  <meta name="description" content="Governance isn't triggered by the size of a decision. It's triggered by dependency. Here's the question I couldn't stop thinking about." />
+  <meta name="author" content="Scott Curtner" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="When Does AI Use Become Shadow AI? The Question I Couldn't Stop Thinking About" />
+  <meta property="og:description" content="Governance isn't triggered by consequence. It's triggered by dependency." />
+  <meta property="og:image" content="images/hero.jpeg" />
+  <meta property="og:type" content="article" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg:        #ffffff;
+      --color-text:      #1a1a1a;
+      --color-muted:     #6b7280;
+      --color-accent:    #1d4ed8;
+      --color-border:    #e5e7eb;
+      --color-surface:   #f9fafb;
+      --color-highlight: #f0f4ff;
+      --font-serif:      'Lora', Georgia, serif;
+      --font-sans:       'Inter', system-ui, sans-serif;
+      --max-width:       720px;
+    }
+
+    body {
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-serif);
+      font-size: 1.125rem;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Site Header ── */
+    .site-header {
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header a.home-link {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .site-header a.home-link:hover { color: var(--color-accent); }
+    .series-tag {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      background: var(--color-highlight);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    /* ── Hero Image ── */
+    .hero-wrap {
+      width: 100%;
+      max-height: 520px;
+      overflow: hidden;
+      background: var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* Placeholder shown when image file not yet present */
+    .hero-placeholder {
+      width: 100%;
+      height: 420px;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: #9ca3af;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+    }
+    .hero-placeholder .placeholder-icon {
+      font-size: 2.5rem;
+      opacity: 0.4;
+    }
+    .hero-placeholder .placeholder-label {
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+    .hero-caption {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      text-align: center;
+      padding: 0.6rem 2rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* ── Article Container ── */
+    .article-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── Eyebrow / Series line ── */
+    .article-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 1rem;
+    }
+    .article-eyebrow span { color: var(--color-accent); }
+
+    /* ── Title & Subtitle ── */
+    .article-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 4vw, 2.4rem);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+      margin-bottom: 1rem;
+    }
+    .article-subtitle {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--color-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Byline ── */
+    .byline {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .byline .author { font-weight: 600; color: var(--color-text); }
+    .byline .sep { color: var(--color-border); }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Body Prose ── */
+    .prose p {
+      margin-bottom: 1.5rem;
+    }
+    .prose h2 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 2.5rem 0 1rem;
+      letter-spacing: -0.01em;
+    }
+    .prose h2:first-child { margin-top: 0; }
+
+    /* ── Pull Quote ── */
+    .pull-quote {
+      border-left: 3px solid var(--color-accent);
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      background: var(--color-highlight);
+      border-radius: 0 6px 6px 0;
+    }
+    .pull-quote p {
+      font-style: italic;
+      color: var(--color-text);
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    /* ── Insight Callout ── */
+    .insight-callout {
+      background: var(--color-text);
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 1.5rem 1.75rem;
+      margin: 2.5rem 0;
+      font-family: var(--font-sans);
+    }
+    .insight-callout .label {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 0.5rem;
+    }
+    .insight-callout p {
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.5;
+      margin: 0;
+      color: #ffffff;
+    }
+
+    /* ── Footnotes ── */
+    .footnotes {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+    .footnotes h3 {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 1.25rem;
+    }
+    .footnotes ol {
+      padding-left: 1.25rem;
+    }
+    .footnotes li {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .footnotes li ul {
+      padding-left: 1rem;
+      margin-top: 0.4rem;
+      list-style: disc;
+    }
+    .footnotes li ul li {
+      margin-bottom: 0.25rem;
+    }
+    .footnotes a {
+      color: var(--color-accent);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .footnotes a:hover { text-decoration: underline; }
+
+    /* ── Site Footer ── */
+    .site-footer {
+      border-top: 1px solid var(--color-border);
+      padding: 2rem 1.5rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      color: var(--color-muted);
+    }
+    .site-footer a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+
+    /* ── Superscript footnote refs ── */
+    sup a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .site-header { padding: 1rem 1.25rem; }
+      .article-container { padding: 2rem 1.25rem 4rem; }
+      .hero-placeholder { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <a href="https://scottcurtner.com/" class="home-link">Scott Curtner</a>
+    <span class="series-tag">Tech Audit Goes Deep</span>
+  </header>
+
+  <!-- Hero Image -->
+  <div class="hero-wrap">
+    <!--
+      PLACE YOUR HERO IMAGE FILE AT:
+      \scottcurtner-website\articles\shadow-ai\images\hero.jpg
+      Then replace the placeholder div below with:
+      <img src="images/hero.jpg" alt="A man works at his desk unaware his shadow on the wall is the silhouette of a robot — Just a Regular Tuesday" />
+    -->
+    <div class="hero-placeholder">
+      <span class="placeholder-icon">🖼</span>
+      <span class="placeholder-label">Hero image — place file at images/hero.jpg</span>
+    </div>
+  </div>
+  <p class="hero-caption">It doesn't feel like Shadow AI. It feels like Tuesday.</p>
+
+  <!-- Article -->
+  <main class="article-container">
+
+    <p class="article-eyebrow"><span>AI Governance</span> &middot; Tech Audit Goes Deep</p>
+
+    <h1 class="article-title">When Does AI Cross from Personal Productivity Tool to Shadow AI?</h1>
+
+    <p class="article-subtitle">Governance isn't triggered by the size of a decision. Reliance is the distinction that reframes everything.</p>
+
+    <div class="byline">
+      <span class="author">Scott Curtner, CIA, CISA</span>
+      <span class="sep">|</span>
+      <span>June 2026</span>
+      <span class="sep">|</span>
+      <span>7 min read</span>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="prose">
+
+      <p>I've been wrestling with a question that sounds simple until you actually try to answer it.</p>
+
+      <p>At what point does using AI stop being a personal productivity tool and become something the business depends on... something that needs to be formally identified, governed, and understood?</p>
+
+      <p>I started where most people start. I assumed the line was drawn by impact. Big decisions... large financial consequences, significant workforce changes, high-stakes outcomes... should carry more scrutiny. Small decisions could fly under the radar. That felt intuitive. It felt reasonable.</p>
+
+      <p>Then I started testing it against real examples, and the intuition fell apart.</p>
+
+      <hr class="divider" />
+
+      <p>The most documented example happened at a scale that made headlines. A ProPublica investigation found that DOGE and VA officials used AI formulas and algorithms to make or inform contract cancellation decisions, cutting out meaningful input from VA career experts who understood what those contracts actually did. The AI tool reportedly relied on outdated contract versions, sometimes analyzed only the first 10,000 characters of a document (roughly five single-spaced pages), and in some cases hallucinated financial values entirely. Over 650 contracts were cancelled. Lawmakers subsequently demanded the VA Inspector General investigate the data inputs, the logic, and who gave the AI its instructions... because nobody could answer those questions.<sup><a href="#fn1" id="ref1">1</a></sup></p>
+
+      <p>What made it worse was the admission from the DOGE staffer who wrote the AI code himself. Asked about the errors, Sahil Lavingia told ProPublica:<sup><a href="#fn2" id="ref2">2</a></sup></p>
+
+      <div class="pull-quote">
+        <p>"I would never recommend someone run my code and do what it says. It's like that 'Office' episode where Steve Carell drives into the lake because Google Maps says drive into the lake. Do not drive into the lake."</p>
+      </div>
+
+      <p>The veterans on the other end of those cancelled services couldn't get an explanation. They just got a result.</p>
+
+      <p>Now consider something less visible, but just as consequential in its own way. A financial institution's fraud detection team begins using an AI tool to score and rank incoming alerts, letting the system surface which cases investigators should prioritize each morning. It starts well... the tool is helpful, the team is still engaged, and human judgment is still in the room. But over time, the investigators stop reading the low-scored alerts entirely. The AI isn't assisting the workflow anymore. It is the workflow. If the model's training data was biased, if the scoring logic drifted, if the inputs were stale... nobody would know, because nobody is checking. When a regulator asks why a pattern of fraud went undetected for six months, the only available answer is the one that should never be acceptable: the algorithm didn't flag it.</p>
+
+      <p>No headlines. No congressional inquiry. Just a quiet, inadequately governed dependency that started out well and drifted one morning queue at a time.</p>
+
+      <p>Then there is the example nobody thinks to flag at all. A manager begins using an AI tool to draft performance review language for their direct reports. At first it's a time-saver... a starting point they shape with their own judgment. But gradually the edits get lighter. The manager reads, adjusts a phrase or two, and submits. The AI is now generating the documented basis for compensation and promotion decisions affecting real people's careers. No one registered the tool. No one owns the output. No one could reconstruct the reasoning if an employee challenged the assessment. It doesn't feel like Shadow AI. It feels like Tuesday.</p>
+
+      <hr class="divider" />
+
+      <p>In each of these cases, the impact was undeniable. But impact alone didn't create the problem. The problem was something else entirely.</p>
+
+      <p>The more I sat with these examples, the more the real distinction came into focus. It isn't about the size of the decision. It's about the role AI plays in making it.</p>
+
+      <p>If AI is used as one input among many... to brainstorm options, summarize information, or pressure-test thinking... and the human decision maker is still reasoning through the problem with multiple sources of evidence, then the human is in control. AI is a tool. That's personal use.</p>
+
+      <p>But the moment a process begins to <em>rely</em> on AI... when the AI is evaluating, scoring, ranking, or materially driving the outcome, and the human couldn't reconstruct the reasoning without it... something fundamental has shifted. The AI is no longer supporting the decision. It is the decision. And if that's happening in a structured, repeatable business context, it needs a name, an owner, documented inputs, and a human being who can stand behind it.</p>
+
+      <p>So what is the actual trigger? What separates personal AI use from Shadow AI that requires formal governance?</p>
+
+      <div class="insight-callout">
+        <div class="label">The Insight</div>
+        <p>Governance isn't triggered by consequence. It's triggered by dependency.</p>
+      </div>
+
+      <hr class="divider" />
+
+      <p>This matters beyond policy and compliance. I've become increasingly interested in what it actually looks like to build AI systems that take this seriously from the ground up... systems with narrow, well-defined scope, verifiable outputs, documented data lineage, and logic that a human can interrogate and explain. Not AI that operates as a black box and asks for trust. AI that earns accountability by making its reasoning visible.</p>
+
+      <p>That's a harder problem than it sounds. But it's the right problem to be working on.</p>
+
+      <hr class="divider" />
+
+      <p>When no human owns the decision, no human owns the consequence. And right now, there are decisions being made where nobody up and down the org chart could tell you why.</p>
+
+      <p>That's not an AI problem. That's a governance problem. And it starts with knowing where the line is.</p>
+
+    </div><!-- /prose -->
+
+    <!-- Footnotes -->
+    <div class="footnotes">
+      <h3>Sources</h3>
+      <ol>
+        <li id="fn1">
+          The VA contract cancellation story was reported across multiple outlets:
+          <ul>
+            <li>ProPublica (investigative, center-left): <a href="https://www.propublica.org/article/trump-doge-veterans-affairs-ai-contracts-health-care" target="_blank" rel="noopener">DOGE Developed Error-Prone AI Tool to "Munch" Veterans Affairs Contracts</a></li>
+            <li>ProPublica: <a href="https://www.propublica.org/article/doge-ai-veterans-affairs-canceled-contracts-senators-trump" target="_blank" rel="noopener">Senators Demand Transparency on Canceled VA Contracts</a></li>
+            <li>Nextgov/FCW (nonpartisan federal IT trade): <a href="https://www.nextgov.com/artificial-intelligence/2025/06/lawmakers-demand-review-vas-ai-driven-contract-cuts/406249" target="_blank" rel="noopener">Lawmakers Demand Review of VA's AI-Driven Contract Cuts</a></li>
+            <li>NPR: <a href="https://www.npr.org/2025/06/02/nx-s1-5417994/former-doge-engineer-shares-his-experience-working-for-the-cost-cutting-unit" target="_blank" rel="noopener">Former DOGE Engineer Shares His Experience Working for the Cost-Cutting Unit</a></li>
+            <li>AI Incident Database (nonpartisan technical registry): <a href="https://incidentdatabase.ai/reports/5325" target="_blank" rel="noopener">Report 5325 — DOGE VA AI Contract Tool Failures</a></li>
+          </ul>
+          <a href="#ref1">↩</a>
+        </li>
+        <li id="fn2">
+          The Lavingia quote is sourced directly from ProPublica's reporting and corroborated across three outlets:
+          <ul>
+            <li>ProPublica: <a href="https://www.propublica.org/article/doge-ai-veterans-affairs-canceled-contracts-senators-trump" target="_blank" rel="noopener">Senators Demand Transparency on Canceled VA Contracts</a></li>
+            <li>ProPublica (deep-dive): <a href="https://www.propublica.org/article/inside-ai-tool-doge-veterans-affairs-contracts-sahil-lavingia" target="_blank" rel="noopener">Inside the AI Tool Used by DOGE to Review Veterans Affairs Contracts</a></li>
+            <li>Nextgov/FCW: <a href="https://www.nextgov.com/people/2025/05/va-based-doge-associate-gets-boot-after-publicly-discussing-his-work/405636" target="_blank" rel="noopener">VA-Based DOGE Associate Gets 'the Boot' After Publicly Discussing His Work</a></li>
+          </ul>
+          <a href="#ref2">↩</a>
+        </li>
+      </ol>
+    </div>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <span>&copy; 2026 Scott Curtner, CIA, CISA</span>
+    <a href="https://scottcurtner.com/">&larr; Back to all articles</a>
+  </footer>
+
+</body>
+</html>

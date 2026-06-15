@@ -1,0 +1,37 @@
+# Scott Curtner
+
+> Technology Audit Manager (VP) and GRC leader with 30+ years
+> of experience at Wells Fargo and Bank of America. CIA®, CISA®,
+> ITIL® 4 certified. Pursuing AAIA™ (Advanced in AI Audit).
+> Based in San Francisco Bay Area.
+
+Scott Curtner is a technology auditor who came up through the
+machines — server administration, enterprise mobility, and
+product management before moving into IT audit and GRC at VP
+level. He writes about AI tools, audit practice, real estate
+investing, and the intersection of technical depth and
+business judgment.
+
+## Professional
+
+- [scottcurtner.com](https://www.scottcurtner.com/): Full
+professional profile — experience, credentials, testimonials,
+and writing.
+
+## Writing
+
+- [I Don't Publish Articles. I Release Them Through an AI Control.](https://www.scottcurtner.com/articles/publish-control/): A missing canonical tag on a Sunday morning pulled a thread. By end of day I'd built a two-agent AI publish control for my blog. Here's the system.
+- [When Does AI Use Become Shadow AI?](https://www.scottcurtner.com/articles/shadow-ai/): Where personal AI productivity tools cross into governance risk — and how dependency triggers the line.
+- [Integrative vs. Disintegrative Pain in Technical Learning](https://www.scottcurtner.com/articles/integrative-pain/integrative-pain-blog-post.html): Applying Mark Divine's pain framework to learning hard technical skills.
+- [I Walked Through a Vacant Rental With My Phone](https://www.scottcurtner.com/articles/unit-a/): How an MCP memory server turns voice notes and phone photos into organized action.
+- [My 2nd Brain Got a Wiki — and Writes Itself](https://www.scottcurtner.com/articles/2nd-brain-wiki/): Adding a compiled wiki layer to an AI memory system backed by GitHub and Claude.
+- [From My Grandfather's Ledger to the Plaid API](https://www.scottcurtner.com/articles/grandpaledger-to-plaid-api/): Replacing 30 years of paper real estate bookkeeping with a Python/Plaid system.
+- [I Built My Daughter an AI Brain for College](https://www.scottcurtner.com/articles/clarice-2ndbrain/): Building a persistent AI memory system for a college-bound kid using Open Brain MCP.
+- [Letting My AI Edit Its Own Memory](https://www.scottcurtner.com/article-memory-edit.html): Extending Open Brain MCP with update and delete tools — and why a write-only memory system is a control weakness.
+- [How I Built a Professional Website for Free](https://www.scottcurtner.com/article-1.html): GitHub Pages, Claude, and the DNS gotcha at Network Solutions nobody warns you about.
+- [Honored by San Bruno](https://www.scottcurtner.com/article-2.html): Receiving the 2026 City of San Bruno Community Recognition Award after 13+ years with the San Bruno Education Foundation.
+
+## Optional
+
+- [LinkedIn](https://www.linkedin.com/in/scottcurtner/):
+Professional network profile and activity.

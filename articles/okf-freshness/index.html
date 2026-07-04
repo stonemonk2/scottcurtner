@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/okf-freshness/" />
+  <title>Google Released a Standard for AI Knowledge Bases. I Adopted It — Then Extended It. | Scott Curtner</title>
+  <meta name="description" content="On June 12, 2026, Google Cloud released the Open Knowledge Format — a minimal standard for AI-readable knowledge bases. Five days later I had adopted it. Within a week I had extended it with a freshness management layer that OKF deliberately leaves open. I wrote a white paper on the architecture. This is the story of how I got there. />
+  <meta name="author" content="Scott Curtner" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/okf-freshness/" />
+  <meta property="og:title" content="Google Released a Standard for AI Knowledge Bases. I Adopted It — Then Extended It." />
+  <meta property="og:description" content="Google's OKF gives AI agents a clean way to read your knowledge. It says nothing about whether that knowledge is still true. Here's the layer I built on top." />
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/okf-freshness/images/verified-knowledge.png" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a1a1a;
+      --muted: #555;
+      --rule: #e0ddd8;
+      --bg: #faf9f7;
+      --accent: #2d5f8a;
+      --accent-light: #e8f0f7;
+      --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 18px;
+      line-height: 1.75;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    nav {
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+    }
+    nav a.wordmark {
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.75rem;
+    }
+    nav ul a {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    nav ul a:hover { color: var(--ink); }
+
+    .article-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .eyebrow {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.1rem;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      line-height: 1.2;
+      font-weight: normal;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .byline {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    p { margin-bottom: 1.5rem; }
+
+    .section-break {
+      text-align: center;
+      color: var(--muted);
+      margin: 2.5rem 0;
+      letter-spacing: 0.3em;
+      font-size: 0.85rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: normal;
+      margin: 2.75rem 0 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1.25rem;
+      margin: 2rem 0;
+      background: var(--accent-light);
+      border-radius: 0 4px 4px 0;
+    }
+    blockquote p {
+      margin: 0;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: #ededea;
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: #2a2a2a;
+    }
+
+    .image-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    .image-compare figure { margin: 0; }
+    .image-compare img {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+    }
+    .image-compare figcaption {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 0.6rem;
+    }
+    .image-compare figcaption strong { color: var(--ink); }
+
+    .footnotes {
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .footnotes p { margin-bottom: 0.6rem; }
+
+    sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+    sup a { color: var(--accent); text-decoration: none; }
+
+    .connect-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .connect-footer strong { color: var(--ink); }
+    .connect-footer a { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.75rem; }
+      nav ul { gap: 1rem; }
+      .article-wrap { padding: 2rem 1.25rem 4rem; }
+      .image-compare { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="wordmark" href="https://www.scottcurtner.com/">Scott Curtner</a>
+    <ul>
+      <li><a href="https://www.scottcurtner.com/#about">About</a></li>
+      <li><a href="https://www.scottcurtner.com/#experience">Experience</a></li>
+      <li><a href="https://www.scottcurtner.com/#credentials">Credentials</a></li>
+      <li><a href="https://www.scottcurtner.com/#writing">Writing</a></li>
+      <li><a href="https://www.scottcurtner.com/#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <div class="article-wrap">
+
+    <p class="eyebrow">Knowledge Systems · Tech Auditor Goes Deep</p>
+
+    <h1>
+      
+      Google Released a Standard for AI Knowledge Bases. <br> I Adopted It <em>Then Extended It.</em></h1>
+
+    <p class="byline">June 2026 · Scott Curtner CIA® CISA® AAIA™ — In Progress ITIL® 4</p>
+
+    <p>It happened on a Sunday. I was mid-session with Claude — not looking for anything in particular, just following a thread — when the system did something I hadn't asked it to do.</p>
+
+    <p>I had been running an AI-assisted knowledge base for months. Pages and pages of personal reference material: professional context, project state, domain notes, running logs. The system knew my work, my properties, my open tasks. It loaded the right context at the right moment without me having to explain anything. By any measure, it was working.</p>
+
+    <p>What happened that Sunday wasn't a failure. It was something subtler. I watched the system synthesize an answer from two documents I recognized — and one of the underlying facts, something I had written down months earlier and never revisited, was no longer accurate. The system had no way to know that. It answered with complete confidence from a document that was technically still there, still formatted correctly, still loading as expected.</p>
+
+    <p>The document wasn't broken. It was stale.</p>
+
+    <p>I sat with that for a moment. I had built a system to give an AI agent accurate, synthesized context on demand. I had optimized for capture and retrieval. I had not built anything that could tell me — or the agent — which parts of that context were still true.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>The audit instinct kicks in at moments like this. I've spent enough time in technology audit to know what the difference between a control and a hope looks like in practice. A knowledge base that grows faithfully but has no mechanism for detecting staleness is not a controlled system. It's a very organized hope.</p>
+
+    <p>The records are clean. The retrieval works. But nobody has checked whether the underlying facts are still facts.</p>
+
+    <p>I've written about the executor/validator pattern before — the idea that you don't let the system that runs a process also certify that the process ran correctly.<sup><a href="#fn1">1</a></sup> The same principle applies here, one level up. An AI agent reading a knowledge base cannot audit its own source material. It can only work with what it finds. If what it finds is wrong, the answer will be wrong, delivered with the same confidence as if it were right.</p>
+
+    <p>That's the failure mode. Not a dramatic crash. Not an obvious error. Just a well-structured system answering fluently from outdated material, at the exact moment someone needs to rely on it.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>I started thinking through what a freshness layer would actually require. Not a philosophical commitment to keeping things current — I already had that, which is how I noticed the problem in the first place. A mechanism. Something structural that makes staleness detectable, reviewable, and recorded.</p>
+
+    <p>The first thing I needed was a better relationship with time.</p>
+
+    <p>A knowledge base typically tracks one date per document: when the content last changed. That timestamp is useful, but it answers the wrong question. Age tells you when something was touched. It doesn't tell you whether anyone has verified it is still accurate.</p>
+
+    <p>Those are two different facts, and collapsing them into one field creates a problem. An old document that has been reviewed and confirmed is fundamentally different from an old document that nobody has looked at in eight months. With a single timestamp, you can't tell them apart. You end up either treating all old documents as suspect (which trains you to ignore the signal, since most old documents are fine) or routinely bumping the date without genuine review (which quietly converts "verified current" into "someone touched this recently," draining the signal of meaning).</p>
+
+    <p>The fix is a second date field. Not a replacement — an addition. One field for when the content last changed. A second for when a human last confirmed that content is still accurate. The gap between them becomes the signal that matters.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>I was still working through what this layer should look like when a format dropped into my awareness that gave it a name and a structure.</p>
+
+    <p>On June 12, 2026, Google Cloud released the Open Knowledge Format — OKF.<sup><a href="#fn2">2</a></sup> The specification is deliberately minimal: a directory of Markdown files, each carrying a YAML frontmatter block, readable by any AI agent without proprietary tooling or a database layer. A root-level file acts as the behavioral contract for any agent reading the directory. The only strictly required field is a document type. Everything else is optional or extensible.</p>
+
+    <p>OKF had emerged from a real pattern. Andrej Karpathy's "LLM wiki" convention had been circulating since April — the idea of keeping a plain-text document that told an AI assistant who you were and what context it needed.<sup><a href="#fn3">3</a></sup> The AGENTS.md and CLAUDE.md patterns had spread across open-source repositories. Practitioners building personal knowledge systems had converged independently on the same shape: Markdown, frontmatter, Git, a root instruction file. OKF looked at that convergence and wrote down the common denominator.</p>
+
+    <p>What it does not specify is the knowledge lifecycle. OKF includes an optional <code>updated</code> timestamp field — one date, content modification only. There is no native field for human verification. No protocol for scheduled review. No per-document instruction about how to evaluate whether content has gone stale.</p>
+
+    <p>This is the correct design choice. A standard that ships a clean, small core is more useful than one that waits for consensus on every possible extension. And the silence on lifecycle is exactly where practitioners should extend. OKF's own architecture invites it — frontmatter extensions that a conformant reader ignores gracefully are precisely how the format was designed to grow.</p>
+
+    <p>What I had been working out on paper was OKF's missing layer.</p>
+
+    <div class="image-compare">
+      <figure>
+        <img
+          src="images/unreviewed-knowledge.png"
+          alt="An open filing cabinet labeled Unreviewed Knowledge — cluttered folders, aging documents, an empty chair beside it and a dusty analog clock above"
+        />
+        <figcaption>
+          <strong>Unreviewed Knowledge</strong> — A system that accumulates faithfully but has no mechanism for detecting what has gone stale.
+        </figcaption>
+      </figure>
+      <figure>
+        <img
+          src="images/verified-knowledge.png"
+          alt="An open filing cabinet labeled Verified Knowledge — organized green folders, a single crisp page on top, a man actively filing, an LED clock showing the current time"
+        />
+        <figcaption>
+          <strong>Verified Knowledge</strong> — A system with a human in the loop, a process running, and a clock that still means something.
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="section-break">· · ·</div>
+
+    <h2>The freshness layer, in three pieces</h2>
+
+    <p>The two-date model is the foundation. Two fields in every document's frontmatter: <code>updated</code> for content modification, <code>verified</code> for last human confirmation. The gap between them is the primary freshness signal. A document where <code>verified</code> sits far behind <code>updated</code> has been changed but never checked — one risk profile. A document that is old but has been regularly confirmed is a different thing entirely.</p>
+
+    <p>There is one invariant riding on top of this: <code>verified</code> should never be older than <code>updated</code>. The act of verifying is itself an event that moves the clock forward. This invariant is treated as a checked condition, not an assumed one — which is the entire point. The difference between "we assume this holds" and "we verify it holds" is the difference between a control and a hope.</p>
+
+    <p>The second piece is scheduled review. A weekly pass, triggered by a simple phrase, surfaces documents in order of oldest verified date first. For each one: confirm it's still accurate and update the field, correct the content if something has changed, consciously defer with a reason and a new target date, or flag for archival. The cadence is weekly rather than threshold-based because threshold-based staleness creates reactive behavior — nothing happens until the flag trips. A weekly habit keeps the queue short and matches the rhythm of how most practitioners track what's changed in their domains.</p>
+
+    <p>The third piece is the one that took the most thought: per-document review contracts. Not all documents should be reviewed the same way. A factual reference needs "is this still accurate?" A status document needs "does this reflect current state?" A process document needs "do these instructions match how the process actually runs?" A journal or memoir-style document doesn't rot in the same way — its failure mode isn't becoming wrong, it's becoming incomplete. That calls for a generative approach: read what's there, identify threads, ask a question designed to elicit addition.</p>
+
+    <p>The review contract lives in a dedicated frontmatter block and encodes the per-document logic directly — how often to review, what mode of review applies, and what to focus on. The document itself stays clean prose. The intelligence about how to evaluate it stays in the contract.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>The Sunday discovery wasn't a crisis. It was a calibration. A system that had been working well surfaced the next problem it needed to solve, at the moment I was present enough to see it.</p>
+
+    <p>I've been thinking about that pattern in other contexts. The systems worth building aren't the ones that never surface problems. They're the ones that surface problems early, when fixing them is still inexpensive. A knowledge base that flags its own staleness before an agent relies on outdated material is doing exactly that.</p>
+
+    <p>What I'm working toward — and haven't fully closed — is the question of what good governance infrastructure looks like when AI agents are reading and acting on knowledge at a cadence no human can match. The freshness layer described here is a start. It keeps the human in the loop where judgment belongs. It makes the knowledge base auditable. It treats "is this still true?" as a real question with a real answer, not a background assumption that something is handling somewhere.<sup><a href="#fn4">4</a></sup></p>
+
+    <p>I don't think that's a solved problem yet. I think it's where the interesting work is.</p>
+
+    <div class="footnotes">
+      <p id="fn1"><sup>1</sup> Scott Curtner, "I Don't Publish Articles. I Release Them Through an AI Control," scottcurtner.com, June 2026. https://www.scottcurtner.com/articles/publish-control/</p>
+      <p id="fn2"><sup>2</sup> Sam McVeety and Amir Hormati, "How the Open Knowledge Format can improve data sharing," Google Cloud Blog, June 12, 2026. https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing — The OKF v0.1 specification and reference implementations are published at https://github.com/GoogleCloudPlatform/knowledge-catalog</p>
+      <p id="fn3"><sup>3</sup> Andrej Karpathy published his LLM wiki pattern on April 3, 2026 via GitHub Gist (https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), describing a self-maintaining personal wiki where an LLM incrementally builds and manages structured markdown files. Google's OKF announcement explicitly credits this gist as the pattern OKF formalizes.</p>
+      <p id="fn4"><sup>4</sup> The full technical treatment of the freshness management layer described in this post — including the two-date model specification, per-document review contract schema, and the three-party build methodology — is available as a white paper: "Knowledge Freshness in a Static Format World: Extending Google's Open Knowledge Format with a Lifecycle Management Layer," June 2026. https://docs.google.com/document/d/1ziIwb_8ls3kZLCfUCUHArbLyfNoKMAzQrtE54lqnByw/edit?usp=sharing</p>
+    </div>
+
+    <div class="connect-footer">
+      <strong>Scott Curtner</strong> is a Technology Audit Manager (VP) at a major US financial institution, a CIA® and CISA® holder pursuing the ISACA AAIA™ certification, a real estate investor, and a board member of the San Bruno Education Foundation. He writes about what happens when a technology auditor goes deep on AI tools and modern knowledge systems.<br><br>
+      <a href="https://www.linkedin.com/in/scottcurtner/">Connect on LinkedIn</a> · <a href="https://www.scottcurtner.com/">scottcurtner.com</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

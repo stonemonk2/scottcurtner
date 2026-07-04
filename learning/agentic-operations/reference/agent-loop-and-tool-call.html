@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agent Loop &amp; Tool-Call Round-Trip — Reference</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.55; font-size: 16px; }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  header h1 { font-size: 1.9rem; font-weight: normal; margin: 0 0 .3rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  .lede { color: var(--muted); font-style: italic; margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.2rem 0 1rem; }
+  a { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .9rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .gate { background: var(--card); border-left: 3px solid var(--accent);
+          padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  ul { padding-left: 1.2rem; } li { margin: .45rem 0; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  @media print { body { background:#fff; color:#000; font-size:10.5pt; }
+                 pre { border: 1px solid #999; } a { color:#000; text-decoration:none; } }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Agent Loop &amp; Tool-Call</p>
+  <header>
+    <div class="kicker">Agentic Operations · Reference · Level 1 · Foundations · Code</div>
+    <h1>The Agent Loop &amp; Tool-Call Round-Trip</h1>
+    <p class="lede">The skeleton every tool-using agent shares. Distilled from the Lesson 0005 build; full working script at <code>../exercises/m1_agent.py</code>.</p>
+  </header>
+
+  <div class="gate">The loop in one line: <strong>call → observe → decide → repeat</strong> —
+  and every iteration rebuilds the model's entire world from the <code>messages</code> list.</div>
+
+  <h2>The round-trip, step by step</h2>
+  <ul>
+    <li><strong>1. You send</strong>: system prompt + tool definitions + full message history.</li>
+    <li><strong>2. Model proposes</strong>: the response's stop-reason says <code>tool_use</code> and its content includes a block naming a tool + arguments. This is <em>just structured text</em>.</li>
+    <li><strong>3. Your code executes</strong>: validate the input, run the real function, capture the result (or the error).</li>
+    <li><strong>4. You append</strong>: the assistant's content (verbatim), then a user message containing a <code>tool_result</code> block whose <code>tool_use_id</code> matches the proposal's id.</li>
+    <li><strong>5. Repeat</strong> until the stop-reason is no longer <code>tool_use</code>.</li>
+  </ul>
+
+  <h2>Minimal loop (Python, Anthropic SDK)</h2>
+<pre><code>messages = [{"role": "user", "content": question}]
+
+for turn in range(1, 11):                      # always bound the loop
+    response = client.messages.create(
+        model=MODEL, max_tokens=16000,
+        system=SYSTEM, tools=TOOLS, messages=messages,
+    )
+    if response.stop_reason != "tool_use":
+        break                                   # model is done
+
+    messages.append({"role": "assistant", "content": response.content})
+    results = []
+    for block in response.content:
+        if block.type == "tool_use":
+            try:
+                out, err = run_tool(block.name, block.input), False
+            except Exception as e:
+                out, err = f"Error: {e}", True  # tell the model, don't crash
+            results.append({"type": "tool_result", "tool_use_id": block.id,
+                            "content": out, "is_error": err})
+    messages.append({"role": "user", "content": results})</code></pre>
+
+  <h2>Reliability rules (the "reliable" in the M1 gate)</h2>
+  <ul>
+    <li><strong>Bound the loop.</strong> A fixed iteration cap converts an infinite loop into a visible failure.</li>
+    <li><strong>Return errors as tool results</strong> (<code>is_error: true</code>) — the model recovers; a crash doesn't.</li>
+    <li><strong>All parallel tool results go back in ONE user message</strong>, one result block per proposal, ids matched.</li>
+    <li><strong>Append the assistant content verbatim</strong> — don't extract just the text; the proposal blocks are part of the conversation.</li>
+    <li><strong>Validate tool inputs in your code.</strong> The model's arguments are untrusted text (see the 0005 calculator: AST whitelist, never <code>eval()</code>).</li>
+  </ul>
+
+  <h2>Reading cost off a response</h2>
+<pre><code>u = response.usage
+u.input_tokens, u.output_tokens        # tokens this call
+cost = u.input_tokens/1e6 * PRICE_IN + u.output_tokens/1e6 * PRICE_OUT</code></pre>
+  <p>Note what grows: every loop iteration re-sends the whole history, so input tokens climb
+  each turn — the loop's cost curve is the statelessness lesson made visible.</p>
+
+  <h2>Tool definitions are prompts</h2>
+<pre><code>{"name": "calculator",
+ "description": "Evaluate one arithmetic expression (...). Call this for
+                 every arithmetic step; do not do mental math.",
+ "input_schema": {"type": "object",
+                  "properties": {"expression": {"type": "string", "description": "..."}},
+                  "required": ["expression"]}}</code></pre>
+  <p>The model chooses tools by reading the description — state <em>when</em> to call it, not
+  just what it does. Official reference:
+  <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">tool use docs</a>.</p>
+
+  <footer>
+    Agentic Operations workspace · Built in <a href="../lessons/0005-build-the-single-tool-agent.html">Lesson 0005</a> ·
+    Working script: <code>../exercises/m1_agent.py</code> (self-test: <code>--selftest</code>)
+  </footer>
+</main>
+</body>
+</html>

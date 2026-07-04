@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0011 — The Orchestrator Bake-Off</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0;
+          font-family: system-ui, sans-serif; font-size: .85rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
+  th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0011</p>
+  <div class="kicker">Agentic Operations · Lesson 0011 · Level 3 · Advanced · Experiment</div>
+  <h1>The Orchestrator Bake-Off</h1>
+  <p class="lede">Prove multi-agent beats one agent on a decomposable task — with traces — or admit it doesn't.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> a head-to-head result, backed by
+  traces, showing whether an orchestrator + subagents actually beats a single agent on your task —
+  and an honest verdict either way. The rubric's first M3 exercise. Prerequisites:
+  <a href="0003-traces-before-prompts.html">Lesson 0003</a>,
+  <a href="0008-react-multi-hop-build.html">Lesson 0008</a>.</div>
+
+  <h2>1 · Pick a genuinely decomposable task</h2>
+  <p>Multi-agent's one real advantage is <strong>context isolation</strong> (Lesson 0003), so the
+  task must have independent sub-parts that each benefit from a clean window. Good: "review these
+  5 documents against a checklist and produce a combined report" (each doc → its own subagent,
+  isolated context). Bad: anything sequential where step N needs step N−1's full reasoning — that's
+  one agent's job, and splitting it just adds coordination cost.</p>
+
+  <h2>2 · Build both arms</h2>
+  <ul>
+    <li><strong>Single agent:</strong> your existing loop, all 5 documents in one context, produce
+    the report.</li>
+    <li><strong>Orchestrator:</strong> a lead loop that spawns one subagent call per document
+    (each a fresh <code>messages</code> list — that's the isolation), collects the structured
+    results, and synthesizes the report. Keep the subagent prompt identical across the five.</li>
+  </ul>
+  <p>Instrument both (you'll formalize this in Lesson 0012): log per-arm total tokens, wall-clock,
+  number of model calls, and the final quality score against a rubric you write first.</p>
+
+  <h2>3 · Run the bake-off</h2>
+  <table>
+    <tr><th>Arm</th><th>Quality (/rubric)</th><th>Total tokens</th><th>Wall-clock</th><th>Model calls</th></tr>
+    <tr><td>Single agent</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>Orchestrator + 5 subagents</td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <p>Run each arm 3 times (agents are non-deterministic; one run isn't a result). Score quality
+  blind if you can.</p>
+  <div class="check"><strong>Pass:</strong> you have a defensible verdict. Two honest outcomes,
+  both valuable: the orchestrator wins on quality (isolation kept each doc's analysis clean) and
+  you can show the token/latency price you paid for it — <em>or</em> it doesn't win, and you can
+  say so. "It didn't beat the single agent" is a passing result. Manufacturing a multi-agent win
+  the traces don't support is a failing one.</div>
+
+  <div class="key"><strong>The M3 discipline:</strong> most teams reach for multi-agent too early
+  (<a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic's own
+  account</a>). You just made the decision the way it should always be made — with traces and a
+  named advantage (context isolation), not with a hunch that "more agents = smarter." Every extra
+  agent must earn its coordination cost and multiplied failure surface.</div>
+
+  <h2>4 · Read the coordination failures</h2>
+  <p>Look at the orchestrator's traces for the failure modes multi-agent <em>adds</em>: a subagent
+  that misread its slice, the synthesizer dropping a subagent's finding, duplicated work across
+  subagents. These don't exist in the single-agent arm — they're the tax you're weighing.</p>
+  <div class="check"><strong>Pass:</strong> you can point to at least one coordination-specific
+  issue in the orchestrator traces (or confidently state there were none across 3 runs).</div>
+
+  <h2>Self-grade</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    <ul>
+      <li><strong>Task was decomposable</strong> — independent sub-parts, isolation-justified (not a sequential task forced apart)</li>
+      <li><strong>Both arms measured</strong> — quality + tokens + latency + calls, 3 runs each</li>
+      <li><strong>Verdict is honest</strong> — win or no-win, backed by the numbers; no manufactured multi-agent victory</li>
+      <li><strong>Coordination cost named</strong> — you identified the failure surface multi-agent added, or verified it was clean</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0012-tracing-and-planted-regression.html">Lesson 0012 — tracing &amp; the planted
+  regression</a>: build the observability you leaned on here, and an eval that catches a bug you
+  hide on purpose.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system — Anthropic</a> (what multi-agent actually cost them, and what it bought).<br>
+    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0010-episodic-memory.html">0010</a> · <a href="0012-tracing-and-planted-regression.html">0012</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

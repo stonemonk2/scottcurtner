@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0015 — Guardrails &amp; the HITL Checkpoint</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0;
+          font-family: system-ui, sans-serif; font-size: .85rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
+  th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0015</p>
+  <div class="kicker">Agentic Operations · Lesson 0015 · Level 4 · Operational Leadership · Build + Design</div>
+  <h1>Guardrails &amp; the HITL Checkpoint</h1>
+  <p class="lede">Least privilege at the tool boundary; a human gate placed by risk, its throughput cost measured.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> tool-permission scoping + injection
+  defense on your agent, and a human-in-the-loop checkpoint policy for one high-stakes action with
+  its throughput cost measured — the rubric's second M4 exercise. Prerequisites:
+  <a href="0004-own-the-feedback-loop.html">Lesson 0004</a>,
+  <a href="0007-structured-prompting-and-the-injection-lab.html">Lesson 0007</a> (injection),
+  <a href="0014-slo-dashboard.html">Lesson 0014</a> (the SLOs a checkpoint trades against).</div>
+
+  <h2>1 · Give the agent a dangerous tool</h2>
+  <p>Add a tool with real-world consequence — a <em>simulated</em> one: <code>send_email(to, body)</code>
+  that writes to an outbox file, or <code>delete_record(id)</code> that mutates a local store. Now
+  the agent can take an action that's hard to reverse — the exact case guardrails exist for
+  (<a href="https://genai.owasp.org/">OWASP LLM Top 10</a>).</p>
+
+  <h2>2 · Guardrails: least privilege + validation</h2>
+  <ul>
+    <li><strong>Least privilege:</strong> scope the tool to the minimum it needs. Can
+    <code>send_email</code> only reach an allowlist of recipients? Can <code>delete_record</code>
+    touch only records the current task owns? Scope in your <em>code</em>, not the prompt — the
+    prompt is advisory, the code is the boundary.</li>
+    <li><strong>Input/output validation:</strong> validate the tool's arguments (0005's rule,
+    now with stakes) and validate the agent's final output before it leaves.</li>
+    <li><strong>Injection defense:</strong> re-run a 0007-style attack — feed the agent untrusted
+    content trying to trigger <code>send_email</code> to an attacker address. Your least-privilege
+    scoping should make the attack fail structurally even if the prompt defense is bypassed.</li>
+  </ul>
+  <div class="check"><strong>Pass:</strong> an injection that would have triggered the dangerous
+  action is stopped by a code-level guard (allowlist/scope), not merely by prompt wording. You've
+  demonstrated why least privilege is the structural defense (the M1/0007 lesson at production stakes).</div>
+
+  <h2>3 · Place a human checkpoint — by risk</h2>
+  <p>The hard part isn't adding approval; it's placing it <em>without killing throughput</em>
+  (Lesson 0004). Design a policy, don't gate everything:</p>
+  <table>
+    <tr><th>Action</th><th>Reversible?</th><th>Blast radius</th><th>Gate?</th></tr>
+    <tr><td>read_record</td><td>yes</td><td>none</td><td>auto</td></tr>
+    <tr><td>send_email (allowlisted)</td><td>no</td><td>1 recipient</td><td>?</td></tr>
+    <tr><td>delete_record</td><td>no</td><td>data loss</td><td>human</td></tr>
+  </table>
+  <p>Implement the gate: when the agent proposes a gated action, the loop pauses and surfaces
+  it for approval (a console prompt, or a queue). Auto-approve the rest.</p>
+  <p>This is not abstract for you — Vernant's own commit/push/egress battery is exactly a
+  checkpoint policy placed by risk (reversible local edits auto-proceed; irreversible egress
+  hails a human). You operate a worked example of this lesson every session.</p>
+
+  <h2>4 · Measure the throughput cost</h2>
+  <p>Run a batch of tasks through with the checkpoint on and off. Record the cost of the gate:</p>
+  <div class="check"><strong>Pass:</strong> you can state the checkpoint's price — e.g. "gating
+  deletes added human wait on 3 of 20 runs and blocked 1 wrong deletion." That sentence — safety
+  gained vs throughput spent — is the M4 checkpoint-design skill. A gate whose cost you can't state
+  is a gate you can't defend.</div>
+
+  <div class="key"><strong>Auditability closes it:</strong> log every consequential action with
+  the decision and context that produced it (Lesson 0004). Now every gated action is traceable —
+  who/what approved, on what evidence. Guardrails protect the SLOs; the checkpoint trades
+  throughput for safety; the audit log makes both defensible.</div>
+
+  <h2>Self-grade</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    <ul>
+      <li><strong>Least privilege enforced in code</strong> — the dangerous tool is scoped structurally; injection stopped by the scope, not the prompt</li>
+      <li><strong>Checkpoint placed by risk</strong> — a policy that gates irreversible/high-blast actions and auto-approves the rest, not a gate on everything</li>
+      <li><strong>Throughput cost measured</strong> — the price of the gate stated in numbers (waits added, bad actions blocked)</li>
+      <li><strong>Auditable</strong> — consequential actions logged with decision + context</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0016-the-improvement-loop.html">Lesson 0016 — the full improvement loop</a>: catch a
+  live regression, ship a gated fix, prove the suite would have blocked the bad version. The last
+  lesson — and the M4 gate.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://genai.owasp.org/">OWASP Top 10 for LLM Applications</a> (the guardrail taxonomy: injection LLM01, excessive agency, least privilege).<br>
+    Reference: <a href="../reference/m4-core-vocabulary.html">Level 4 Vocabulary</a> ·
+    Sister lessons: <a href="0014-slo-dashboard.html">0014</a> · <a href="0016-the-improvement-loop.html">0016</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0010 — Episodic Memory</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0010</p>
+  <div class="kicker">Agentic Operations · Lesson 0010 · Level 2 · Developing · Build → gate</div>
+  <h1>Episodic Memory</h1>
+  <p class="lede">"The agent remembers" is always code choosing what to reload. Here you write that code.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> an agent that recalls a prior run's
+  outcome and changes its plan because of it — the rubric's third M2 exercise — followed by the M2
+  readiness check. Prerequisites:
+  <a href="0002-match-the-pattern-to-the-problem.html">Lesson 0002</a> (memory types),
+  <a href="0008-react-multi-hop-build.html">Lesson 0008</a> (your multi-tool agent).</div>
+
+  <h2>1 · The setup: a run worth remembering</h2>
+  <p>Give your agent a task that can fail informatively and be retried later. Example: a "deploy
+  checker" that runs a (simulated) check tool which fails the first time with a specific reason
+  ("port 8080 already in use"), and a task the agent should approach differently next session if
+  it recalls that failure.</p>
+
+  <h2>2 · Write the episodic store</h2>
+  <p>The whole lesson in one idea: <strong>memory is retrieval-and-injection, not remembering.</strong>
+  Between runs the model retains nothing (Lesson 0001). So:</p>
+  <ul>
+    <li><strong>Write:</strong> at the end of a run, append a record to <code>episodes.jsonl</code>
+    — the task, what happened, the outcome, one lesson learned. Give the agent a tool
+    (<code>record_episode(summary, outcome, lesson)</code>) or write it from your loop.</li>
+    <li><strong>Retrieve &amp; inject:</strong> at the <em>start</em> of the next run, read the
+    relevant past episodes and place them into the context (a "prior runs" section in the system
+    prompt or first message) before the model plans.</li>
+  </ul>
+  <p>This is the same move as your MISSION/NOTES files in this very teaching workspace — they're
+  the teacher's episodic memory, re-injected each session because the teacher is stateless too.</p>
+
+  <h2>3 · Prove the plan changed</h2>
+  <p>Run twice. Run 1: the agent hits the failure, records the episode. Run 2 (fresh process):
+  the agent loads the episode and should <em>open differently</em> — checking the port first,
+  or choosing an alternative — rather than repeating run 1's blind approach.</p>
+  <div class="check"><strong>Pass:</strong> run 2's trace shows the agent referencing the recalled
+  lesson and altering its first action. Control test: delete <code>episodes.jsonl</code> and run
+  again — it reverts to the naive approach, proving the behavior came from the injected memory,
+  not the model.</div>
+
+  <div class="key"><strong>The three memory types, now concrete:</strong> in-context (this run's
+  window), external (the <code>episodes.jsonl</code> on disk), episodic (past-run records you
+  chose to reload). You never made the model "remember" — you engineered what re-entered the
+  window. That is the whole of memory in agentic systems.</div>
+
+  <h2>4 · The M2 readiness check</h2>
+  <p>You've now built every M2 exercise: structured prompt + injection defense (0007), ReAct
+  multi-hop (0008), RAG build-and-break (0009), episodic memory (0010). Bring to your teaching
+  agent a <strong>design justification for one grounded multi-step agent of your choosing</strong>
+  — the M2 gate skill from Lesson 0002 — now backed by things you've actually built.</p>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal what the M2 check will probe</button>
+  <div id="rubric" class="key">
+    The gate is <em>justifying choices, not reciting them</em>. Expect:
+    <ul>
+      <li><strong>Pattern:</strong> "Why ReAct here and not CoT or ToT?" — answer by problem shape and token cost, with numbers from your builds</li>
+      <li><strong>Memory:</strong> "Where does state live, and what gets reloaded when?" — answer as retrieval-and-injection, not "it remembers"</li>
+      <li><strong>Grounding:</strong> "What caps this agent's answer quality?" — retrieval; and how you'd measure it</li>
+      <li><strong>Injection:</strong> "Where does untrusted data enter, and what must it never reach?" — least privilege as the structural answer</li>
+    </ul>
+    Pass this and M2 is closed — the M3 hands-on arc (orchestrator bake-off, tracing + planted
+    regression, critic/verifier) is next.
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0011-orchestrator-bakeoff.html">Lesson 0011 — the orchestrator-vs-single
+  bake-off</a>: prove multi-agent earns its cost, with traces — or admit it doesn't.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents — Anthropic</a> (memory as long-horizon context curation).<br>
+    Reference: <a href="../reference/m2-core-vocabulary.html">Level 2 Vocabulary</a> ·
+    Sister lessons: <a href="0009-rag-build-and-break.html">0009</a> · <a href="0011-orchestrator-bakeoff.html">0011</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

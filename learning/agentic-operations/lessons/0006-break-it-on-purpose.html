@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0006 — Break It On Purpose</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0;
+          font-family: system-ui, sans-serif; font-size: .85rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
+  th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0006</p>
+  <div class="kicker">Agentic Operations · Lesson 0006 · Level 1 · Foundations · Lab</div>
+  <h1>Break It On Purpose</h1>
+  <p class="lede">You don't own a system until you've watched it fail. Two labs, then the M1 gate.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> a filled-in evidence table showing
+  (a) answer quality degrading as junk fills the window and (b) output quality moving with
+  prompt phrasing — the last two M1 exercises, measured on your own agent. Prerequisite:
+  <a href="0005-build-the-single-tool-agent.html">Lesson 0005</a> working.</div>
+
+  <h2>Lab A · Overflow the window</h2>
+  <p>The claim under test (from <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>,
+  grounded in <a href="https://research.trychroma.com/context-rot">Chroma's context-rot study</a>):
+  irrelevant tokens actively degrade reasoning — long before the window is full.</p>
+  <p><strong>Protocol.</strong> Take your 0005 agent. Bury a fact it needs in junk, and scale the
+  junk. For example: prepend to the user message a "background notes" blob of N paragraphs of
+  irrelevant filler (generate junk deterministically — repeated boilerplate paragraphs work), with
+  one load-bearing line hidden in the middle: <code>"Christina's locker code is 4417."</code>
+  Then ask: <em>"What is Christina's locker code multiplied by 3?"</em> (forces both retrieval
+  from context <em>and</em> a tool call). Run at junk sizes of roughly 0, 2k, 20k, and 60k words
+  — keep the fact at the middle position each time, 3 runs per size.</p>
+  <table>
+    <tr><th>Junk size</th><th>Correct (n/3)</th><th>Input tokens</th><th>Latency</th><th>Notes</th></tr>
+    <tr><td>0</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>~2k words</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>~20k words</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>~60k words</td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <div class="check"><strong>Pass:</strong> you observed at least one of: wrong/missed retrievals
+  appearing as junk grows, latency and cost climbing, or the model ignoring the tool discipline.
+  If everything stays perfect at 60k words, push further or move the fact deeper — and note that
+  a strong model resisting distraction at these sizes is itself a data point; the study's effect
+  sizes grow with length.</div>
+
+  <h2>Lab B · One vague prompt, three ways</h2>
+  <p>The claim under test: "garbage in, garbage out" is literal — phrasing moves results.</p>
+  <p><strong>Protocol.</strong> Pick a vague ask, e.g. <em>"figure out the money stuff for the
+  trip"</em>. Run it three ways against your agent and compare the outputs side by side:</p>
+  <ul>
+    <li><strong>V1 — as-is</strong>: the vague phrasing, verbatim.</li>
+    <li><strong>V2 — specified</strong>: concrete task, inputs, output format ("Split $1,842 of
+    trip costs across 4 people, where Sam paid $900 and owes half shares…: show per-person net").</li>
+    <li><strong>V3 — specified + constraints</strong>: V2 plus edge-case handling and a required
+    output structure (a table, rounding rules, currency).</li>
+  </ul>
+  <div class="check"><strong>Pass:</strong> V1 produced something confidently under-determined
+  (it guessed your intent); V3's answer is checkable. Write one sentence on what V1 <em>invented</em>
+  — that invention is the "confidently wrong" failure mode from the rubric.</div>
+
+  <div class="key"><strong>The two intuitions, now measured:</strong> more context is not better
+  context (Lab A), and vague context produces confidently wrong output rather than hedged output
+  (Lab B). You now hold evidence, not slogans.</div>
+
+  <h2>The M1 readiness check</h2>
+  <p>You're ready to close the gate. Bring to your teaching agent:</p>
+  <ul>
+    <li>Your written explanation from Lesson 0001 (it will be pressure-tested)</li>
+    <li>The working 0005 agent + a context-log excerpt you can narrate</li>
+    <li>This lesson's evidence table and one-sentence Lab B finding</li>
+  </ul>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal what the check will probe</button>
+  <div id="rubric" class="key">
+    Expect pushback like: <em>"The model answered something from yesterday's chat — doesn't that
+    disprove statelessness?"</em> · <em>"Why not just raise the context limit instead of curating?"</em> ·
+    <em>"Your agent crashed on a tool error in the demo — is it still reliable?"</em> — the gate
+    passes when your answers route through mechanism (rebuilt context, distraction cost,
+    error-as-result), not vocabulary.
+  </div>
+
+  <h2>Next</h2>
+  <p>After the gate: the M2 hands-on arc begins with
+  <a href="0007-structured-prompting-and-the-injection-lab.html">Lesson 0007 — Structured
+  Prompting &amp; the Injection Lab</a>.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://research.trychroma.com/context-rot">Context Rot — Chroma</a> (the study your Lab A reproduces in miniature).<br>
+    Reference: <a href="../reference/m1-core-vocabulary.html">Level 1 Vocabulary</a> ·
+    Sister lessons: <a href="0005-build-the-single-tool-agent.html">0005</a> · <a href="0007-structured-prompting-and-the-injection-lab.html">0007</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

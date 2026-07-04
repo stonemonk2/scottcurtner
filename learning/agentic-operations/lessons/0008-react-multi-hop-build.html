@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0008 — The ReAct Multi-Hop Build</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0008</p>
+  <div class="kicker">Agentic Operations · Lesson 0008 · Level 2 · Developing · Guided build</div>
+  <h1>The ReAct Multi-Hop Build</h1>
+  <p class="lede">Thought → action → observation, looped — the workhorse pattern, built and logged by hand.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> an agent that answers a question no
+  single lookup can answer, with a logged thought/action/observation trace you can replay — the
+  rubric's first M2 exercise. Prerequisites:
+  <a href="0002-match-the-pattern-to-the-problem.html">Lesson 0002</a>,
+  <a href="0005-build-the-single-tool-agent.html">Lesson 0005</a>.</div>
+
+  <h2>1 · The corpus (offline, deterministic)</h2>
+  <p>No web APIs needed — the pattern is the point. Create
+  <code>exercises/notes/</code> with 6–10 small text files forming a chain of facts, e.g.
+  <code>team.md</code> ("The pipeline runs on Temporal; Marisol owns the worker fleet"),
+  <code>marisol.md</code> ("Marisol's runbook lives at runbook-w3.md"),
+  <code>runbook-w3.md</code> ("Worker restarts require the ops channel approval; the channel is
+  #ops-west")… Design a question that takes 3+ hops:
+  <em>"Which channel must approve a restart of the fleet owned by the person who owns the
+  pipeline workers?"</em></p>
+
+  <h2>2 · Two tools</h2>
+  <p>Extend your 0005 loop with two tools (same schema discipline — descriptions say <em>when</em>):</p>
+<pre><code>search_notes(query)  ->  filenames whose content matches the query terms
+read_note(filename)  ->  the file's full text</code></pre>
+  <p>Implementation stays boring: substring/keyword match for search; path-validate
+  <code>read_note</code> against the notes directory (untrusted input — 0005's rule).</p>
+
+  <h2>3 · Elicit the pattern</h2>
+  <p>ReAct is interleaved reasoning and acting
+  (<a href="https://arxiv.org/abs/2210.03629">Yao et al.</a>): the model states a thought, takes
+  one action, reads the observation, adjusts. Two changes produce it:</p>
+  <ul>
+    <li><strong>System prompt:</strong> "Work step by step. Before each tool call, state in one
+    sentence what you're looking for and why. After each result, state what you learned. Search
+    before you read; read before you answer."</li>
+    <li><strong>Trace logging:</strong> extend your context logger to also write a compact
+    per-step trace: <code>{step, thought, action, action_input, observation}</code> — thought =
+    the text block preceding the tool call, observation = the tool result you returned.</li>
+  </ul>
+  <div class="check"><strong>Pass:</strong> the multi-hop question is answered correctly, and the
+  trace file reads as a coherent chain: each thought references the previous observation. If the
+  model answers from nothing (hallucinated hop), tighten the prompt: "Only state facts you have
+  read from a note in this session."</div>
+
+  <h2>4 · Watch it adjust — the part CoT can't do</h2>
+  <p>Now sabotage one hop: rename a file so a search comes back empty, or plant a note whose
+  content contradicts another. Re-run and read the trace.</p>
+  <div class="check"><strong>Pass:</strong> the trace shows the model <em>reacting to the
+  observation</em> — reformulating the search, choosing another file — rather than plowing on.
+  That mid-course adjustment is the entire argument for ReAct over linear chain-of-thought on
+  tool-driven tasks. Keep this trace; it's gate evidence.</div>
+
+  <div class="key"><strong>Justify the choice (the M2 gate skill):</strong> write three sentences —
+  why ReAct and not CoT for this task (external facts needed mid-reasoning); why not
+  Tree-of-Thought (no branching search justifying the token cost); what the per-hop cost was
+  (read it off your usage log). If you can write those three sentences about any task, you've
+  passed the heart of M2.</div>
+
+  <h2>Self-grade</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    <ul>
+      <li><strong>Multi-hop works</strong> — 3+ dependent lookups, correct final answer</li>
+      <li><strong>Trace is legible</strong> — thought/action/observation per step, replayable by a reader who wasn't there</li>
+      <li><strong>Adjustment demonstrated</strong> — the sabotage run shows reformulation, not denial</li>
+      <li><strong>Choice justified</strong> — the three-sentence CoT/ReAct/ToT justification, with real costs</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0009-rag-build-and-break.html">Lesson 0009 — RAG build &amp; break</a>: grounding
+  at scale, and what happens when chunking is wrong.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a> (Yao et al.) — compare their published traces with yours.<br>
+    Reference: <a href="../reference/m2-core-vocabulary.html">Level 2 Vocabulary</a> · <a href="../reference/agent-loop-and-tool-call.html">Agent Loop</a> ·
+    Sister lessons: <a href="0007-structured-prompting-and-the-injection-lab.html">0007</a> · <a href="0009-rag-build-and-break.html">0009</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

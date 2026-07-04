@@ -31,6 +31,10 @@ and writing.
 - [How I Built a Professional Website for Free](https://www.scottcurtner.com/article-1.html): GitHub Pages, Claude, and the DNS gotcha at Network Solutions nobody warns you about.
 - [Honored by San Bruno](https://www.scottcurtner.com/article-2.html): Receiving the 2026 City of San Bruno Community Recognition Award after 13+ years with the San Bruno Education Foundation.
 
+## Learning
+
+- [Agentic Operations](https://www.scottcurtner.com/learning/agentic-operations/): A hands-on, four-level course on building AI agents — from "the context window is the model's entire world" to owning SLOs for a live agent in production. Written and published as I go.
+
 ## Optional
 
 - [LinkedIn](https://www.linkedin.com/in/scottcurtner/):

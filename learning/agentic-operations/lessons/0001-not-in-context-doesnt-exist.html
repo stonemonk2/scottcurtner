@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0001 — Not in Context = Doesn't Exist</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+    --good: #2e7d4f; --bad: #b3402e; --good-bg: #e8f3ec; --bad-bg: #f9e9e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126;
+            --good: #6fbf8f; --bad: #e08a75; --good-bg: #1d2b23; --bad-bg: #2e211d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  /* context window diagram */
+  .cw { border: 2px solid var(--accent); border-radius: 6px; padding: .7rem;
+        margin: 1.4rem 0 .3rem; font-family: system-ui, sans-serif; font-size: .8rem; }
+  .cw .slot { background: var(--card); border: 1px solid var(--rule); border-radius: 3px;
+              padding: .4rem .6rem; margin: .3rem 0; }
+  .cw-caption { font-family: system-ui, sans-serif; font-size: .78rem; color: var(--muted);
+                margin: .3rem 0 0; }
+  .outside { color: var(--muted); font-family: system-ui, sans-serif; font-size: .8rem;
+             padding: .2rem .6rem; }
+  /* quiz */
+  .q { border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem;
+       margin: 1.1rem 0; font-family: system-ui, sans-serif; }
+  .q p { margin: 0 0 .6rem; font-weight: 600; font-size: .95rem; }
+  .q button { display: block; width: 100%; text-align: left; margin: .35rem 0;
+              padding: .55rem .8rem; font-size: .9rem; font-family: inherit;
+              background: var(--card); color: var(--ink); border: 1px solid var(--rule);
+              border-radius: 4px; cursor: pointer; }
+  .q button:hover:not(:disabled) { border-color: var(--accent); }
+  .q button:disabled { cursor: default; opacity: .85; }
+  .q button.right { background: var(--good-bg); border-color: var(--good); }
+  .q button.wrong { background: var(--bad-bg); border-color: var(--bad); }
+  .q .expl { display: none; margin-top: .6rem; font-size: .87rem; color: var(--muted);
+             border-top: 1px dashed var(--rule); padding-top: .55rem; }
+  #score { font-family: system-ui, sans-serif; font-weight: 600; margin-top: 1rem; }
+  /* own words */
+  textarea { width: 100%; min-height: 7rem; font-family: Georgia, serif; font-size: 1rem;
+             background: var(--card); color: var(--ink); border: 1px solid var(--rule);
+             border-radius: 4px; padding: .7rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  #rubric { display: none; margin-top: 1rem; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0001</p>
+  <div class="kicker">Agentic Operations · Lesson 0001 · Level 1 · Foundations</div>
+  <h1>Not in Context = Doesn't Exist</h1>
+  <p class="lede">The one mental model everything else in this field hangs off.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> explain, in your own words, why an
+  agent's behavior is entirely a function of what's in its context window — and pass the
+  retrieval quiz below. That's the first half of the M1 gate.</div>
+
+  <h2>1 · An LLM predicts text; it doesn't look things up</h2>
+  <p>An LLM is a next-token predictor: given everything so far, it emits the statistically most
+  plausible next <a href="../reference/m1-core-vocabulary.html#token">token</a> (≈¾ of a word).
+  There is no database of facts inside — training compressed a huge slice of text into model
+  weights, and generation is those weights producing plausible continuations
+  (<a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy's one-hour intro</a> is the
+  canonical walkthrough). This single mechanism explains both the magic and the failures:
+  a confident wrong answer isn't a "bug" — it's a plausible continuation that happens to be false.</p>
+
+  <h2>2 · Context is the model's entire world</h2>
+  <p><a href="../reference/m1-core-vocabulary.html#context">Context</a> is everything the model can
+  see <em>right now</em>. Not "what it was told earlier" — what is in the window on <em>this</em>
+  call:</p>
+
+  <div class="cw">
+    <strong style="color:var(--accent)">CONTEXT WINDOW — a fixed budget of tokens, rebuilt every single call</strong>
+    <div class="slot">system prompt — who the model is, the rules of engagement</div>
+    <div class="slot">instructions &amp; conversation so far</div>
+    <div class="slot">retrieved data — files, search results, database rows</div>
+    <div class="slot">tool outputs — what came back from the last action</div>
+  </div>
+  <div class="outside">outside the window: everything else in the universe — including "what the model said yesterday"</div>
+  <p class="cw-caption">Fig. 1 — If it's not in one of these slots on this call, the model behaves as if it never existed.</p>
+
+  <p>The model is <strong>stateless</strong>. Between two API calls it retains nothing — zero.
+  Any appearance of memory is an engineering choice: <em>someone's code</em> re-inserted the
+  conversation history, the file, the fact. You've watched this from the user side daily: when a
+  Claude Code session compacts, the model didn't "forget" — its world got rebuilt with a summary
+  where the raw history used to be. Whoever controls what goes into the window controls what the
+  agent knows, believes, and does.</p>
+
+  <div class="key"><strong>The load-bearing sentence:</strong> an agent's behavior is entirely a
+  function of its context window, because the model is a stateless next-token predictor — the
+  window is the only input it has. Change the context and you change the agent; nothing else you
+  "told it" exists.</div>
+
+  <h2>3 · Two corollaries that separate practitioners from tourists</h2>
+  <ul>
+    <li><strong>Garbage in, garbage out is literal.</strong> Vague context doesn't produce hedged
+    output — it produces <em>confidently wrong</em> output, because the model always emits a
+    plausible continuation of whatever it was given.</li>
+    <li><strong>⚠️ More context is not better context.</strong> Irrelevant tokens actively degrade
+    reasoning. Chroma measured this across 18 models as
+    <a href="https://research.trychroma.com/context-rot">context rot</a>: accuracy falls as inputs
+    grow, long before the window is "full," and mid-context facts get lost. This is why
+    <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Anthropic
+    calls context curation the #1 job</a> of agent engineers — selection and compression beat volume.</li>
+  </ul>
+
+  <h2>4 · An agent is a loop around this stateless core</h2>
+  <p>An <a href="../reference/m1-core-vocabulary.html#agent">agent</a> = an LLM in a loop with
+  tools and a goal (<a href="https://www.anthropic.com/research/building-effective-agents">Anthropic,
+  Building Effective Agents</a>). A <a href="../reference/m1-core-vocabulary.html#tool-call">tool
+  call</a> is just structured text the model <em>proposes</em> — a name and arguments. Your code
+  executes it and pastes the result back into the window; the model then continues from that
+  enriched context. Call → observe → decide → repeat. Every iteration of the loop is another
+  full rebuild of the model's world. You'll build this loop yourself in Lesson 0004.</p>
+
+  <h2>5 · Retrieval quiz — closed book</h2>
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">Answer from memory
+  (that's the point — effortful recall is what makes it stick). Click an option for instant feedback.</p>
+
+  <div class="q" data-correct="2">
+    <p>1. Why does an LLM sometimes state false facts confidently?</p>
+    <button>It retrieves corrupted entries from its database</button>
+    <button>It misunderstands questions phrased with double negatives</button>
+    <button>It predicts plausible continuations, not verified truths</button>
+    <button>It runs out of memory during generation</button>
+    <div class="expl">Generation is next-token prediction over the context. "Plausible" and "true" are different properties — and the model only optimizes the first.</div>
+  </div>
+
+  <div class="q" data-correct="1">
+    <p>2. What does the model itself retain between two separate calls?</p>
+    <button>Recent messages only</button>
+    <button>Nothing at all</button>
+    <button>Key facts only</button>
+    <button>Tool outputs only</button>
+    <div class="expl">Stateless. Anything that "carries over" was re-inserted into the context by code — a retrieval-and-injection choice someone made.</div>
+  </div>
+
+  <div class="q" data-correct="3">
+    <p>3. Your agent "forgot" an instruction mid-run. Where do you look first?</p>
+    <button>The model version and release notes</button>
+    <button>The temperature and sampling parameter settings</button>
+    <button>The network logs for dropped requests</button>
+    <button>The exact context sent that turn</button>
+    <div class="expl">Behavior is a function of the window. If the instruction was truncated, compacted away, or buried mid-context, it doesn't exist to the model on that call.</div>
+  </div>
+
+  <div class="q" data-correct="1">
+    <p>4. Adding more marginally-relevant documents to context tends to…</p>
+    <button>improve answer quality steadily</button>
+    <button>degrade answer quality measurably</button>
+    <button>leave answer quality unchanged</button>
+    <button>improve recall, hurting speed</button>
+    <div class="expl">Context rot: irrelevant tokens distract and degrade reasoning well before the window is full. Curation beats volume.</div>
+  </div>
+
+  <div class="q" data-correct="0">
+    <p>5. What is a tool call, mechanically?</p>
+    <button>Structured text the model proposes; your code executes it</button>
+    <button>A sandboxed function the model executes all by itself</button>
+    <button>A network request the model sends to external servers</button>
+    <button>Compiled code the provider hosts and invokes for you</button>
+    <div class="expl">The model only ever emits text — here, a structured request (name + arguments). Your code is what makes it real, and what makes it safe.</div>
+  </div>
+
+  <div class="q" data-correct="2">
+    <p>6. Cost, latency, and context limits are all measured in…</p>
+    <button>words</button>
+    <button>characters</button>
+    <button>tokens</button>
+    <button>requests</button>
+    <div class="expl">Models read and write tokens (≈¾ of a word). Every operational number in this field is denominated in them.</div>
+  </div>
+
+  <div id="score"></div>
+
+  <h2>6 · Say it in your own words</h2>
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">The M1 gate is
+  explaining this <em>in your own words</em>. Write your explanation, then reveal the rubric and
+  grade yourself. Bring it to the next session — your teacher will pressure-test it.</p>
+  <textarea placeholder="Why is an agent's behavior entirely a function of its context window?"></textarea>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    A passing explanation touches all four:
+    <ul>
+      <li><strong>Statelessness</strong> — the model retains nothing between calls; its world is rebuilt every turn</li>
+      <li><strong>Mechanism</strong> — it's a next-token predictor over the window, not a fact lookup</li>
+      <li><strong>Hard boundary</strong> — the window is a fixed token budget; what's outside it does not exist to the model</li>
+      <li><strong>Design consequence</strong> — therefore agent engineering is deciding what to load, in what order, at what compression</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p>Lesson 0002: tokens and cost — you'll tokenize real text and read cost off a real API response.
+  Then the tool-call loop, then you ship the M1 agent.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — The Busy Person's Intro to LLMs</a> (1 hr; watch before Lesson 0002 if you can).<br>
+    Reference: <a href="../reference/m1-core-vocabulary.html">Level 1 Vocabulary</a> ·
+    Part of the <a href="../">Agentic Operations</a> course.<br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+<script>
+  let answered = 0, correct = 0;
+  const total = document.querySelectorAll('.q').length;
+  document.querySelectorAll('.q').forEach(q => {
+    const right = parseInt(q.dataset.correct, 10);
+    const buttons = q.querySelectorAll('button');
+    buttons.forEach((b, i) => b.addEventListener('click', () => {
+      buttons.forEach(x => x.disabled = true);
+      buttons[right].classList.add('right');
+      if (i !== right) b.classList.add('wrong'); else correct++;
+      q.querySelector('.expl').style.display = 'block';
+      answered++;
+      if (answered === total) {
+        const s = document.getElementById('score');
+        s.textContent = `Score: ${correct}/${total}` +
+          (correct === total ? ' — clean sweep. The vocabulary is yours.' :
+           ' — reread the sections for the ones you missed, then retake tomorrow (spaced retrieval beats rereading today).');
+      }
+    }));
+  });
+</script>
+</body>
+</html>

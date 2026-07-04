@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M4 Core Vocabulary — Agentic Operations Reference</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.55; font-size: 16px;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  header h1 { font-size: 1.9rem; font-weight: normal; margin: 0 0 .3rem; }
+  .kicker {
+    font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: .8rem;
+  }
+  .lede { color: var(--muted); font-style: italic; margin-top: 0; }
+  h2 {
+    font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+    margin: 2.2rem 0 1rem;
+  }
+  dl { margin: 0; }
+  dt { font-weight: bold; margin-top: 1.1rem; }
+  dt .warn { color: var(--accent); font-weight: normal; }
+  dd { margin: .15rem 0 0 0; }
+  dd .why { display: block; color: var(--muted); font-size: .92rem; margin-top: .15rem; }
+  .gate {
+    background: var(--card); border-left: 3px solid var(--accent);
+    padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0;
+  }
+  .gate strong { color: var(--accent); }
+  ul { padding-left: 1.2rem; }
+  li { margin: .45rem 0; }
+  a { color: var(--accent); }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .gate { border: 1px solid #999; }
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Level 4 Vocabulary</p>
+  <header>
+    <div class="kicker">Agentic Operations · Reference · Level 4 · Operational Leadership</div>
+    <h1>M4 Core Vocabulary</h1>
+    <p class="lede">The four clusters of Stage 4 — the ownership stage. Source: the Agentic Operations Knowledge Map. Sister sheets: <a href="m1-core-vocabulary.html">M1</a> · <a href="m2-core-vocabulary.html">M2</a> · <a href="m3-core-vocabulary.html">M3</a>.</p>
+  </header>
+
+  <div class="gate">
+    <strong>The M4 gate:</strong> you can run agentic systems in production against reliability,
+    cost, and safety targets, and drive a continuous-improvement loop without being told what to
+    fix. Arc signal: own SLOs for a live agent and independently run an observe → fix → verify cycle.
+  </div>
+
+  <h2 id="reliability">Cluster A — Reliability engineering</h2>
+  <dl>
+    <dt id="slos">SLOs for agents</dt>
+    <dd>Success rate, latency, cost-per-task, and escalation rate as first-class metrics.
+      <span class="why">The canonical SLI/SLO/SLA framing: <a href="https://sre.google/sre-book/service-level-objectives/">Google SRE Book, ch. 4</a>.</span></dd>
+    <dt id="degradation">Graceful degradation</dt>
+    <dd>Fallbacks, retries with backoff, and circuit breakers for flaky tools.</dd>
+    <dt>The reliability intuition <span class="warn">⚠️</span></dt>
+    <dd>Production reliability is an <strong>engineering discipline, not a prompting problem</strong>.</dd>
+  </dl>
+
+  <h2 id="cost">Cluster B — Cost &amp; performance governance</h2>
+  <dl>
+    <dt id="cost-attribution">Cost attribution</dt>
+    <dd>Cost per run, per user, per feature; token budgets as a design constraint, not an invoice surprise.</dd>
+    <dt id="model-routing">Model routing</dt>
+    <dd>Matching task difficulty to model tier instead of defaulting to the biggest model.</dd>
+    <dt id="cost-levers">Ongoing cost levers</dt>
+    <dd>Caching, context compression, and prompt optimization — continuous work, not one-time setup.</dd>
+  </dl>
+
+  <h2 id="safety">Cluster C — Safety &amp; control</h2>
+  <dl>
+    <dt id="guardrails">Guardrails</dt>
+    <dd>Input/output validation, injection defense, and tool-permission scoping (least privilege).
+      <span class="why">Standard risk taxonomy: <a href="https://genai.owasp.org/">OWASP Top 10 for LLM Applications</a> — prompt injection is LLM01.</span></dd>
+    <dt id="hitl">Human-in-the-loop design <span class="warn">⚠️</span></dt>
+    <dd>Deciding which actions require approval and how to surface them. The hard part is placing checkpoints <em>by risk</em> without killing throughput.</dd>
+    <dt id="auditability">Auditability</dt>
+    <dd>Every consequential action traceable to a decision and its context.</dd>
+  </dl>
+
+  <h2 id="improvement">Cluster D — Continuous improvement &amp; leadership</h2>
+  <dl>
+    <dt id="improvement-loop">The improvement loop</dt>
+    <dd>Observe → evaluate → hypothesize → change → re-evaluate, run continuously, with human feedback recalibrating the metrics.</dd>
+    <dt id="regression-suites">Regression suites</dt>
+    <dd>Gate every prompt, model, and tool change before it ships.</dd>
+    <dt id="team-practices">Team practices</dt>
+    <dd>Onboarding, prompt/skill libraries, incident review, and documentation as living assets.</dd>
+  </dl>
+
+  <h2 id="intuitions">The three critical intuitions</h2>
+  <ul>
+    <li><strong>⚠️ The model will change under you.</strong> New versions silently shift behavior — your eval suite is your only stable ground truth.</li>
+    <li><strong>Cost, reliability, and quality are one tradeoff surface.</strong> You tune the system, not the prompt.</li>
+    <li><strong>Ownership means owning the feedback loop</strong>, not just the current build.</li>
+  </ul>
+
+  <h2 id="exercises">The three M4 exercises</h2>
+  <ul>
+    <li>Define SLOs for one production agent and build a dashboard that tracks success rate, cost, and escalation.</li>
+    <li>Design and defend a human-in-the-loop checkpoint policy for a high-stakes action, then measure its throughput cost.</li>
+    <li>Run a full improvement cycle: catch a live regression, ship a gated fix, and prove the eval suite would have blocked the bad version.</li>
+  </ul>
+
+  <h2 id="signals">Signals of readiness for operational ownership</h2>
+  <ul>
+    <li>You reach for a <em>trace</em> before a prompt when something breaks.</li>
+    <li>You can say "no" to adding an agent or a bigger model, with a cost/reliability argument.</li>
+    <li>You treat the eval suite as the source of truth when a model version shifts behavior.</li>
+    <li>You design human checkpoints by risk, balancing safety against throughput — without being asked.</li>
+    <li>You close your own improvement loops: spotting drift, shipping gated fixes, proving the fix held.</li>
+  </ul>
+
+  <footer>
+    Agentic Operations workspace · <a href="../lessons/0004-own-the-feedback-loop.html">Lesson 0004</a> ·
+    Sister sheets: <a href="m1-core-vocabulary.html">M1</a> · <a href="m2-core-vocabulary.html">M2</a> · <a href="m3-core-vocabulary.html">M3</a> ·
+    Part of the <a href="../">Agentic Operations</a> course.
+  </footer>
+</main>
+</body>
+</html>

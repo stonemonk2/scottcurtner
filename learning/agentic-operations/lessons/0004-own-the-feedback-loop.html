@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0004 — Own the Feedback Loop</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+    --good: #2e7d4f; --bad: #b3402e; --good-bg: #e8f3ec; --bad-bg: #f9e9e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126;
+            --good: #6fbf8f; --bad: #e08a75; --good-bg: #1d2b23; --bad-bg: #2e211d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  .q { border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem;
+       margin: 1.1rem 0; font-family: system-ui, sans-serif; }
+  .q p { margin: 0 0 .6rem; font-weight: 600; font-size: .95rem; }
+  .q button { display: block; width: 100%; text-align: left; margin: .35rem 0;
+              padding: .55rem .8rem; font-size: .9rem; font-family: inherit;
+              background: var(--card); color: var(--ink); border: 1px solid var(--rule);
+              border-radius: 4px; cursor: pointer; }
+  .q button:hover:not(:disabled) { border-color: var(--accent); }
+  .q button:disabled { cursor: default; opacity: .85; }
+  .q button.right { background: var(--good-bg); border-color: var(--good); }
+  .q button.wrong { background: var(--bad-bg); border-color: var(--bad); }
+  .q .expl { display: none; margin-top: .6rem; font-size: .87rem; color: var(--muted);
+             border-top: 1px dashed var(--rule); padding-top: .55rem; }
+  #score { font-family: system-ui, sans-serif; font-weight: 600; margin-top: 1rem; }
+  textarea { width: 100%; min-height: 10rem; font-family: Georgia, serif; font-size: 1rem;
+             background: var(--card); color: var(--ink); border: 1px solid var(--rule);
+             border-radius: 4px; padding: .7rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  #rubric { display: none; margin-top: 1rem; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0004</p>
+  <div class="kicker">Agentic Operations · Lesson 0004 · Level 4 · Operational Leadership</div>
+  <h1>Own the Feedback Loop</h1>
+  <p class="lede">M4 in one move: reliability is engineering, the eval suite is the ground truth, and ownership means the loop runs because <em>you</em> run it.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> define SLOs for an agent you actually
+  run, place one human checkpoint by risk, and sketch a full observe → fix → verify cycle. That's
+  operational ownership on paper — the M4 gate. (Prerequisite:
+  <a href="0003-traces-before-prompts.html">Lesson 0003</a> — you can't own targets you can't measure.)</div>
+
+  <h2>1 · From M3 to M4</h2>
+  <p>M3 gave you the instruments: traces and evals. M4 points them at production and holds the
+  system to targets. ⚠️ The stage's first intuition: production reliability is an
+  <strong>engineering discipline, not a prompting problem</strong> — when an agent misses its
+  targets weekly, the fix is fallbacks, budgets, gates, and loops, not another adjective in the
+  prompt.</p>
+
+  <h2>2 · SLOs: agents get pagers too</h2>
+  <p>An agent in production carries <strong>service level objectives</strong> like any other
+  service (<a href="https://sre.google/sre-book/service-level-objectives/">Google SRE Book,
+  ch. 4</a> — SLI = what you measure, SLO = the target). The agent-specific four:
+  <strong>success rate, latency, cost-per-task, and escalation rate</strong> — first-class
+  metrics, dashboarded, not vibes. Below the targets sits the reliability toolkit: graceful
+  degradation, fallbacks, retries with backoff, and circuit breakers for flaky tools.</p>
+
+  <h2>3 · Cost is a design constraint, not an invoice</h2>
+  <p>Attribute cost per run, per user, per feature — then design against a <strong>token
+  budget</strong> the way you design against a latency budget. <strong>Model routing</strong>
+  matches task difficulty to model tier instead of defaulting to the biggest model; caching,
+  context compression, and prompt optimization are <em>ongoing</em> levers, not launch-week
+  chores. Cost, reliability, and quality form <strong>one tradeoff surface</strong> — you tune
+  the system, not the prompt.</p>
+
+  <h2>4 · Safety: least privilege, checkpoints by risk, audit everything</h2>
+  <p><strong>Guardrails</strong>: input/output validation, injection defense, and tool-permission
+  scoping to least privilege — the <a href="https://genai.owasp.org/">OWASP Top 10 for LLM
+  Applications</a> is the standard taxonomy (prompt injection sits at #1). ⚠️ The hard design
+  problem is <strong>human-in-the-loop placement</strong>: which actions require approval, and how
+  to surface them <em>without killing throughput</em> — checkpoints go where risk is, not
+  everywhere. And <strong>auditability</strong>: every consequential action traceable to a
+  decision and its context. You live inside a worked example daily — this repo's guarded commit
+  paths and human-approval gates on publish actions are exactly a checkpoint policy placed by
+  risk.</p>
+
+  <h2>5 · The improvement loop is the job</h2>
+  <p><strong>Observe → evaluate → hypothesize → change → re-evaluate</strong>, continuously, with
+  human feedback recalibrating the metrics. Regression suites gate every prompt, model, and tool
+  change before it ships. ⚠️ And the intuition that makes the eval suite existential: <strong>the
+  model will change under you</strong> — new versions silently shift behavior, so your eval suite
+  is the only stable ground truth you own. Ownership means owning this loop — spotting drift,
+  shipping gated fixes, and proving the fix held — without being told what to fix.</p>
+
+  <div class="key"><strong>The M4 load-bearing sentence:</strong> you run an agentic system the way
+  you run any production system — against SLOs, inside budgets, behind risk-placed human
+  checkpoints — except your only stable ground truth is the eval suite, because the model itself
+  will change under you.</div>
+
+  <h2>6 · Retrieval quiz — closed book</h2>
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">Answer from
+  memory. Click an option for instant feedback.</p>
+
+  <div class="q" data-correct="1">
+    <p>1. Your production agent misses its targets weekly. This is primarily a…</p>
+    <button>prompt quality problem</button>
+    <button>systems engineering discipline</button>
+    <button>model selection question</button>
+    <button>vendor uptime concern</button>
+    <div class="expl">Production reliability is an engineering discipline, not a prompting problem — fallbacks, retries, circuit breakers, budgets, gates.</div>
+  </div>
+
+  <div class="q" data-correct="0">
+    <p>2. A model version bump silently shifts behavior. Your stable ground truth is…</p>
+    <button>the eval suite</button>
+    <button>the system prompt</button>
+    <button>the vendor changelog</button>
+    <button>the production logs</button>
+    <div class="expl">The model will change under you. The eval suite is the one thing you own that says "this still works" — which is why it gates every change.</div>
+  </div>
+
+  <div class="q" data-correct="2">
+    <p>3. First-class SLO metrics for a production agent:</p>
+    <button>accuracy, parameter count, uptime, request volume</button>
+    <button>throughput, model tier, cache hits, temperature</button>
+    <button>success rate, latency, cost-per-task, escalation rate</button>
+    <button>sentiment, retention, click rate, session length</button>
+    <div class="expl">The agent-specific four: success rate, latency, cost-per-task, escalation rate — measured per run, dashboarded, owned.</div>
+  </div>
+
+  <div class="q" data-correct="3">
+    <p>4. Where do token budgets belong?</p>
+    <button>In the invoice, as a total</button>
+    <button>In the prompt, as a warning</button>
+    <button>In the logs, as a metric</button>
+    <button>In the design, as a constraint</button>
+    <div class="expl">Token budgets are a design constraint — like a latency budget. If cost only shows up on the invoice, governance already failed.</div>
+  </div>
+
+  <div class="q" data-correct="0">
+    <p>5. The hard part of human-in-the-loop design is…</p>
+    <button>placing checkpoints without killing throughput</button>
+    <button>training reviewers to read traces</button>
+    <button>building the approval user interface</button>
+    <button>convincing users to trust agents</button>
+    <div class="expl">Checkpoints go where the risk is. Approval on everything is safe and useless; approval on nothing is fast and reckless — placement by risk is the craft.</div>
+  </div>
+
+  <div class="q" data-correct="2">
+    <p>6. Cost, reliability, and quality are…</p>
+    <button>separate concerns with separate owners</button>
+    <button>ranked priorities, quality always first</button>
+    <button>one tradeoff surface, tuned together</button>
+    <button>independent metrics on one dashboard</button>
+    <div class="expl">One tradeoff surface — you tune the system, not the prompt. Pushing one corner moves the other two; owning the system means owning the whole surface.</div>
+  </div>
+
+  <div id="score"></div>
+
+  <h2>7 · Ownership on paper — the gate skill</h2>
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">The M4 signal is
+  owning SLOs and closing improvement loops unprompted. Pick <em>one agent you actually run
+  today</em> (a Vernant pipeline stage, an AFK run, a scheduled job). Write: its four SLOs with
+  targets (or "measure first, then set"), one high-stakes action plus your checkpoint policy for
+  it and its throughput cost, and one full improvement-loop cycle. Reveal the rubric, self-grade,
+  bring it to the next session.</p>
+  <textarea placeholder="Agent: …&#10;SLOs: success rate … / latency … / cost-per-task … / escalation rate …&#10;High-stakes action: … — checkpoint policy: … — throughput cost: …&#10;Improvement cycle: observed … → evaluated … → hypothesis … → change … → re-evaluate via …"></textarea>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    A passing design covers all four:
+    <ul>
+      <li><strong>All four SLOs</strong> — success rate, latency, cost-per-task, escalation rate, each with a target or an explicit "measure first" plan (a vibe is not a target)</li>
+      <li><strong>Checkpoint by risk</strong> — one high-stakes action gated by human approval, with the throughput cost named and accepted, not ignored</li>
+      <li><strong>A complete loop</strong> — observe → evaluate → hypothesize → change → re-evaluate, where the re-evaluation runs through the eval/regression suite, not through eyeballing</li>
+      <li><strong>The gate stated</strong> — what regression suite blocks a bad prompt/model/tool change from shipping, and why it (not the vendor) is your ground truth</li>
+    </ul>
+  </div>
+
+  <h2>Next — the map is laid; the proofs remain</h2>
+  <p>Lessons 0001–0004 are the four-milestone mental-model spine of the whole knowledge map. From
+  here, everything is hands-on: the M1 single-tool agent build is the first proof due, then up the
+  ladder — each gate passes on demonstrated capability, not coverage.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://sre.google/sre-book/service-level-objectives/">Service Level Objectives — Google SRE Book, ch. 4</a> (free online; substitute "agent run" for "request" as you read).<br>
+    Reference: <a href="../reference/m4-core-vocabulary.html">Level 4 Vocabulary</a> ·
+    Sister lesson: <a href="0003-traces-before-prompts.html">0003 — Traces Before Prompts</a> ·
+    Part of the <a href="../">Agentic Operations</a> course.<br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+<script>
+  let answered = 0, correct = 0;
+  const total = document.querySelectorAll('.q').length;
+  document.querySelectorAll('.q').forEach(q => {
+    const right = parseInt(q.dataset.correct, 10);
+    const buttons = q.querySelectorAll('button');
+    buttons.forEach((b, i) => b.addEventListener('click', () => {
+      buttons.forEach(x => x.disabled = true);
+      buttons[right].classList.add('right');
+      if (i !== right) b.classList.add('wrong'); else correct++;
+      q.querySelector('.expl').style.display = 'block';
+      answered++;
+      if (answered === total) {
+        const s = document.getElementById('score');
+        s.textContent = `Score: ${correct}/${total}` +
+          (correct === total ? ' — clean sweep. Now go own something.' :
+           ' — reread the sections for the ones you missed, then retake tomorrow (spaced retrieval beats rereading today).');
+      }
+    }));
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M3 Core Vocabulary — Agentic Operations Reference</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.55; font-size: 16px;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  header h1 { font-size: 1.9rem; font-weight: normal; margin: 0 0 .3rem; }
+  .kicker {
+    font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: .8rem;
+  }
+  .lede { color: var(--muted); font-style: italic; margin-top: 0; }
+  h2 {
+    font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+    margin: 2.2rem 0 1rem;
+  }
+  dl { margin: 0; }
+  dt { font-weight: bold; margin-top: 1.1rem; }
+  dt .warn { color: var(--accent); font-weight: normal; }
+  dd { margin: .15rem 0 0 0; }
+  dd .why { display: block; color: var(--muted); font-size: .92rem; margin-top: .15rem; }
+  .gate {
+    background: var(--card); border-left: 3px solid var(--accent);
+    padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0;
+  }
+  .gate strong { color: var(--accent); }
+  ul { padding-left: 1.2rem; }
+  li { margin: .45rem 0; }
+  a { color: var(--accent); }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .gate { border: 1px solid #999; }
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Level 3 Vocabulary</p>
+  <header>
+    <div class="kicker">Agentic Operations · Reference · Level 3 · Advanced</div>
+    <h1>M3 Core Vocabulary</h1>
+    <p class="lede">The four clusters of Stage 3. Source: the Agentic Operations Knowledge Map. Sister sheets: <a href="m1-core-vocabulary.html">M1</a> · <a href="m2-core-vocabulary.html">M2</a> · <a href="m4-core-vocabulary.html">M4</a>.</p>
+  </header>
+
+  <div class="gate">
+    <strong>The M3 gate:</strong> you can architect multi-agent systems, diagnose failure modes
+    from traces, and stand up evaluation and observability that catch regressions before users do.
+    Arc signal: debug a failing agent from traces alone; build an eval suite that catches a
+    planted regression.
+  </div>
+
+  <h2 id="architectures">Cluster A — Agent architectures</h2>
+  <dl>
+    <dt id="single-agent">Single-agent</dt>
+    <dd>One loop, one context. Simplest, easiest to debug — the best default.</dd>
+    <dt id="multi-agent">Multi-agent</dt>
+    <dd>Multiple specialized agents collaborating. More capability, more coordination cost.</dd>
+    <dt id="orchestrator">Orchestrator / subagent</dt>
+    <dd>A lead agent decomposes work and delegates to focused subagents with isolated context windows.
+      <span class="why">Why it matters: <strong>context isolation</strong> is the main reason to go multi-agent, not "more brains." Real-world account: <a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic's multi-agent research system</a>.</span></dd>
+    <dt>The architecture intuition <span class="warn">⚠️</span></dt>
+    <dd>Most teams reach for multi-agent too early — added agents multiply failure surface and cost. Justify every extra agent.</dd>
+  </dl>
+
+  <h2 id="lifecycle">Cluster B — State &amp; run lifecycle</h2>
+  <dl>
+    <dt id="agent-state">Agent state</dt>
+    <dd>The full picture of a run: goal, history, memory, pending tools.</dd>
+    <dt id="run-lifecycle">Run lifecycle</dt>
+    <dd>Start → plan → act → observe → loop → terminate — plus retries, timeouts, and stop conditions.</dd>
+    <dt id="durability">Durability</dt>
+    <dd>Checkpointing and resuming long runs — the problem workflow runtimes like Temporal exist to solve.
+      <span class="why">See <a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai">durable execution meets AI</a>. Vernant's own pipeline runs on Temporal — you operate this daily.</span></dd>
+  </dl>
+
+  <h2 id="failures">Cluster C — Failure modes &amp; self-correction</h2>
+  <dl>
+    <dt id="failure-modes">Common failure modes</dt>
+    <dd>Hallucination, looping, context overflow, tool misuse, goal drift, silent partial failure.</dd>
+    <dt id="self-correction">Self-correction</dt>
+    <dd>Reflection, verification steps, and critic/validator patterns.</dd>
+    <dt>The failure intuition <span class="warn">⚠️</span></dt>
+    <dd>Agents fail <strong>silently and confidently</strong> — the dangerous failures are the plausible-looking wrong answers, not the crashes.</dd>
+  </dl>
+
+  <h2 id="observability">Cluster D — Observability &amp; evaluation</h2>
+  <dl>
+    <dt id="tracing">Tracing</dt>
+    <dd>Capturing the full step-by-step trajectory of a run for inspection — every LLM call, tool invocation, and retrieval step.
+      <span class="why">Tooling exists for this (<a href="https://langfuse.com/docs/observability/overview">Langfuse</a>, Arize, Opik) — the point is the discipline, not the vendor.</span></dd>
+    <dt id="evals">Evals</dt>
+    <dd>Trajectory-level and outcome-level scoring — not just final-answer accuracy. Agents must be judged on <em>how they got there</em>.
+      <span class="why">Practitioner canon: <a href="https://hamel.dev/blog/posts/evals/">Your AI Product Needs Evals</a> (Husain).</span></dd>
+    <dt id="llm-judge">LLM-as-judge &amp; human-in-the-loop scoring</dt>
+    <dd>Automated judging scales, but the metrics need continuous human recalibration — measure the judge's agreement with humans before trusting it.
+      <span class="why">How: <a href="https://hamel.dev/blog/posts/llm-judge/">Using LLM-as-a-Judge</a> (Husain).</span></dd>
+  </dl>
+
+  <h2 id="intuitions">The three critical intuitions</h2>
+  <ul>
+    <li><strong>You debug agents by reading traces, not by staring at prompts.</strong> Observability is a prerequisite, not a nice-to-have.</li>
+    <li><strong>⚠️ Eval on trajectories, not just outcomes.</strong> A right answer via a broken path will break at scale.</li>
+    <li><strong>Every architecture decision is a context-management decision in disguise.</strong> (M1's lesson, at system scale.)</li>
+  </ul>
+
+  <h2 id="exercises">The three M3 exercises</h2>
+  <ul>
+    <li>Build an orchestrator with 2–3 subagents and prove (with traces) it beats a single agent on a decomposable task — or admit it doesn't.</li>
+    <li>Instrument an agent with full tracing and build an eval set that catches a regression you deliberately introduce.</li>
+    <li>Add a critic/verifier step and measure the reduction in silent wrong answers.</li>
+  </ul>
+
+  <footer>
+    Agentic Operations workspace · <a href="../lessons/0003-traces-before-prompts.html">Lesson 0003</a> ·
+    Sister sheets: <a href="m1-core-vocabulary.html">M1</a> · <a href="m2-core-vocabulary.html">M2</a> · <a href="m4-core-vocabulary.html">M4</a> ·
+    Part of the <a href="../">Agentic Operations</a> course.
+  </footer>
+</main>
+</body>
+</html>

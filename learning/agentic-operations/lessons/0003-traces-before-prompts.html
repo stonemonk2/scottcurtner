@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0003 — Traces Before Prompts</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+    --good: #2e7d4f; --bad: #b3402e; --good-bg: #e8f3ec; --bad-bg: #f9e9e5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126;
+            --good: #6fbf8f; --bad: #e08a75; --good-bg: #1d2b23; --bad-bg: #2e211d; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  .q { border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem;
+       margin: 1.1rem 0; font-family: system-ui, sans-serif; }
+  .q p { margin: 0 0 .6rem; font-weight: 600; font-size: .95rem; }
+  .q button { display: block; width: 100%; text-align: left; margin: .35rem 0;
+              padding: .55rem .8rem; font-size: .9rem; font-family: inherit;
+              background: var(--card); color: var(--ink); border: 1px solid var(--rule);
+              border-radius: 4px; cursor: pointer; }
+  .q button:hover:not(:disabled) { border-color: var(--accent); }
+  .q button:disabled { cursor: default; opacity: .85; }
+  .q button.right { background: var(--good-bg); border-color: var(--good); }
+  .q button.wrong { background: var(--bad-bg); border-color: var(--bad); }
+  .q .expl { display: none; margin-top: .6rem; font-size: .87rem; color: var(--muted);
+             border-top: 1px dashed var(--rule); padding-top: .55rem; }
+  #score { font-family: system-ui, sans-serif; font-weight: 600; margin-top: 1rem; }
+  textarea { width: 100%; min-height: 9rem; font-family: Georgia, serif; font-size: 1rem;
+             background: var(--card); color: var(--ink); border: 1px solid var(--rule);
+             border-radius: 4px; padding: .7rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  #rubric { display: none; margin-top: 1rem; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0003</p>
+  <div class="kicker">Agentic Operations · Lesson 0003 · Level 3 · Advanced</div>
+  <h1>Traces Before Prompts</h1>
+  <p class="lede">M3 in one move: when an agent fails, you read the trajectory — and every architecture choice is a context decision at system scale.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> know your first three moves when an
+  agent fails (trace → failure taxonomy → eval), and be able to argue <em>against</em> adding an
+  agent. Those instincts are the M3 gate on paper. (Prerequisites:
+  <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>,
+  <a href="0002-match-the-pattern-to-the-problem.html">Lesson 0002</a>.)</div>
+
+  <h2>1 · From M2 to M3</h2>
+  <p>M2 taught you to design one agent well. M3 is what happens when agents run as <em>systems</em>:
+  architectures, lifecycles, failure modes — and the observability and evaluation machinery that
+  catches regressions before users do.</p>
+
+  <h2>2 · Single-agent is the best default</h2>
+  <p>One loop, one context: simplest, cheapest, easiest to debug. The only load-bearing reason to
+  go multi-agent is <strong>context isolation</strong> — an orchestrator decomposes work and hands
+  each subagent a clean, focused window (M1's lesson, applied at system scale). It is <em>not</em>
+  "more brains." ⚠️ Most teams reach for multi-agent too early: every added agent multiplies
+  failure surface, coordination cost, and tokens.
+  <a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic's
+  multi-agent research system</a> is the honest reference: their early agents spawned 50 subagents
+  for simple queries and distracted each other with excessive updates — the wins came from
+  disciplined decomposition, not from agent count. Justify every extra agent, with traces.</p>
+
+  <h2>3 · A run is a lifecycle, not a call</h2>
+  <p><strong>Agent state</strong> is the full picture of a run: goal, history, memory, pending
+  tools. The <strong>lifecycle</strong> is start → plan → act → observe → loop → terminate — plus
+  the unglamorous parts that make it reliable: retries, timeouts, stop conditions. Long runs need
+  <strong>durability</strong>: checkpointing and resuming, the problem workflow runtimes like
+  <a href="https://temporal.io/blog/durable-execution-meets-ai-why-temporal-is-the-perfect-foundation-for-ai">Temporal</a>
+  exist to solve. You already operate this: Vernant's pipeline runs on Temporal precisely so a
+  crashed run resumes at the failed step instead of restarting.</p>
+
+  <h2>4 · Agents fail silently and confidently</h2>
+  <p>The M3 failure taxonomy: hallucination, looping, context overflow, tool misuse, goal drift,
+  and silent partial failure. ⚠️ The dangerous ones don't crash — they return
+  <strong>plausible-looking wrong answers</strong>. Crashes page someone; a confident wrong answer
+  ships. Self-correction patterns (reflection, verification steps, critic/validator agents) exist
+  to convert silent failures into caught ones — and their value is <em>measurable</em>: count the
+  silent wrong answers before and after.</p>
+
+  <h2>5 · Observability and evals are the floor, not the polish</h2>
+  <p><strong>Tracing</strong> captures the full step-by-step trajectory of a run — every model
+  call, tool invocation, and retrieval step with inputs, outputs, and timing (tools like
+  <a href="https://langfuse.com/docs/observability/overview">Langfuse</a>, Arize, and Opik do
+  this; the discipline matters more than the vendor). You debug agents by <em>reading traces</em>,
+  not by staring at prompts. <strong>Evals</strong> score both trajectories and outcomes — ⚠️ a
+  right answer via a broken path will break at scale, so judging only final answers hides rot.
+  <a href="https://hamel.dev/blog/posts/evals/">Husain's essay</a> is the practitioner canon:
+  failed AI products share one root cause — no eval system. Where you use an
+  <a href="https://hamel.dev/blog/posts/llm-judge/">LLM as judge</a>, measure its agreement with
+  humans before trusting it, and keep recalibrating.</p>
+
+  <div class="key"><strong>The M3 load-bearing sentence:</strong> agents fail silently and
+  confidently, so observability comes before debugging and evals come before shipping — and when
+  you do scale the architecture, you're managing context windows, not adding brains.</div>
+
+  <h2>6 · Retrieval quiz — closed book</h2>
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">Answer from
+  memory. Click an option for instant feedback.</p>
+
+  <div class="q" data-correct="2">
+    <p>1. You're designing a new agent system. Best default architecture?</p>
+    <button>Multi-agent</button>
+    <button>Pipeline</button>
+    <button>Single-agent</button>
+    <button>Orchestrator/subagent</button>
+    <div class="expl">One loop, one context — simplest and easiest to debug. Everything else must earn its place with evidence.</div>
+  </div>
+
+  <div class="q" data-correct="1">
+    <p>2. The main legitimate reason to split one agent into several?</p>
+    <button>More total intelligence applied per task</button>
+    <button>Isolated context windows for decomposed subtasks</button>
+    <button>Higher throughput from parallel model calls</button>
+    <button>Redundancy when one agent fails silently</button>
+    <div class="expl">Context isolation is the reason — each subagent gets a clean, focused window. "More brains" is the myth; parallelism is sometimes a bonus, never the justification.</div>
+  </div>
+
+  <div class="q" data-correct="3">
+    <p>3. Your agent produced a confident, wrong answer in production. First move?</p>
+    <button>Rewrite the system prompt wording</button>
+    <button>Switch to a bigger model</button>
+    <button>Add a retry with backoff</button>
+    <button>Read the run's full trace</button>
+    <div class="expl">You debug agents by reading traces, not staring at prompts. The trace tells you which step went wrong; every other move is a guess.</div>
+  </div>
+
+  <div class="q" data-correct="0">
+    <p>4. An agent got the right answer via a broken path. Why does it matter?</p>
+    <button>Lucky trajectories fail once conditions shift slightly</button>
+    <button>Wrong paths always cost more output tokens</button>
+    <button>Judges cannot score outcomes without full paths</button>
+    <button>Users can see the reasoning trace anyway</button>
+    <div class="expl">Eval on trajectories, not just outcomes — a right answer via a broken path will break at scale. Outcome-only scoring hides the rot.</div>
+  </div>
+
+  <div class="q" data-correct="2">
+    <p>5. In production, the most dangerous agent failures are…</p>
+    <button>crashes that page the on-call</button>
+    <button>timeouts from slow tool backends</button>
+    <button>plausible wrong answers passing unnoticed</button>
+    <button>rate limits during traffic spikes</button>
+    <div class="expl">Agents fail silently and confidently. Crashes get caught by machinery; a plausible wrong answer sails through to the user.</div>
+  </div>
+
+  <div class="q" data-correct="1">
+    <p>6. Per the M3 intuition: every architecture decision is really a decision about…</p>
+    <button>models</button>
+    <button>context</button>
+    <button>tooling</button>
+    <button>latency</button>
+    <div class="expl">Every architecture decision is a context-management decision in disguise — orchestrator/subagent exists to isolate windows. M1's lesson never stops applying.</div>
+  </div>
+
+  <div id="score"></div>
+
+  <h2>7 · Diagnosis plan — the gate skill</h2>
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">The M3 signal is
+  debugging from traces alone and building evals that catch regressions. On paper: <em>you inherit
+  a multi-step agent that "mostly works" but users report occasional nonsense answers.</em> Write:
+  what your traces must capture, the first three failure modes you'd hunt and why, and the eval
+  set (trajectory + outcome checks) that would catch a planted regression. Then reveal the rubric
+  and self-grade. Bring it to the next session.</p>
+  <textarea placeholder="Traces capture: …&#10;First three failure modes I'd hunt: … because …&#10;Eval set: trajectory checks … / outcome checks …&#10;Architecture question: would fewer agents do?"></textarea>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    A passing plan covers all four:
+    <ul>
+      <li><strong>Traces first</strong> — named what the trajectory must record (every model call, tool call, retrieval, inputs/outputs, timing), before any prompt speculation</li>
+      <li><strong>Silent failures prioritized</strong> — the hunt list targets plausible wrong answers (hallucination, goal drift, silent partial failure), not just crashes</li>
+      <li><strong>Both eval levels</strong> — trajectory checks (did it take a sane path?) <em>and</em> outcome checks (was the answer right?), with a planted regression as the test of the tests</li>
+      <li><strong>Architecture challenged</strong> — asked whether fewer agents (or one) would shrink the failure surface, and demanded trace evidence for any extra agent</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p>Hands-on from here: the orchestrator-vs-single-agent bake-off (settled with traces), full
+  tracing instrumentation with a planted-regression eval, and a critic/verifier step with a
+  measured reduction in silent wrong answers. The sister M4 lesson,
+  <a href="0004-own-the-feedback-loop.html">Own the Feedback Loop</a>, takes these instruments
+  into production.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a> (Anthropic) — the most honest public account of what multi-agent actually costs and buys.<br>
+    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0002-match-the-pattern-to-the-problem.html">0002</a> · <a href="0004-own-the-feedback-loop.html">0004</a> ·
+    Part of the <a href="../">Agentic Operations</a> course.<br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+<script>
+  let answered = 0, correct = 0;
+  const total = document.querySelectorAll('.q').length;
+  document.querySelectorAll('.q').forEach(q => {
+    const right = parseInt(q.dataset.correct, 10);
+    const buttons = q.querySelectorAll('button');
+    buttons.forEach((b, i) => b.addEventListener('click', () => {
+      buttons.forEach(x => x.disabled = true);
+      buttons[right].classList.add('right');
+      if (i !== right) b.classList.add('wrong'); else correct++;
+      q.querySelector('.expl').style.display = 'block';
+      answered++;
+      if (answered === total) {
+        const s = document.getElementById('score');
+        s.textContent = `Score: ${correct}/${total}` +
+          (correct === total ? ' — clean sweep. Now go read a real trace.' :
+           ' — reread the sections for the ones you missed, then retake tomorrow (spaced retrieval beats rereading today).');
+      }
+    }));
+  });
+</script>
+</body>
+</html>

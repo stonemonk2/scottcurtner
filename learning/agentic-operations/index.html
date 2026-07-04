@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://www.scottcurtner.com/learning/agentic-operations/" />
+<title>Agentic Operations — Learning | Scott Curtner</title>
+<meta name="description" content="A four-level, hands-on course in building AI agents — from the context window as the model's entire world to owning SLOs for a live agent in production.">
+<meta name="author" content="Scott Curtner">
+<meta property="og:title" content="Agentic Operations — Learning | Scott Curtner">
+<meta property="og:description" content="A four-level, hands-on course in building AI agents — from the context window as the model's entire world to owning SLOs for a live agent in production.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.scottcurtner.com/learning/agentic-operations/">
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+    --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126;
+            --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .breadcrumb { font-family: system-ui, sans-serif; font-size: .8rem; color: var(--muted); margin: 0 0 1rem; }
+  .breadcrumb a { color: var(--muted); }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  h3 { font-family: system-ui, sans-serif; font-size: 1.05rem; font-weight: 600;
+       color: var(--ink); margin: 1.8rem 0 .3rem; }
+  a { color: var(--accent); }
+  .level-status { font-family: system-ui, sans-serif; font-size: .8rem; color: var(--muted); margin: 0 0 .7rem; }
+  ul.roadmap { list-style: none; padding: 0; margin: 0 0 .5rem; font-family: system-ui, sans-serif; font-size: .95rem; }
+  ul.roadmap li { padding: .45rem 0; border-bottom: 1px dashed var(--rule); }
+  ul.roadmap li:last-child { border-bottom: none; }
+  .done { color: var(--good); font-weight: 600; margin-right: .3rem; }
+  .pending { color: var(--muted); }
+  .pending-mark { color: var(--rule); margin-right: .3rem; }
+  .gate-tag { font-size: .78rem; color: var(--accent); margin-left: .3rem; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<main>
+  <p class="breadcrumb"><a href="/">scottcurtner.com</a> / <a href="../">Learning</a> / Agentic Operations</p>
+  <div class="kicker">Learning · Agentic Operations</div>
+  <h1>Agentic Operations</h1>
+  <p class="lede">Learn to build AI agents, one real concept at a time.</p>
+
+  <p>This course is four levels, each building on the last. You move on when you can explain the
+  idea yourself and the hands-on exercise works — not just when you've read the page. Keep your own
+  AI assistant (Claude, ChatGPT, whatever you use) open alongside these lessons; working through
+  follow-up questions with it is part of the method, not a detour.</p>
+
+  <h2>Start here — the mental-model spine</h2>
+  <p>These four lessons are the spine of the whole course — one per level, best read in order.
+  Everything else below is hands-on practice built on top of them.</p>
+  <ul class="roadmap">
+    <li><span class="done">&#10003;</span><a href="lessons/0001-not-in-context-doesnt-exist.html">0001 — Not in Context = Doesn't Exist</a> <span class="pending">(Level 1)</span></li>
+    <li><span class="done">&#10003;</span><a href="lessons/0002-match-the-pattern-to-the-problem.html">0002 — Match the Pattern to the Problem</a> <span class="pending">(Level 2)</span></li>
+    <li><span class="done">&#10003;</span><a href="lessons/0003-traces-before-prompts.html">0003 — Traces Before Prompts</a> <span class="pending">(Level 3)</span></li>
+    <li><span class="done">&#10003;</span><a href="lessons/0004-own-the-feedback-loop.html">0004 — Own the Feedback Loop</a> <span class="pending">(Level 4)</span></li>
+  </ul>
+
+  <h2>The practice ladder</h2>
+  <p>Each level's hands-on lessons are still being written. This is the planned arc — check back as
+  they ship.</p>
+
+  <h3>Level 1 · Foundations</h3>
+  <p class="level-status">Spine lesson done · <a href="reference/m1-core-vocabulary.html">Level 1 Vocabulary</a></p>
+  <ul class="roadmap">
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Tokens &amp; Cost</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Anatomy of a Tool Call</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Ship the Single-Tool Agent</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Break It on Purpose</span><span class="gate-tag">(gate)</span></li>
+  </ul>
+
+  <h3>Level 2 · Developing</h3>
+  <p class="level-status">Spine lesson done · <a href="reference/m2-core-vocabulary.html">Level 2 Vocabulary</a></p>
+  <ul class="roadmap">
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Structured Prompting &amp; Instruction Hierarchy</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Prompt-Injection Lab</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Build the ReAct Multi-Hop Agent</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Build a Small RAG Pipeline</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Episodic Memory</span><span class="gate-tag">(gate)</span></li>
+  </ul>
+
+  <h3>Level 3 · Advanced</h3>
+  <p class="level-status">Spine lesson done · <a href="reference/m3-core-vocabulary.html">Level 3 Vocabulary</a></p>
+  <ul class="roadmap">
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Run Lifecycle &amp; Durability</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Orchestrator Build</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Tracing Instrumentation + Eval Set</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Critic/Verifier Step</span><span class="gate-tag">(gate)</span></li>
+  </ul>
+
+  <h3>Level 4 · Operational Leadership</h3>
+  <p class="level-status">Spine lesson done · <a href="reference/m4-core-vocabulary.html">Level 4 Vocabulary</a></p>
+  <ul class="roadmap">
+    <li><span class="pending-mark">&#9675;</span><span class="pending">SLO Definition + Dashboard</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Guardrails &amp; Least Privilege</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">HITL Checkpoint Policy</span></li>
+    <li><span class="pending-mark">&#9675;</span><span class="pending">Full Improvement Cycle</span><span class="gate-tag">(gate)</span></li>
+  </ul>
+
+  <footer>
+    Part of <a href="../">Learning</a> on scottcurtner.com.
+  </footer>
+</main>
+</body>
+</html>

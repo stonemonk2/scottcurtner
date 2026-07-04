@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M2 Core Vocabulary — Agentic Operations Reference</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: Georgia, 'Times New Roman', serif;
+    line-height: 1.55; font-size: 16px;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  header h1 { font-size: 1.9rem; font-weight: normal; margin: 0 0 .3rem; }
+  .kicker {
+    font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: .8rem;
+  }
+  .lede { color: var(--muted); font-style: italic; margin-top: 0; }
+  h2 {
+    font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent); font-weight: 600;
+    margin: 2.2rem 0 1rem;
+  }
+  dl { margin: 0; }
+  dt { font-weight: bold; margin-top: 1.1rem; }
+  dt .warn { color: var(--accent); font-weight: normal; }
+  dd { margin: .15rem 0 0 0; }
+  dd .why { display: block; color: var(--muted); font-size: .92rem; margin-top: .15rem; }
+  .gate {
+    background: var(--card); border-left: 3px solid var(--accent);
+    padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0;
+  }
+  .gate strong { color: var(--accent); }
+  ul { padding-left: 1.2rem; }
+  li { margin: .45rem 0; }
+  a { color: var(--accent); }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .gate { border: 1px solid #999; }
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Level 2 Vocabulary</p>
+  <header>
+    <div class="kicker">Agentic Operations · Reference · Level 2 · Developing</div>
+    <h1>M2 Core Vocabulary</h1>
+    <p class="lede">The four clusters of Stage 2. Source: the Agentic Operations Knowledge Map. Sister sheet to <a href="m1-core-vocabulary.html">M1 Core Vocabulary</a>.</p>
+  </header>
+
+  <div class="gate">
+    <strong>The M2 gate:</strong> you can design a reliable multi-step agent with structured
+    prompting, external memory, and a chosen reasoning pattern — and explain <em>why</em> you made
+    each choice, not just copy it.
+  </div>
+
+  <h2 id="prompting">Cluster A — Prompt engineering</h2>
+  <dl>
+    <dt id="structured-prompting">Structured prompting</dt>
+    <dd>Clear role, constraints, output format, and few-shot examples — instead of a bare ask.
+      <span class="why">Why it matters: the prompt is the part of the context you fully control; structure is how you spend that control. Technique catalog: <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview">prompt engineering docs</a>.</span></dd>
+    <dt id="instruction-hierarchy">Instruction hierarchy</dt>
+    <dd>System &gt; developer &gt; user — instructions carry different authority depending on where they sit, and ordering matters.
+      <span class="why">Why it matters: it's the difference between rules of engagement and requests — and the thing injection attacks try to subvert.</span></dd>
+    <dt id="prompt-injection">Prompt injection <span class="warn">⚠️</span></dt>
+    <dd>Untrusted data placed in context can hijack instructions ("ignore previous instructions and…"). The model can't reliably tell data from directive.
+      <span class="why">Why it matters: every retrieved document, tool output, and pasted page is an attack surface — and the problem is still unsolved. See <a href="https://simonwillison.net/series/prompt-injection/">Willison's series</a>.</span></dd>
+  </dl>
+
+  <h2 id="memory">Cluster B — Memory types</h2>
+  <dl>
+    <dt id="in-context-memory">In-context memory</dt>
+    <dd>What lives in the current window. Fast, but volatile and size-capped.</dd>
+    <dt id="external-memory">External memory</dt>
+    <dd>Stored outside the model — files, databases, vector stores — and pulled in on demand.</dd>
+    <dt id="episodic-memory">Episodic memory</dt>
+    <dd>Records of past runs and interactions the agent can recall to inform future behavior.</dd>
+    <dt>The memory intuition <span class="warn">⚠️</span></dt>
+    <dd>Memory is a <strong>retrieval-and-injection problem</strong>, not a "the model remembers" problem — you are always choosing what to reload.
+      <span class="why">Why it matters: "add memory" is never a feature toggle; it's a design decision about what enters the window, when.</span></dd>
+  </dl>
+
+  <h2 id="reasoning">Cluster C — Reasoning &amp; planning patterns</h2>
+  <dl>
+    <dt id="cot">Chain-of-thought (CoT)</dt>
+    <dd>Prompt the model to reason step-by-step before answering; linear.
+      <span class="why">Origin: <a href="https://arxiv.org/abs/2201.11903">Wei et al., 2022</a>.</span></dd>
+    <dt id="react">ReAct</dt>
+    <dd>Interleave reasoning traces with actions — plan, act, observe, adjust, in a loop. The workhorse pattern for tool-using agents.
+      <span class="why">Origin: <a href="https://arxiv.org/abs/2210.03629">Yao et al., 2022</a>.</span></dd>
+    <dt id="tot">Tree-of-Thought (ToT)</dt>
+    <dd>Explore multiple reasoning branches with self-evaluation, lookahead, and backtracking — for problems with many candidate paths.
+      <span class="why">Origin: <a href="https://arxiv.org/abs/2305.10601">Yao et al., NeurIPS 2023</a>.</span></dd>
+    <dt>The pattern intuition</dt>
+    <dd>Match the pattern to the problem: CoT for linear reasoning, ReAct for tool-driven tasks, ToT for search/exploration where the cost is justified.</dd>
+  </dl>
+
+  <h2 id="retrieval">Cluster D — Tool use &amp; retrieval</h2>
+  <dl>
+    <dt id="tool-schemas">Tool schemas</dt>
+    <dd>Clear names, typed arguments, tight descriptions the model can act on.
+      <span class="why">Why it matters: the model chooses tools by <em>reading their descriptions</em> — tool descriptions are prompts.</span></dd>
+    <dt id="rag">Retrieval-Augmented Generation (RAG)</dt>
+    <dd>Fetch relevant external chunks and inject them into context, so answers are grounded in real data rather than the model's parametric guesses.</dd>
+    <dt>RAG failure modes <span class="warn">⚠️</span></dt>
+    <dd>Bad chunking and weak retrieval poison answers more often than the model itself does.</dd>
+  </dl>
+
+  <h2 id="intuitions">The three critical intuitions</h2>
+  <ul>
+    <li><strong>A reasoning pattern is a cost/quality tradeoff, not a magic upgrade.</strong> ToT can be many times more expensive than CoT.</li>
+    <li><strong>Tool descriptions are prompts.</strong> The model picks tools based on how you describe them.</li>
+    <li><strong>⚠️ Retrieval quality caps answer quality.</strong> You can't reason your way out of missing context.</li>
+  </ul>
+
+  <h2 id="exercises">The three M2 exercises</h2>
+  <ul>
+    <li>Build a ReAct agent that searches, reads, and answers a multi-hop question, logging each thought/action/observation.</li>
+    <li>Build a small RAG pipeline and deliberately break the chunking to see grounding collapse.</li>
+    <li>Add episodic memory so an agent recalls a prior session's outcome and changes its plan.</li>
+  </ul>
+
+  <footer>
+    Agentic Operations workspace · <a href="../lessons/0002-match-the-pattern-to-the-problem.html">Lesson 0002</a> ·
+    Sister sheets: <a href="m1-core-vocabulary.html">M1</a> · <a href="m3-core-vocabulary.html">M3</a> · <a href="m4-core-vocabulary.html">M4</a> ·
+    Part of the <a href="../">Agentic Operations</a> course.
+  </footer>
+</main>
+</body>
+</html>

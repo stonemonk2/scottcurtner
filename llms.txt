@@ -21,6 +21,7 @@ and writing.
 ## Writing
 
 - [I Don't Publish Articles. I Release Them Through an AI Control.](https://www.scottcurtner.com/articles/publish-control/): A missing canonical tag on a Sunday morning pulled a thread. By end of day I'd built a two-agent AI publish control for my blog. Here's the system.
+- [Google Released a Standard for AI Knowledge Bases. I Adopted It — Then Extended It.](https://www.scottcurtner.com/articles/okf-freshness/): Google's OKF gives AI agents a clean way to read your knowledge. It says nothing about whether that knowledge is still true. Here's the layer I built on top.
 - [When Does AI Use Become Shadow AI?](https://www.scottcurtner.com/articles/shadow-ai/): Where personal AI productivity tools cross into governance risk — and how dependency triggers the line.
 - [Integrative vs. Disintegrative Pain in Technical Learning](https://www.scottcurtner.com/articles/integrative-pain/integrative-pain-blog-post.html): Applying Mark Divine's pain framework to learning hard technical skills.
 - [I Walked Through a Vacant Rental With My Phone](https://www.scottcurtner.com/articles/unit-a/): How an MCP memory server turns voice notes and phone photos into organized action.

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0012 — Tracing &amp; the Planted Regression</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0012</p>
+  <div class="kicker">Agentic Operations · Lesson 0012 · Level 3 · Advanced · Build + Lab</div>
+  <h1>Tracing &amp; the Planted Regression</h1>
+  <p class="lede">You debug agents by reading traces. So first you build the trace — then an eval that catches a bug you hid.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> full tracing on your agent, plus an
+  eval set that catches a regression you deliberately introduced — the rubric's second M3 exercise,
+  and the core of the M3 gate. Prerequisite:
+  <a href="0003-traces-before-prompts.html">Lesson 0003</a>.</div>
+
+  <h2>1 · Instrument a real trace</h2>
+  <p>A trace is the full trajectory of a run: every model call, tool call, and retrieval, with
+  inputs, outputs, and timing (Lesson 0003). Extend the logging you've built since 0005 into one
+  structured trace per run — one record per step:</p>
+<pre><code>{"run_id", "step", "type": "model_call|tool_call",
+ "input", "output", "tokens", "latency_ms", "ts_offset"}</code></pre>
+  <p>Hosted tools (<a href="https://langfuse.com/docs/observability/overview">Langfuse</a>, Arize,
+  Opik) do this for you in production and add a UI — Vernant already has a langfuse-bridge in the
+  tree if you want to wire the real thing. But build the JSONL version by hand first: the
+  discipline is knowing <em>what</em> must be captured, and you only learn that by capturing it.</p>
+  <div class="check"><strong>Pass:</strong> after one run you can reconstruct exactly what the
+  agent did — and, critically, <em>why</em> it made each decision — from the trace alone, without
+  re-running. If you can't tell why it chose a tool, your trace is missing the model's input for
+  that step.</div>
+
+  <h2>2 · Build a small eval set</h2>
+  <p>Write 8–12 test cases for your agent: input + expected outcome. Then split scoring into the
+  two M3 levels — because a right answer via a broken path breaks at scale (Lesson 0003):</p>
+  <ul>
+    <li><strong>Outcome checks:</strong> is the final answer correct? (assert on the value)</li>
+    <li><strong>Trajectory checks:</strong> did it take a sane path? (e.g. "used the calculator
+    tool for arithmetic", "made ≤ N model calls", "never read a note it didn't search for first")
+    — assertions over the trace from step 1.</li>
+  </ul>
+  <div class="check"><strong>Pass:</strong> your suite runs and passes green on the current agent,
+  and at least a third of your assertions are <em>trajectory</em>-level, not just final-answer.</div>
+
+  <h2>3 · Plant a regression — the lab</h2>
+  <p>Introduce a bug that a naive outcome-only test would miss. Best kind: one that keeps answers
+  right on easy cases but corrupts the <em>path</em> or fails on edge cases. Examples:</p>
+  <ul>
+    <li>Weaken the system prompt so the agent sometimes does mental math instead of calling the
+    tool (outcome often still correct — trajectory now wrong).</li>
+    <li>Cap the loop at 2 iterations (multi-hop questions now truncate).</li>
+    <li>Silently drop <code>is_error</code> handling (errors now corrupt instead of recover).</li>
+  </ul>
+  <div class="check"><strong>Pass:</strong> your eval suite goes red on the planted regression —
+  and the assertion that catches it is a <em>trajectory</em> check for at least one of your
+  plants, proving why trajectory evals earn their keep. If an outcome-only suite would have stayed
+  green, you've demonstrated the exact M3 intuition.</div>
+
+  <div class="key"><strong>What you now own:</strong> the two instruments of M3. Traces turn "it
+  broke" into "here's the step it broke at." Evals turn "seems fine" into "the suite is green" —
+  and the trajectory layer is what stops a lucky-but-broken agent from shipping. Every change from
+  here (prompt, model, tool) gets gated by this suite — the seed of the M4 improvement loop.</div>
+
+  <h2>Self-grade — the M3 gate is nearly closed</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    <ul>
+      <li><strong>Trace is complete</strong> — every model/tool step with I/O + timing; run reconstructable from it alone, decisions explicable</li>
+      <li><strong>Eval has both levels</strong> — outcome and trajectory assertions, green on the good agent</li>
+      <li><strong>Regression caught</strong> — suite goes red on your planted bug; a trajectory assertion catches at least one plant</li>
+      <li><strong>You can debug from the trace</strong> — you found the broken step by reading, not re-running</li>
+    </ul>
+    With this plus Lesson 0013's critic step, the M3 gate (debug from traces alone + eval catches
+    a planted regression) is demonstrated.
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0013-critic-verifier-step.html">Lesson 0013 — the critic/verifier step</a>: add a
+  self-correction stage and measure how many silent wrong answers it kills; then the M3 readiness
+  check.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://hamel.dev/blog/posts/evals/">Your AI Product Needs Evals — Hamel Husain</a> (why the eval suite is the product's spine).<br>
+    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0011-orchestrator-bakeoff.html">0011</a> · <a href="0013-critic-verifier-step.html">0013</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

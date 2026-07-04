@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0005 — Build the Single-Tool Agent</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0005</p>
+  <div class="kicker">Agentic Operations · Lesson 0005 · Level 1 · Foundations · Guided build</div>
+  <h1>Build the Single-Tool Agent</h1>
+  <p class="lede">The second half of the M1 gate: ship a reliable agent — and read what the model actually sees.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> a working calculator agent you
+  built and ran, plus a per-turn context log you have personally read. Prerequisite:
+  <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>. Companion reference:
+  <a href="../reference/agent-loop-and-tool-call.html">The Agent Loop &amp; Tool-Call Round-Trip</a>.</div>
+
+  <p>This is a build lesson, not a reading lesson. Work in a terminal at the repo root. A
+  complete, self-tested reference implementation lives at
+  <code>learning/agentic-operations/exercises/m1_agent.py</code> — type the stages yourself
+  first and peek at it when stuck; the typing is where the learning is. (Its offline logic —
+  calculator safety, context-log serialization — passed <code>--selftest</code>; the live API
+  path needs your key, which is checkpoint 0.)</p>
+
+  <h2>Checkpoint 0 · Bring your own key</h2>
+  <p>This course runs on <strong>your own</strong> Anthropic API key — it stays on your machine,
+  is never committed, and never reaches anyone else. Copy the template, then paste your key into
+  the new <code>.env</code>:</p>
+<pre><code>cp .env.example .env      # then edit .env:  ANTHROPIC_API_KEY=sk-ant-...</code></pre>
+  <p>Create a key at the <a href="https://console.anthropic.com">Anthropic Console</a> if you
+  don't have one. <code>.env</code> is gitignored, so the key can't be committed by accident.
+  Verify it's set without printing the secret:</p>
+<pre><code>uv run python -c "from dotenv import dotenv_values; print('ANTHROPIC_API_KEY' in dotenv_values('.env'))"</code></pre>
+  <div class="check"><strong>Pass:</strong> prints <code>True</code>. The whole hands-on runs on
+  well under a dollar of your own credit — this agent's model is priced at $5 / $25 per million
+  input / output tokens, and the calculator examples spend a few thousand tokens each.</div>
+
+  <h2>Stage 1 · One call, no tools</h2>
+  <p>Start a script that makes a single API call and prints the response blocks and token usage.
+  Model: <code>claude-opus-4-8</code>. Note two things when it runs: the response is a <em>list of
+  typed content blocks</em>, not a string; and the usage object prices the call in tokens —
+  the unit everything in this field is denominated in.</p>
+<pre><code>response = client.messages.create(
+    model="claude-opus-4-8", max_tokens=16000,
+    system=SYSTEM, messages=[{"role": "user", "content": "What is 137 * 41?"}],
+)
+for block in response.content:
+    if block.type == "text": print(block.text)
+print(response.stop_reason, response.usage.input_tokens, response.usage.output_tokens)</code></pre>
+  <div class="check"><strong>Pass:</strong> you get an answer, a stop-reason of
+  <code>end_turn</code>, and real token counts. The model probably did the arithmetic in its
+  head — plausibly. That's the failure mode tools exist to close.</div>
+
+  <h2>Stage 2 · Define the tool</h2>
+  <p>Add the calculator tool definition (see the reference sheet for the exact schema) and a
+  system prompt that says arithmetic must go through it. Remember from Lesson 0002:
+  <strong>the description is a prompt</strong> — say <em>when</em> to call it ("for every
+  arithmetic step; do not do mental math"), not just what it does.</p>
+  <div class="check"><strong>Pass:</strong> the same question now returns
+  <code>stop_reason == "tool_use"</code> and a content block carrying
+  <code>{"expression": "137 * 41"}</code>. Stop and look at that block: it is <em>text the model
+  proposed</em>. Nothing has been computed yet. Your code makes it real.</div>
+
+  <h2>Stage 3 · Execute and loop</h2>
+  <p>Implement the tool body and the loop: execute the proposal, append the assistant content
+  verbatim, append a <code>tool_result</code> (id matched to the proposal), call again; repeat
+  while the stop-reason is <code>tool_use</code>. Two non-negotiables from the reference sheet:
+  the tool body treats the model's input as <em>untrusted</em> (the reference script uses an AST
+  whitelist — never <code>eval()</code>), and the loop is <em>bounded</em> (10 iterations).</p>
+<pre><code>uv run learning/agentic-operations/exercises/m1_agent.py
+# or your own: "What is (137 * 41) + 2**10 / 7? Work step by step."</code></pre>
+  <div class="check"><strong>Pass:</strong> the agent calls the calculator (possibly several
+  times), then answers. Check it: (137 × 41) + 2¹⁰ ÷ 7 = 5617 + 146.29 ≈ 5763.29.</div>
+
+  <h2>Stage 4 · Log the world — the M1 exercise</h2>
+  <p>Before <em>every</em> API call, dump the complete context — system prompt, tool
+  definitions, full message history — to <code>context_log.jsonl</code>. Then run once and
+  <strong>read the log</strong>. This is the rubric's exercise #1 and the whole point:</p>
+  <ul>
+    <li>Turn 1's record is small: system + tools + your question.</li>
+    <li>Turn 2's record contains everything turn 1 had <em>plus</em> the model's proposal
+    <em>plus</em> your tool result — because the model retained nothing; you rebuilt its world.</li>
+    <li>Watch <code>input_tokens</code> climb every turn. That's statelessness, priced.</li>
+  </ul>
+  <div class="check"><strong>Pass:</strong> you can point at turn 2's log line and narrate every
+  piece of it — where it came from, and what would happen if any piece were missing.</div>
+
+  <h2>Stage 5 · Make it reliable</h2>
+  <p>Break it on purpose (gently — the real breaking is Lesson 0006): ask something that makes
+  the model send a bad expression, or temporarily make the tool raise. The agent must return the
+  error to the model as a <code>tool_result</code> with <code>is_error: true</code> — and the
+  model should recover — rather than crashing.</p>
+  <div class="check"><strong>Pass:</strong> a tool error produces a recovered answer or a clean
+  explanation, never a stack trace.</div>
+
+  <div class="key"><strong>What you just proved:</strong> an agent is an LLM in a bounded loop
+  with a tool and a goal; the model only ever proposes text; your code executes, feeds back, and
+  rebuilds the model's world every turn. You've now <em>watched</em> the M1 sentence be true.</div>
+
+  <h2>Self-grade — the gate check</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    "Reliable single-tool agent" means all four:
+    <ul>
+      <li><strong>It works</strong> — multi-step arithmetic question answered correctly via the tool</li>
+      <li><strong>The world is visible</strong> — every turn's full context logged, and you read it (can narrate turn 2's contents from memory)</li>
+      <li><strong>Failure is handled</strong> — tool errors go back to the model as error results; loop is bounded</li>
+      <li><strong>You can defend the design</strong> — why the tool description says "do not do mental math", why the input is validated, why input tokens grow per turn</li>
+    </ul>
+    Bring the run output + a context-log excerpt to the readiness check. With this and your
+    Lesson 0001 explanation, the M1 gate is checkable.
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0006-break-it-on-purpose.html">Lesson 0006 — Break It On Purpose</a>: overflow the
+  window with junk and measure the degradation; rewrite one vague prompt three ways. Then the M1
+  readiness check.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use with Claude — Claude Platform Docs</a> (the round-trip you just built, officially specified).<br>
+    Reference: <a href="../reference/agent-loop-and-tool-call.html">Agent Loop &amp; Tool-Call Round-Trip</a> · <a href="../reference/m1-core-vocabulary.html">Level 1 Vocabulary</a> ·
+    Sister lessons: <a href="0001-not-in-context-doesnt-exist.html">0001</a> · <a href="0006-break-it-on-purpose.html">0006</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

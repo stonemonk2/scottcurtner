@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0013 — The Critic/Verifier Step</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0;
+          font-family: system-ui, sans-serif; font-size: .85rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--rule); }
+  th { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0013</p>
+  <div class="kicker">Agentic Operations · Lesson 0013 · Level 3 · Advanced · Build → gate</div>
+  <h1>The Critic/Verifier Step</h1>
+  <p class="lede">Agents fail silently and confidently. A critic converts silent failures into caught ones — and you measure by how many.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> a verifier stage added to your agent
+  and a measured reduction in silent wrong answers — the rubric's third M3 exercise — then the M3
+  readiness check. Prerequisites:
+  <a href="0003-traces-before-prompts.html">Lesson 0003</a>,
+  <a href="0012-tracing-and-planted-regression.html">Lesson 0012</a> (you need the eval set).</div>
+
+  <h2>1 · Establish the baseline</h2>
+  <p>Run your agent across a test set that includes hard cases where it sometimes produces
+  plausible-but-wrong answers (the dangerous M3 failure — Lesson 0003). Using your 0012 evals,
+  record the <strong>silent wrong rate</strong>: answers that were wrong but looked confident and
+  well-formed (no crash, no "I'm not sure").</p>
+  <div class="check"><strong>Pass:</strong> you have a baseline number — e.g. "4 of 20 answers
+  were confidently wrong." If your agent never errs on your set, make the set harder; you can't
+  measure a reduction you can't first produce.</div>
+
+  <h2>2 · Add the verifier</h2>
+  <p>Insert a self-correction stage before the agent returns (Lesson 0003, Cluster C):</p>
+  <ul>
+    <li><strong>Reflection / critic:</strong> a second model call — ideally fresh-context, given
+    only the question and the proposed answer — prompted to find flaws: "Check this answer. Does it
+    follow from the evidence? Recompute any arithmetic. If it's wrong or unsupported, say so and
+    why." A fresh-context verifier catches what a self-critique in the same window rationalizes.</li>
+    <li><strong>Loop or gate:</strong> if the critic flags a problem, the agent revises (bounded
+    retries) or returns an honest "uncertain" rather than a confident wrong answer.</li>
+  </ul>
+
+  <h2>3 · Measure the delta</h2>
+  <table>
+    <tr><th>Configuration</th><th>Correct</th><th>Silent wrong</th><th>Honest "uncertain"</th><th>Extra tokens/run</th></tr>
+    <tr><td>Baseline (no critic)</td><td></td><td></td><td></td><td>—</td></tr>
+    <tr><td>+ critic/verifier</td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  <div class="check"><strong>Pass:</strong> silent wrong answers dropped, and you can state the
+  cost — the critic adds tokens and latency, and may convert some right answers to "uncertain"
+  (a real tradeoff). A verifier that halves silent-wrong at 1.5× cost is a decision you can now
+  articulate, not just an instinct.</div>
+
+  <div class="key"><strong>The M3 arc, complete:</strong> single-agent-default and the multi-agent
+  bar (0011), tracing and trajectory evals (0012), self-correction measured (0013). You've turned
+  "agents fail silently" from a warning into an instrumented, mitigated, quantified property of
+  your system.</div>
+
+  <h2>4 · The M3 readiness check</h2>
+  <p>Bring to your teaching agent: a failing agent you can <strong>debug from traces alone</strong>
+  (they'll hand you a broken run — or you replay a 0012 plant — and you find the fault by reading),
+  and your <strong>eval suite catching a planted regression</strong>. Both are the literal M3 gate.</p>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal what the M3 check will probe</button>
+  <div id="rubric" class="key">
+    <ul>
+      <li><strong>Trace-first debugging:</strong> given a broken run, you reach for the trace, not the prompt, and locate the faulting step by reading</li>
+      <li><strong>Eval as gate:</strong> your suite goes red on a regression, with a trajectory assertion doing the catching on at least one case</li>
+      <li><strong>Architecture judgment:</strong> you can argue for/against adding an agent on this task with trace evidence, not vibes</li>
+      <li><strong>Silent-failure literacy:</strong> you can name the difference between a crash and a confidently-wrong answer, and which your instruments catch</li>
+    </ul>
+    Pass and M3 closes — the M4 hands-on arc (SLO dashboard, guardrails, HITL, full improvement
+    loop) is the ownership stage.
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0014-slo-dashboard.html">Lesson 0014 — the SLO dashboard</a>: put your live agent
+  under production targets.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://hamel.dev/blog/posts/llm-judge/">Using LLM-as-a-Judge for Evaluation — Hamel Husain</a> (building a critic you can trust; measuring its agreement with humans).<br>
+    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0012-tracing-and-planted-regression.html">0012</a> · <a href="0014-slo-dashboard.html">0014</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

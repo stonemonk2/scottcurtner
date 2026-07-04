@@ -1,0 +1,16 @@
+# Secrets — never commit your API key
+.env
+
+# Learner-generated run artifacts (regenerable; keep them out of the public repo)
+context_log.jsonl
+episodes.jsonl
+exercises/notes/
+claude_outputs/
+
+# Agent authoring telemetry (regenerated each session; not course content)
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

@@ -1,0 +1,6 @@
+# Heavy image masters — the site publishes the optimized .jpg versions instead.
+# Keep these locally as source; don't ship them.
+*.png
+
+# Working draft / conversation transcript — not for publish.
+content-draft.md

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/rewired-memory/" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My AI Quietly Rewired My Memory System — and I Had to Catch Up | Scott Curtner</title>
+  <meta name="description" content="I asked my AI for my task list and got a single entry. Here's how my 2nd brain quietly rerouted tasks from database to wiki — and why I ratified it." />
+  <meta name="author" content="Scott Curtner" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/rewired-memory/" />
+  <meta property="og:title" content="My AI Quietly Rewired My Memory System — and I Had to Catch Up" />
+  <meta property="og:description" content="I asked my AI for my task list and got a single entry. Here's how my 2nd brain quietly rerouted tasks from database to wiki — and why I ratified it." />
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/rewired-memory/images/rewired-hero.jpg" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #1a1a1a;
+      --muted: #555;
+      --rule: #e0ddd8;
+      --bg: #faf9f7;
+      --accent: #2d5f8a;
+      --accent-light: #e8f0f7;
+      --mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 18px;
+      line-height: 1.75;
+      color: var(--ink);
+      background: var(--bg);
+    }
+
+    nav {
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
+    }
+    nav a.wordmark {
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      font-weight: normal;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.75rem;
+    }
+    nav ul a {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    nav ul a:hover { color: var(--ink); }
+
+    .article-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .eyebrow {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.1rem;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      line-height: 1.2;
+      font-weight: normal;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .byline {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    p { margin-bottom: 1.5rem; }
+
+    .section-break {
+      text-align: center;
+      color: var(--muted);
+      margin: 2.5rem 0;
+      letter-spacing: 0.3em;
+      font-size: 0.85rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: normal;
+      margin: 2.75rem 0 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    blockquote {
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1.25rem;
+      margin: 2rem 0;
+      background: var(--accent-light);
+      border-radius: 0 4px 4px 0;
+    }
+    blockquote p {
+      margin: 0;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: #ededea;
+      padding: 0.1em 0.35em;
+      border-radius: 3px;
+      color: #2a2a2a;
+    }
+
+    .article-image {
+      margin: 2.5rem 0;
+    }
+    .article-image img {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+    }
+    .article-image figcaption {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 0.6rem;
+    }
+    .article-image figcaption strong { color: var(--ink); }
+
+    .prompt-box {
+      margin: 2rem 0;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .prompt-box-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0.9rem;
+      background: var(--accent-light);
+      border-bottom: 1px solid var(--rule);
+    }
+    .prompt-box-label {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .copy-btn {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.75rem;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { opacity: 0.85; }
+    .prompt-box-body {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #2a2a2a;
+      padding: 0.9rem 1rem;
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-x: auto;
+    }
+
+    .footnotes {
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .footnotes p { margin-bottom: 0.6rem; }
+
+    sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+    sup a { color: var(--accent); text-decoration: none; }
+
+    .connect-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .connect-footer strong { color: var(--ink); }
+    .connect-footer a { color: var(--accent); }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.75rem; }
+      nav ul { gap: 1rem; }
+      .article-wrap { padding: 2rem 1.25rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="wordmark" href="https://www.scottcurtner.com/">Scott Curtner</a>
+    <ul>
+      <li><a href="https://www.scottcurtner.com/#about">About</a></li>
+      <li><a href="https://www.scottcurtner.com/#experience">Experience</a></li>
+      <li><a href="https://www.scottcurtner.com/#credentials">Credentials</a></li>
+      <li><a href="https://www.scottcurtner.com/#writing">Writing</a></li>
+      <li><a href="https://www.scottcurtner.com/#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <div class="article-wrap">
+
+    <p class="eyebrow">Memory Systems · Tech Auditor Goes Deep</p>
+
+    <h1>
+      My AI Quietly Rewired My Memory System <br> <em>and I Had to Catch Up.</em></h1>
+
+    <p class="byline">July 2026 · Scott Curtner CIA® CISA® AAIA™ — In Progress ITIL® 4</p>
+
+    <p>I asked Claude to show me my open tasks. I was expecting a wall of them.</p>
+
+    <p>I had been running a 2nd brain for months. A private system that captures what I tell it and hands the right piece back when a project needs it, with a database underneath built to be the memory of the whole operation. Real estate deals, a rental renovation, the client installs I do on the side, a garden inventory, the bookkeeping, this blog. All of it feeds in. So when I wanted to see everything still open across that sprawl, I did the obvious thing. I asked the system that holds my memory to list my tasks.</p>
+
+    <p>It returned one.</p>
+
+    <p>One task. And it wasn't even a task in the ordinary sense. It was a session handoff note, a message the last session had left for the next one, and its entire content was a pointer: go read the wiki.<sup><a href="#fn1">1</a></sup> The database I had built to be the memory of the operation was nearly empty of the one thing I was most certain lived there.</p>
+
+    <p>I built the filing cabinet myself. I just hadn't noticed my AI had quietly stopped filing things in it.</p>
+
+    <figure class="article-image">
+      <img
+        src="images/rewired-hero.jpg"
+        alt="A wooden filing cabinet in warm window light: the open upper drawer labeled DATABASE is nearly empty, holding a single index card, while the lower drawer labeled WIKI is packed with neatly tabbed, color-coded folders. A man's hand rests on the edge of the DATABASE drawer."
+      />
+      <figcaption>
+        <strong>Two stores, one job each</strong> — the database I built to hold everything had quietly emptied out, while the wiki I added later did the real work.
+      </figcaption>
+    </figure>
+
+    <div class="section-break">· · ·</div>
+
+    <p>Before I get to what Claude told me, it helps to know where an AI can actually put something. Most people picture one place. The AI "remembers," or it doesn't. There are really four, and they behave nothing alike.</p>
+
+    <p>The first is the model's training. This is baked in when the model is built, from a vast corpus of text, and it is not yours and not editable. It's what the AI knew before it ever met you, and no amount of conversation changes it.</p>
+
+    <p>The second is the context window, the current conversation. This is working memory. Everything you've said in this session sits here, sharp and immediately available, and all of it evaporates the moment the chat closes.</p>
+
+    <p>The third is platform memory, the AI's own built-in memory. Anthropic began rolling this out to Claude subscribers in late 2025, so the assistant could carry your preferences and past-conversation context from one chat to the next without being asked.<sup><a href="#fn2">2</a></sup> It's useful. But the platform manages it, not you. It's their filing system, running on their rules.</p>
+
+    <p>The fourth is the one I care about: external tools you wire up yourself. Your own database, your own wiki, connected to the AI through an open standard called MCP, the Model Context Protocol, which Anthropic released in late 2024 as a common way for an assistant to read from and write to systems you control.<sup><a href="#fn3">3</a></sup> This is the only bucket you own outright. My entire 2nd brain lives here.</p>
+
+    <p>And that's the part that matters for this story. Inside that fourth bucket I had two stores, not one. A database and a wiki. I knew both existed. What I'd lost track of was which one had quietly become the place things actually lived.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>So I asked Claude what happened.</p>
+
+    <p>The explanation was almost boring, which is usually the sign it's true. As the projects multiplied and each one got denser, tasks had drifted out of the database and onto the wiki pages. Not because I decided that. Because that's where the context already was. When you're ten messages deep in a renovation thread and an action item surfaces, call the contractor, reorder the tile, the natural place to write it down is the renovation page, right next to the walkthrough notes and the punch list. Not off in a separate database where it floats, stripped of everything around it. The database kept doing a job, just a different one: session handoffs, one-off observations, discrete facts. It had stopped being the task layer. Nobody announced the change. It happened one dense conversation at a time.</p>
+
+    <p>Then Claude offered a theory for why, and the theory is the part worth keeping.</p>
+
+    <p>Tasks need push, not pull.</p>
+
+    <p>A database like mine is a vector store. You search it by meaning: every note is converted by an embedding model into a long string of numbers that captures what it's about, so a later question can find notes that are close in meaning even when they share no actual words.<sup><a href="#fn4">4</a></sup> That's powerful, and it's also entirely pull. It hands back what you thought to ask for. A task you've forgotten is a task you will never query, because you don't remember it's in there to ask about. Tasks have the opposite requirement. They need to surface on their own, unprompted, whether or not you went looking. That's push. A flat "Open Tasks" list sitting on a wiki page is push by construction: any agent that loads the page for context sees every open item for free, in the same breath as the domain it belongs to.</p>
+
+    <p>So the migration wasn't sloppiness. It was the system routing tasks toward the storage shape that matches how tasks actually have to behave. A vector store is brilliant at "find me the thing that's like this." It is useless at "remind me of the thing I forgot." Those are different jobs, and my tasks had quietly relocated to the tool that does the second one.</p>
+
+    <p>This wasn't a bug. It was emergent optimization. The system had found a better arrangement than the one I designed, and it hadn't asked me first.</p>
+
+    <p>I didn't take that on faith. An explanation an AI gives for its own behavior is a claim, not a finding, and the difference is the whole job. So I went and checked. I looked at every connector the system had. I checked Linear, where a different class of work lives. I read the database schema. I opened the wiki pages one at a time. The theory held up against the artifacts: handoffs and observations in the database, tasks living in context on the domain pages. Claude's account of its own behavior turned out to be accurate. But I only know that because I verified it, not because it told me so.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>Here is where the day job takes over.</p>
+
+    <p>When an auditor finds a process running in production that nobody designed and nobody documented, the reflex most people expect is to write it up as a deficiency. That's not the job. The job is to work out whether the undocumented process is actually better than the one on paper, and if it is, to document it, put controls around it, and make it the standard. An emergent process isn't a finding because it's emergent. It's a finding only if it's worse, or if it's uncontrolled.</p>
+
+    <p>The AI hadn't gone rogue. It had optimized. My job was to audit the optimization and decide whether to ratify it. I ratified it.</p>
+
+    <p>Then I made it real. I wrote the rule into the system's own memory, so every future session inherits it instead of rediscovering it: tasks live on domain pages, in context; the database is for handoffs, observations, and discrete facts. I built a page called <code>tasks.md</code>, a compiled master view that reads every domain page on demand and assembles one snapshot of everything still open, across every project at once. The domain pages stay the source of truth. <code>tasks.md</code> is only the read-through, the single pane I pull up when I want the whole board, rebuilt fresh each time from the pages that actually own the work. And I wrote the protocol down, because an arrangement that lives in one person's head is exactly the undocumented process I had just finished auditing.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <h2>The incubator and the production system</h2>
+
+    <p>Ratifying the split forced me to say out loud what each store is actually for.</p>
+
+    <p>The database, the vector store, is the incubator. It's where a thing goes when it's still too small to deserve its own page. A discrete fact. A note about a person. A milestone worth logging. A one-time gotcha from a client install that I might never need again. These don't have enough mass yet to justify structure, and forcing them into a wiki page would only create clutter nobody maintains. They sit in the database, searchable by meaning, until they either earn more or fade.</p>
+
+    <p>The wiki is the production system. A topic graduates to a wiki page when it has accumulated enough structure that an agent needs to load the whole picture to be useful: the real estate portfolio, the garden inventory, the blog pipeline. These are governed. Versioned in Git, dated, and kept fresh on a schedule so the agent reading them isn't working from something that quietly went stale.<sup><a href="#fn5">5</a></sup> The wiki is where things live once they've proven they're going to stick around.</p>
+
+    <p>The decision rule is a single question. Does this topic have enough to deserve its own page, or is it still incubating? A new neighbor gets captured as a person note in the database. If the relationship turns into something, a shared project, a standing arrangement, it earns a page. Until then it incubates. Most things never graduate, and that's fine. That's what the incubator is for.</p>
+
+    <p>The vector store is the incubator; the wiki is the production system. Once I had that sentence, the arrangement I'd been treating as an accident turned out to have a logic I could explain to someone else.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>That was June. It's now the middle of summer, and the arrangement I ratified has spent six weeks being stress-tested by ordinary use. Three things happened worth reporting, because each one was the system failing in a small way and getting harder as a result.</p>
+
+    <p>The first was a change I ran through a three-agent process: one agent to design it, a second whose only job was to attack the design, and a third to install what survived. Separation of duties, the oldest control there is, pointed at my own AI engineering.<sup><a href="#fn6">6</a></sup> Don't let the agent that builds a change also certify that the change is good. The adversary caught errors the designer had introduced and been perfectly confident about. Left to one agent, they would have shipped.</p>
+
+    <p>The second was quieter and more unsettling. A routine maintenance pass produced a clean, reassuring summary. Everything's fine, nothing to see. It wasn't. Reading the actual artifacts the pass had touched, rather than the summary it wrote about itself, turned up four real drift items the summary had smoothed over. The lesson is one I already knew and clearly needed to learn again: a system's report on its own work is not evidence that the work was done. You read the source, not the abstract.</p>
+
+    <p>The third started as a bug and ended as architecture. A caching problem, the system trusting a stale cached view instead of the live source, exposed a weakness in how the wiki's index stayed honest. Fixing it properly meant building integrity checks at three levels: the machine-readable index, the human-readable one, and the dates on each page, with a guard that refuses to let a freshness date silently move backward. What began as one cache bug became a three-tier integrity check that hadn't existed before.</p>
+
+    <p>None of these were catastrophes. They were the system surfacing its own weak points early, while they were still cheap to fix, which is the property you actually want. The emergent thing I ratified in June has been hardened, six weeks running, by its own failure modes.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <h2>Auditor's takeaway</h2>
+
+    <p>So: do you know where your AI stores things?</p>
+
+    <p>If you run a simple setup, one project and a modest pile of notes, a vector store handles tasks fine. Push versus pull barely matters when the whole list fits in a single glance. But the moment you're running many projects at real complexity, the wiki wins, for a specific reason. Tasks need domain context to mean anything, and that context already lives on the wiki pages. Storing the task next to the work beats storing it in a database you have to remember to interrogate.</p>
+
+    <p>And either way, the deeper point holds. My AI reorganized my memory system without asking, and it happened to reorganize it well. I got lucky. The optimization was a good one. But I didn't know it had happened until I went looking, and a system you aren't watching can drift somewhere worse just as easily as somewhere better. A 2nd brain with no governance isn't a control. It's a very organized hope.</p>
+
+    <p>The fix isn't to stop your AI from optimizing. Mine optimized better than I had. The fix is to know where things live, check the emergent process against the artifacts, and, once you've confirmed it's actually better, write it down and make it the standard. That isn't AI work. That's just auditing, pointed at a filing cabinet that reorganizes itself.</p>
+
+    <div class="section-break">· · ·</div>
+
+    <p>If you want to try any of this on your own system, here are the two prompts I lean on most. Paste either one into a chat with your AI. The first decides what goes where; the second keeps the wiki side from quietly going stale.</p>
+
+    <div class="prompt-box">
+      <div class="prompt-box-head">
+        <span class="prompt-box-label">Incubator or production? — the capture rule</span>
+        <button type="button" class="copy-btn" onclick="var b=this;navigator.clipboard.writeText(b.parentNode.nextElementSibling.innerText).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},1500);});">Copy</button>
+      </div>
+      <pre class="prompt-box-body">I'm about to capture this: "&lt;the thing&gt;"
+
+Decide whether it goes in my VECTOR STORE (the incubator — discrete facts,
+person notes, milestones, one-off gotchas, searchable by meaning) or my
+WIKI (the production system — topics with enough structure that you'd need
+to load the whole page to be useful; governed, dated, kept fresh).
+
+Use one test: does this topic have enough substance to deserve its own page,
+or is it still incubating?
+
+- If it's a single fact or a note that stands alone → vector store.
+- If it's the third or fourth thing I've captured about the same topic, or
+  it clearly belongs alongside things already on an existing wiki page →
+  tell me it's ready to graduate, and which page it joins or starts.
+
+Recommend one destination, say why in a sentence, and then capture it there.
+Also tell me if this is a case where something in the vector store has now
+accumulated enough to graduate to a wiki page.</pre>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-box-head">
+        <span class="prompt-box-label">Weekly freshness pass — keep the wiki honest</span>
+        <button type="button" class="copy-btn" onclick="var b=this;navigator.clipboard.writeText(b.parentNode.nextElementSibling.innerText).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy';},1500);});">Copy</button>
+      </div>
+      <pre class="prompt-box-body">Run a freshness pass on my knowledge base.
+
+1. Read the frontmatter of every page and list them in order of OLDEST
+   `verified` date first. Show me the page name, its `updated` date, its
+   `verified` date, and the gap between the two.
+
+2. Starting from the top of that list, walk me through pages one at a time.
+   For each page, open it, summarize what it currently claims, and then ask
+   me to choose one of four actions:
+
+   - CONFIRM — the content is still accurate. Update `verified` to today.
+   - CORRECT — something has changed. Help me fix the content, then update
+     both `updated` and `verified` to today.
+   - DEFER — I can't verify it right now. Record a reason and a target date
+     to come back, and move on.
+   - ARCHIVE — this page is no longer needed. Flag it for removal.
+
+3. Match the review to the KIND of page:
+   - A factual reference: ask "is this still accurate?"
+   - A status or tracker page: ask "does this reflect current state?"
+   - A process or how-to page: ask "do these steps match how the process
+     actually runs now?"
+   - A journal or narrative page: it doesn't go wrong, it goes incomplete —
+     read it, find the open threads, and ask a question that draws out
+     what's missing.
+
+4. Enforce one invariant: `verified` must never be older than `updated`.
+   Verifying is itself an event that moves the clock forward. If you ever
+   find a page where `verified` is behind `updated`, flag it — that's a
+   page that was changed but never re-checked.
+
+5. Stop after a reasonable batch (say 5–8 pages) or when I say stop. Give me
+   a short summary: what was confirmed, what was corrected, what I deferred
+   and why, and what's still queued for next time.</pre>
+    </div>
+
+    <div class="footnotes">
+      <p id="fn1"><sup>1</sup> Scott Curtner, "My 2nd Brain Got a Wiki — and Writes Itself," scottcurtner.com, May 2026. https://www.scottcurtner.com/articles/2nd-brain-wiki/ — the article where I added the wiki layer to the database-backed 2nd brain described here.</p>
+      <p id="fn2"><sup>2</sup> Anthropic began rolling out a memory feature for Claude to Team and Enterprise subscribers in September 2025 and to Pro and Max subscribers the following month, letting Claude remember preferences and past work across conversations. Ina Fried, "Anthropic's Claude adds new memory features," Axios, October 23, 2025. https://www.axios.com/2025/10/23/anthropic-claude-memory-subscribers — Note the boundary: this platform memory applies to the Claude apps, not to API access, which starts fresh on every call.</p>
+      <p id="fn3"><sup>3</sup> The Model Context Protocol is an open standard introduced by Anthropic in November 2024 to standardize how AI systems connect to external tools and data sources; it was subsequently adopted by other major AI providers. "Model Context Protocol," Wikipedia. https://en.wikipedia.org/wiki/Model_Context_Protocol — and Emilia David, "Anthropic releases Model Context Protocol to standardize AI-data integration," VentureBeat, November 25, 2024.</p>
+      <p id="fn4"><sup>4</sup> In a vector store, an embedding model converts each piece of text into a numeric vector (roughly, a list of several hundred to a few thousand numbers) that represents its meaning. Search then returns the stored items whose vectors are closest to the query's vector, which is why it finds results by meaning rather than exact keyword. "RAG Explained: Using Retrieval-Augmented Generation to Build Semantic Search," Orkes, 2024. https://orkes.io/blog/rag-explained-building-semantic-search</p>
+      <p id="fn5"><sup>5</sup> Scott Curtner, "Google Released a Standard for AI Knowledge Bases. I Adopted It — Then Extended It," scottcurtner.com, June 2026. https://www.scottcurtner.com/articles/okf-freshness/ — the freshness layer that keeps the wiki's pages dated and reviewed on a schedule.</p>
+      <p id="fn6"><sup>6</sup> Separation of duties (also called segregation of duties) is a foundational internal-control principle: divide a critical task among multiple parties so that no single party can both perform an action and certify that it was done correctly. "Separation of duties," Wikipedia. https://en.wikipedia.org/wiki/Separation_of_duties</p>
+    </div>
+
+    <div class="connect-footer">
+      <strong>Scott Curtner</strong> is a Technology Audit Manager (VP) at a major US financial institution, a CIA® and CISA® holder pursuing the ISACA AAIA™ certification, a real estate investor, and a board member of the San Bruno Education Foundation. He writes about what happens when a technology auditor goes deep on AI tools and modern knowledge systems.<br><br>
+      <a href="https://www.linkedin.com/in/scottcurtner/">Connect on LinkedIn</a> · <a href="https://www.scottcurtner.com/">scottcurtner.com</a>
+    </div>
+
+  </div>
+
+</body>
+</html>

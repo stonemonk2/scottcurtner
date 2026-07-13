@@ -20,6 +20,7 @@ and writing.
 
 ## Writing
 
+- [Auditing My Own Code: What I Found When I Turned My Career on My Bookkeeping System](https://www.scottcurtner.com/articles/auditing-my-own-code/): I audit other people's technology for a living. Here is what turned up when I pointed that same instinct at the bookkeeping system I built myself.
 - [My AI Quietly Rewired My Memory System — and I Had to Catch Up](https://www.scottcurtner.com/articles/rewired-memory/): I asked my AI for my task list and got a single entry. Here's how my 2nd brain quietly rerouted tasks from database to wiki — and why I ratified it.
 - [I Don't Publish Articles. I Release Them Through an AI Control.](https://www.scottcurtner.com/articles/publish-control/): A missing canonical tag on a Sunday morning pulled a thread. By end of day I'd built a two-agent AI publish control for my blog. Here's the system.
 - [Google Released a Standard for AI Knowledge Bases. I Adopted It — Then Extended It.](https://www.scottcurtner.com/articles/okf-freshness/): Google's OKF gives AI agents a clean way to read your knowledge. It says nothing about whether that knowledge is still true. Here's the layer I built on top.

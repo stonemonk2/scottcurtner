@@ -804,7 +804,7 @@ In `sitemap.xml` (lesson URLs were renumbered by Task 2):
 python - <<'EOF'
 import pathlib, re
 sm = pathlib.Path("sitemap.xml").read_text(encoding="utf-8")
-urls = set(re.findall(r"<loc>https://www\.scottcurtner\.com/(learning/[^<]+)</loc>", sm))
+urls = set(re.findall(r"<loc>https://www\.scottcurtner\.com/(learning/[^<]*)</loc>", sm))
 disk = set()
 for p in pathlib.Path("learning").rglob("*.html"):
     rel = p.as_posix()

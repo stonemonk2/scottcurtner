@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/auditing-my-own-code/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auditing My Own Code | Scott Curtner</title>
+  <meta name="description" content="I audit other people's technology for a living. Here is what turned up when I pointed that same instinct at the bookkeeping system I built myself.">
+  <meta property="og:title" content="Auditing My Own Code: What I Found When I Turned My Career on My Bookkeeping System | Scott Curtner">
+  <meta property="og:description" content="I audit other people's technology for a living. Here is what turned up when I pointed that same instinct at the bookkeeping system I built myself.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/auditing-my-own-code/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/auditing-my-own-code/images/hero.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B1F3A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%232A7FD4' text-anchor='middle'%3ESC%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .deck {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: var(--ink-light);
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 2.2em 0 0.6em;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote ──────────────────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Standard callout ────────────────────────────────────────────────────── */
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-size: 0.95rem;
+      color: var(--ink-light);
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Audit finding card ──────────────────────────────────────────────────── */
+    .finding {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--accent-warm);
+      padding: 24px 28px 10px;
+      margin: 2.4em 0;
+    }
+    .finding-tag {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .finding h4 {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .finding-row {
+      display: grid;
+      grid-template-columns: 128px 1fr;
+      gap: 16px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+    .finding-row .label {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding-top: 4px;
+    }
+    .finding-row .val { color: var(--ink-light); }
+    .finding-row .val strong { color: var(--ink); }
+    @media (max-width: 600px) {
+      .finding-row { grid-template-columns: 1fr; gap: 3px; padding: 12px 0; }
+    }
+
+    /* ── Audit-questions section ─────────────────────────────────────────────── */
+    .audit-section {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 28px 32px;
+      margin: 3em 0;
+    }
+    .audit-section h3 { color: var(--accent-warm); margin-top: 0; }
+    .audit-questions {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.9;
+      margin: 0.6em 0 0.2em;
+    }
+
+    /* ── Auditor's takeaway ──────────────────────────────────────────────────── */
+    .takeaway {
+      background: var(--ink);
+      border-radius: 4px;
+      padding: 30px 34px;
+      margin: 3em 0 1em;
+    }
+    .takeaway .tag {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 14px;
+    }
+    .takeaway p {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #e7e0d5;
+      margin: 0;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+
+<article>
+  <div class="hero">
+    <span class="eyebrow">July 2026 &middot; Technology Audit &middot; Bookkeeping &middot; Follow-up</span>
+    <h1>Auditing My Own Code: What I Found When I Turned My Career on My Bookkeeping System</h1>
+    <p class="deck">For a decade I have audited other people&rsquo;s technology. For thirty years I have loved building my own. This is what turned up when I aimed both instincts at the same target ... the bookkeeping system I built with Claude ... and wrote up the findings the way I would for anyone else.</p>
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>July 12, 2026</span>
+      <span>9 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero.jpg" alt="An open handwritten ledger beside a laptop showing the same records as a spreadsheet, in warm afternoon light">
+    <figcaption class="photo-caption">The same books, kept two ways ... thirty years apart.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <p>I audit technology for a living. For about a decade, my job has been to sit with other people&rsquo;s systems and ask the uncomfortable questions ... where is the bug, where is the data stale, where is the process quietly wasting everyone&rsquo;s time. Before that, and all through it, I have spent closer to thirty years as a technologist who loves to build things. AI has taken that second half of me, the builder, and set it on fire again.</p>
+
+    <p>Those two halves are most useful pointed at the same thing: my own systems. I am always, quietly, auditing my own work ... and the findings tend to arrive when I stop looking at a problem as one of those people and start looking at it as the other.</p>
+
+    <p>The clearest example is a bug Claude had convinced me, for months, could not be fixed. My property spreadsheets use modern Excel formulas that &ldquo;spill&rdquo; ... one formula fills a whole table of results and is supposed to grow on its own as new transactions arrive. Mine kept truncating. Every time my Python sync wrote to the workbook, the tables froze at their current size and stopped showing new rows. The fix was manual: open each tab, re-enter the formula by hand. Claude and I had looked more than once, and the answer kept coming back the same ... the library that writes the file cannot preserve what Excel needs, so you will have to do this by hand. I wrote myself an instruction sheet inside the workbook so I would not forget the steps.</p>
+
+    <p>I accepted that. As the <em>user</em> of the system, I knew it was a chore, and I did the chore. Then one weekend I asked the question as the <em>builder</em> instead ... not &ldquo;how do I do this by hand&rdquo; but &ldquo;is there any way at all to automate the thing I keep doing by hand?&rdquo; Same problem, different question. This time Claude went digging deeper and came back with something neither of us had surfaced before. There was a way. That shift, from performing the workaround to refusing to accept it, is the whole story of this piece.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <p>That was the first of three findings from a few weekends of turning this instinct loose on my own books. I will write all three up the way I would write up anyone else&rsquo;s ... condition, cause, risk, remediation. Old habit, and a good one.</p>
+
+    <h2>Finding one: the bug we were told couldn&rsquo;t be fixed</h2>
+
+    <p>The spill bug is worth understanding, because the cause was invisible from anywhere inside Excel. Claude and I traced it to the XML inside the workbook file: the library I use to write transactions, <code>openpyxl</code>, does not preserve the small piece of metadata that tells Excel a formula is a dynamic array. Every save quietly rewrote my spill formulas as the older, legacy kind, frozen at whatever size they were at that instant. Nothing looked broken. The formulas still calculated. They just stopped growing.</p>
+
+    <figure class="figure">
+      <img src="images/finding-01-spill.jpg" alt="A laptop showing a bookkeeping spreadsheet with a running-total column and one total cell highlighted">
+      <figcaption class="photo-caption">A running total that looks right ... and quietly stops counting a few rows short.</figcaption>
+    </figure>
+
+    <p>The fix came in two layers. First, Claude moved every tab&rsquo;s totals off the fragile spill and onto <code>SUMIFS</code> ... a plain formula that reads straight down the ledger and sums everything matching a given property, however many rows there happen to be. The totals are now correct no matter what the spill does, and I kept the spill tables on purpose, so I can audit one against the other. Second came the part that had eluded us for months: a small script, built on a library called <code>xlwings</code>, that drives Excel through its own engine to force a true re-spill across every tab at once, wired to a single button. Installing <code>xlwings</code> was the actual unlock ... it turned out to be the one tool that could do what <code>openpyxl</code> could not. The manual copy, delete, and paste I had done tab by tab, sync after sync, is simply gone.</p>
+
+    <div class="finding">
+      <span class="finding-tag">Finding 01 &middot; Dynamic-Array Spill Degradation</span>
+      <h4>The property tables froze on every sync, and the fix was &ldquo;do it by hand&rdquo;</h4>
+      <div class="finding-row">
+        <span class="label">Condition</span>
+        <span class="val">Every entity tab&rsquo;s spill table silently froze at its current size on each sync and stopped showing new rows. Keeping them current meant re-entering the formula by hand, tab by tab.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Cause</span>
+        <span class="val"><code>openpyxl</code> does not preserve Excel&rsquo;s dynamic-array metadata, so every script save downgraded the dynamic spills into fixed legacy arrays that could not grow.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Risk</span>
+        <span class="val">Totals that leaned on the spill could understate without any error showing ... plus a standing manual chore, repeated across every tab, every single sync.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Remediation</span>
+        <span class="val">Two layers: rebuilt all totals on spill-independent <code>SUMIFS</code>, kept as a live audit check against the visible tables; and, via the <code>xlwings</code> library, automated the re-spill through Excel&rsquo;s own engine into a one-click button, retiring the manual step.</span>
+      </div>
+    </div>
+
+    <h2>Finding two: the income that counted itself twice</h2>
+
+    <p>The second finding never threw an error. It invented money. I caught it the old-fashioned way, spot-checking an individual property ledger and noticing the income sat higher than it had any right to.</p>
+
+    <figure class="figure">
+      <img src="images/reviewing.jpg" alt="A person at a desk reviewing financial dashboards on a monitor at dusk">
+      <figcaption class="photo-caption">The duplicate never announced itself. I caught it the way I catch most things ... by looking.</figcaption>
+    </figure>
+
+    <p>Plaid, the service that connects the system to my banks, reports a transaction more than once over its life ... first as <em>pending</em>, then a day or two later as <em>posted</em>. Reasonable, except it assigns each version a different transaction ID. My duplicate check keyed on that ID, so the pending copy and the posted copy sailed through as two separate events. For weeks, certain transactions were booked twice ... rent payments and a payroll run, the recurring items most likely to move through that pending-then-posted lifecycle.</p>
+
+    <p>The tell, once Claude and I knew to look, was in the descriptions: the pending copy comes through truncated, the posted copy fills in the detail, same amount and account a day or two apart. About <strong>$7,070 of income that had never actually arrived twice</strong> was sitting in my books as though it had ... two rent payments, a payroll run, and an Amazon order, each counted once for real and once for pretend.</p>
+
+    <div class="finding">
+      <span class="finding-tag">Finding 02 &middot; Pending/Posted Duplication</span>
+      <h4>Recurring income was being double-counted, silently, for weeks</h4>
+      <div class="finding-row">
+        <span class="label">Condition</span>
+        <span class="val">Pending and posted versions of the same transaction were both booked, double-counting recurring income (rent, payroll) and some expenses. No error was ever raised.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Cause</span>
+        <span class="val">Plaid reissues a transaction with a new <code>transaction_id</code> when a pending charge posts. Deduplication keyed on that id, so the two ids read as two distinct events.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Risk</span>
+        <span class="val">Overstated income ... roughly $7,070 of phantom duplicate income, concentrated in the most predictable recurring transactions.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Remediation</span>
+        <span class="val">Skip pending transactions entirely; book only settled ones. Removed the four historical duplicates by hand, preserving the posted copy of each.</span>
+      </div>
+    </div>
+
+    <p>The fix was almost embarrassingly small. One line: if a transaction is still pending, skip it. Book only settled ones. That costs a day or two of latency, which for bookkeeping is the right trade ... I would rather my books lag reality by a day than lead it into fiction. Then I removed the four historical duplicates by hand, keeping the posted copy of each.</p>
+
+    <h2>Finding three: the expense I knew the system would miss</h2>
+
+    <p>For the third one, I went in already knowing it was there.</p>
+
+    <p>A large renovation payment ... <strong>$8,818.75</strong> to my contractor ... was never going to show up in my books. It had been paid from a mostly unused account I had excluded from active review, and the importer&rsquo;s handling of accounts like that one was blunt: skip them, drop the transactions on the floor. So a real, deductible expense against one of my properties sat completely outside the system, invisible by design.</p>
+
+    <p>As the user, I knew the number. As the builder, I knew the design skipped it. So the fix was to change the rule: don&rsquo;t skip anything, give it a home that won&rsquo;t interfere. Now transactions from accounts I am not actively assigning are quarantined, not skipped. The $8,818.75 surfaced the instant I made that change, and a single rule filed it against the right property.</p>
+
+    <div class="finding">
+      <span class="finding-tag">Finding 03 &middot; Silent Exclusion of Whole Accounts</span>
+      <h4>A real expense sat outside the books, invisible by design</h4>
+      <div class="finding-row">
+        <span class="label">Condition</span>
+        <span class="val">A real, deductible renovation expense of $8,818.75 sat entirely outside the books, paid from an account the importer was configured to skip.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Cause</span>
+        <span class="val">Accounts excluded from active review had their transactions silently dropped rather than captured, so anything paid from them was invisible ... by design, not by accident.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Risk</span>
+        <span class="val">Understated cost basis on the property, and a standing class of transactions the system could discard without a trace.</span>
+      </div>
+      <div class="finding-row">
+        <span class="label">Remediation</span>
+        <span class="val">Capture-and-quarantine: nothing is dropped. Unassigned transactions route to a visible holding area that stays out of every total. The expense surfaced at once and filed to the right property by rule.</span>
+      </div>
+    </div>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>The same three questions I&rsquo;d ask a bank</h2>
+
+    <p>When I sit across from a team whose system just produced a wrong number, I ask three questions, in this order.</p>
+
+    <div class="audit-section">
+      <h3>The three questions</h3>
+      <p class="audit-questions">
+        Can you confirm this is wrong?<br>
+        If it is wrong ... how would you dimension the risk?<br>
+        And what is the best path forward?
+      </p>
+    </div>
+
+    <p>They sound simple. They are not. The first refuses to cry wolf ... you confirm the problem is real before you alarm anyone. The second is the real audit: how big is this, and how do you know? The third is where a finding earns its keep ... you arrive with a path forward, not just a problem.</p>
+
+    <p>I turned those questions on myself this year, and the answers came out mixed, which is the honest way for them to come out. The duplicated income I confirmed the slow way, spot-checking a property ledger until the numbers stopped adding up. The frozen spills and the hidden expense I already knew about ... one a chore I tolerated, one a limitation I assumed I was stuck with. What I feel good about is the second question. Every transaction carries its source and a unique ID. Nothing gets silently dropped anymore ... it gets quarantined, where I can still see it. The totals can be checked against the tables above them. None of that made the mistakes impossible. It made them <em>findable</em> ... a lower bar than perfect, and the only one that has ever actually held up in practice.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>Both halves, pointed at the same thing</h2>
+
+    <p>Here is the part I did not expect. I have spent a decade finding other people&rsquo;s bugs, correcting their outdated documentation, and pointing out where their process quietly costs them time. Good work, and I am good at it. But it is someone else&rsquo;s system ... at the end of the audit I hand over a report, and someone else decides what to do with it.</p>
+
+    <p>Doing this to my own system is a completely different feeling. I find the bug and I fix the bug. I question the design and then I get to change it. The auditor&rsquo;s eye and the builder&rsquo;s hands are finally attached to the same person, on the same thing, in the same afternoon ... and with AI closing the distance between &ldquo;I wonder if&rdquo; and &ldquo;it works now,&rdquo; that loop has gotten short enough to be honestly addictive.</p>
+
+    <div class="pull">
+      <p>Every one of these findings made my system a little more trustworthy. Every fix taught me something I did not know how to do the week before.</p>
+    </div>
+
+    <p>I am not maintaining a spreadsheet. I am upskilling myself on my own tools, on my own time, on problems I actually care about ... a strange and wonderful place to be thirty years into loving technology. I feel like a beginner again, with just enough experience to know how rare that feeling is.</p>
+
+    <div class="takeaway">
+      <span class="tag">Auditor&rsquo;s Takeaway</span>
+      <p>The goal is a system whose mistakes cannot hide ... one that captures and carries its own paper trail. One that lets its totals be checked against each other. What surprised me is that building it that way, and being the one who both breaks it and repairs it, turned out to be wonderfully engrossing work pointed at something of my own.</p>
+    </div>
+
+  </div>
+</article>
+
+<footer class="article-footer">
+  <div class="author-bio">
+    <h4>Scott Curtner</h4>
+    <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       ← Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

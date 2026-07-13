@@ -128,7 +128,9 @@ skill during implementation, not trusted from memory.
   0001→0002→0003→0004→0005→…→0018. 0001's stale paragraph (naming the never-built
   lessons) is rewritten to point at 0002 and mention the Level 1 practice ladder now
   starting at 0005. 0003's Next keeps its prose but gains the explicit next link to
-  0004. Broken `<\a>` closing tags (ten lessons) fixed to `</a>`.
+  0004. (CORRECTION 2026-07-13: the suspected broken `<\a>` closing tags were a
+  search-tool display artifact — the committed files were verified byte-level clean.
+  The checker keeps a malformed-tag guard, but there is nothing to fix.)
 - **0018 (The Improvement Loop):** the Next section becomes a congratulations block —
   all 18 lessons and all four level gates complete — pointing back to the course index
   and suggesting where to apply the skills next. No next link.

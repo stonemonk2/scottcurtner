@@ -85,7 +85,7 @@ sys.exit(1 if failures else 0)
 - [ ] **Step 2: Baseline run — expect failures**
 
 Run: `python scripts/check_learning_links.py`
-Expected: exit 1. The `tags` check reports ~10 lesson files with `<\a>`; the `terms` check reports many M1–M4 hits. The `links` check should report **zero** broken links — if it reports any, inspect them (they may be pre-existing bugs worth noting to Scott) before proceeding.
+Expected: exit 1. The `terms` check reports many M1–M4 hits. The `tags` check reports **zero** (verified 2026-07-13: the suspected `<\a>` tags were a search-tool display artifact; the guard stays). The `links` check should report **zero** broken links — if it reports any, inspect them (they may be pre-existing bugs worth noting to Scott) before proceeding.
 
 - [ ] **Step 3: Verify links-only mode passes**
 
@@ -673,13 +673,9 @@ git commit -m "Build lesson assumes the warm-ups: key check replaces BYOK, callb
 **Files:**
 - Modify: the ~10 lesson files containing `<\a>`; `lessons/0001-…`, `0002-…`, `0003-…`, `0004-…`; `lessons/0018-the-improvement-loop.html`
 
-- [ ] **Step 1: Fix every malformed closing anchor tag**
+- [ ] **Step 1: Confirm zero malformed closing anchor tags**
 
-Replace the literal string `<\a>` with `</a>` in every lesson file that has it (grep first: `grep -rln '<\\a>' learning`). A one-liner works:
-
-```bash
-grep -rl '<\\a>' learning --include="*.html" | xargs sed -i 's|<\\a>|</a>|g'
-```
+(Verified 2026-07-13: the suspected `<\a>` tags were a search-tool display artifact — the committed files are byte-level clean. Nothing to fix; just confirm the guard passes.)
 
 Run: `python scripts/check_learning_links.py tags` — expected `0 failure(s)`.
 

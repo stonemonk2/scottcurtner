@@ -15,7 +15,7 @@ for page in sorted(ROOT.rglob("*.html")):
     if "links" in checks:
         for m in re.finditer(r'(?:href|src)="([^"]+)"', text):
             url = m.group(1)
-            if url.startswith(("http://", "https://", "mailto:", "#")):
+            if url.startswith(("http://", "https://", "mailto:", "#", "data:")):
                 continue
             path_part = unquote(urlparse(url).path)
             if not path_part:

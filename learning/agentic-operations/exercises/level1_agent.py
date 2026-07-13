@@ -7,7 +7,7 @@
 A calculator agent built as a manual tool-use loop, logging the FULL context
 sent to the model on every turn (the Level 1 exercise: read what the model sees).
 
-Run:      uv run docs/learning/agentic-operations/exercises/level1_agent.py
+Run:      uv run learning/agentic-operations/exercises/level1_agent.py
           uv run .../level1_agent.py "your own arithmetic question"
 Self-test (no API call): uv run .../level1_agent.py --selftest
 """

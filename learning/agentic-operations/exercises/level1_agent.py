@@ -2,10 +2,10 @@
 # requires-python = ">=3.10"
 # dependencies = ["anthropic", "python-dotenv"]
 # ///
-"""M1 single-tool agent — Lesson 0007 reference implementation.
+"""Level 1 single-tool agent — Lesson 0007 reference implementation.
 
 A calculator agent built as a manual tool-use loop, logging the FULL context
-sent to the model on every turn (the M1 exercise: read what the model sees).
+sent to the model on every turn (the Level 1 exercise: read what the model sees).
 
 Run:      uv run docs/learning/agentic-operations/exercises/level1_agent.py
           uv run .../level1_agent.py "your own arithmetic question"
@@ -80,7 +80,7 @@ def _jsonable(o):
 
 
 def log_turn(turn: int, messages: list) -> None:
-    """The M1 exercise: persist the ENTIRE world the model is about to see."""
+    """The Level 1 exercise: persist the ENTIRE world the model is about to see."""
     record = {"turn": turn, "system": SYSTEM, "tools": TOOLS, "messages": messages}
     with LOG.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, default=_jsonable) + "\n")

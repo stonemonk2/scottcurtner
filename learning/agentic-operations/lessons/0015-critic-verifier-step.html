@@ -59,14 +59,14 @@
   <p class="lede">Agents fail silently and confidently. A critic converts silent failures into caught ones — and you measure by how many.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> a verifier stage added to your agent
-  and a measured reduction in silent wrong answers — the rubric's third M3 exercise — then the M3
+  and a measured reduction in silent wrong answers — the rubric's third Level 3 exercise — then the Level 3
   readiness check. Prerequisites:
   <a href="0003-traces-before-prompts.html">Lesson 0003</a>,
   <a href="0014-tracing-and-planted-regression.html">Lesson 0014</a> (you need the eval set).</div>
 
   <h2>1 · Establish the baseline</h2>
   <p>Run your agent across a test set that includes hard cases where it sometimes produces
-  plausible-but-wrong answers (the dangerous M3 failure — Lesson 0003). Using your 0014 evals,
+  plausible-but-wrong answers (the dangerous Level 3 failure — Lesson 0003). Using your 0014 evals,
   record the <strong>silent wrong rate</strong>: answers that were wrong but looked confident and
   well-formed (no crash, no "I'm not sure").</p>
   <div class="check"><strong>Pass:</strong> you have a baseline number — e.g. "4 of 20 answers
@@ -95,16 +95,16 @@
   (a real tradeoff). A verifier that halves silent-wrong at 1.5× cost is a decision you can now
   articulate, not just an instinct.</div>
 
-  <div class="key"><strong>The M3 arc, complete:</strong> single-agent-default and the multi-agent
+  <div class="key"><strong>The Level 3 arc, complete:</strong> single-agent-default and the multi-agent
   bar (0013), tracing and trajectory evals (0014), self-correction measured (0015). You've turned
   "agents fail silently" from a warning into an instrumented, mitigated, quantified property of
   your system.</div>
 
-  <h2>4 · The M3 readiness check</h2>
+  <h2>4 · The Level 3 readiness check</h2>
   <p>Bring to your teaching agent: a failing agent you can <strong>debug from traces alone</strong>
   (they'll hand you a broken run — or you replay a 0014 plant — and you find the fault by reading),
-  and your <strong>eval suite catching a planted regression</strong>. Both are the literal M3 gate.</p>
-  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal what the M3 check will probe</button>
+  and your <strong>eval suite catching a planted regression</strong>. Both are the literal Level 3 gate.</p>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal what the Level 3 check will probe</button>
   <div id="rubric" class="key">
     <ul>
       <li><strong>Trace-first debugging:</strong> given a broken run, you reach for the trace, not the prompt, and locate the faulting step by reading</li>
@@ -112,7 +112,7 @@
       <li><strong>Architecture judgment:</strong> you can argue for/against adding an agent on this task with trace evidence, not vibes</li>
       <li><strong>Silent-failure literacy:</strong> you can name the difference between a crash and a confidently-wrong answer, and which your instruments catch</li>
     </ul>
-    Pass and M3 closes — the M4 hands-on arc (SLO dashboard, guardrails, HITL, full improvement
+    Pass and Level 3 closes — the Level 4 hands-on arc (SLO dashboard, guardrails, HITL, full improvement
     loop) is the ownership stage.
   </div>
 

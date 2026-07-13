@@ -3,7 +3,7 @@
 Sixteen short lessons that take you from *"an LLM predicts the next token"* to
 *owning the improvement loop that keeps a production agent honest as the model
 shifts beneath it.* Four mental-model lessons and twelve build-and-break labs,
-one arc per milestone (M1 Foundational → M4 Operational Leader).
+one arc per milestone (Level 1 Foundational → Level 4 Operational Leader).
 
 Open `lessons/0001-not-in-context-doesnt-exist.html` in a browser to start.
 The lessons are self-contained HTML — no build step, no server.
@@ -17,7 +17,7 @@ never ships an API key.** You run it on *your own* key, which:
 - is read from a local `.env` that is **gitignored** (it can't be committed), and
 - is **never** printed, logged, or sent anywhere except Anthropic's API.
 
-The whole M1–M2 hands-on costs well under a dollar of your own credit.
+The whole Level 1–Level 2 hands-on costs well under a dollar of your own credit.
 
 ### Quick start
 

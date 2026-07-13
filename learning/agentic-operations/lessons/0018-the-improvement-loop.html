@@ -57,12 +57,12 @@
 
   <div class="win"><strong>Your win for this lesson:</strong> one complete improvement cycle —
   catch a live regression, ship a gated fix, and prove your eval suite would have blocked the bad
-  version — the rubric's third M4 exercise, and the whole map's final proof. Prerequisites:
+  version — the rubric's third Level 4 exercise, and the whole map's final proof. Prerequisites:
   everything, especially <a href="0014-tracing-and-planted-regression.html">0014</a> (evals),
   <a href="0016-slo-dashboard.html">0016</a> (SLOs), <a href="0017-guardrails-and-hitl.html">0017</a> (gate).</div>
 
   <h2>The loop, run once for real</h2>
-  <p>The M4 improvement loop is observe → evaluate → hypothesize → change → re-evaluate, run
+  <p>The Level 4 improvement loop is observe → evaluate → hypothesize → change → re-evaluate, run
   continuously (Lesson 0004). You'll execute one full turn of it — the way you'd run it forever in
   production.</p>
   <ol>
@@ -71,7 +71,7 @@
     dashboard surface the damage: an SLO drops (success rate falls, or escalation spikes). You find
     it because you're <em>watching the metrics</em>, not because a user complained.</li>
     <li><strong>Evaluate.</strong> Reach for the traces (0014), not the prompt. Read the failing
-    runs and locate the faulting step. This is the M3 reflex serving the M4 loop.</li>
+    runs and locate the faulting step. This is the Level 3 reflex serving the Level 4 loop.</li>
     <li><strong>Hypothesize.</strong> State what you think broke and why, as a falsifiable claim
     ("the new prompt made the agent skip the verifier on short inputs").</li>
     <li><strong>Change.</strong> Ship the fix — through your 0017 guardrails/gate, not around them.
@@ -91,10 +91,10 @@
   the suite, and it just got stronger. That's what "owning the loop" means: not shipping the
   current build, but running the machine that keeps every future build honest.</div>
 
-  <h2>The M4 readiness check — and the whole arc</h2>
+  <h2>The Level 4 readiness check — and the whole arc</h2>
   <p>Bring to your teaching agent: your <strong>SLO dashboard for a live agent</strong> (0016) and
   a <strong>complete observe→fix→verify cycle you ran independently</strong> (this lesson). Those
-  are the literal M4 gate — and passing it is the top of the map.</p>
+  are the literal Level 4 gate — and passing it is the top of the map.</p>
   <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal the operational-ownership signals</button>
   <div id="rubric" class="key">
     The doc's own signals that you're ready for ownership — the check probes each:

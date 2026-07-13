@@ -52,7 +52,7 @@
   <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0007</p>
   <div class="kicker">Agentic Operations · Lesson 0007 · Level 1 · Foundations · Guided build</div>
   <h1>Build the Single-Tool Agent</h1>
-  <p class="lede">The second half of the M1 gate: ship a reliable agent — and read what the model actually sees.</p>
+  <p class="lede">The second half of the Level 1 gate: ship a reliable agent — and read what the model actually sees.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> a working calculator agent you
   built and ran, plus a per-turn context log you have personally read. Prerequisite:
@@ -116,7 +116,7 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
   <div class="check"><strong>Pass:</strong> the agent calls the calculator (possibly several
   times), then answers. Check it: (137 × 41) + 2¹⁰ ÷ 7 = 5617 + 146.29 ≈ 5763.29.</div>
 
-  <h2>Stage 4 · Log the world — the M1 exercise</h2>
+  <h2>Stage 4 · Log the world — the Level 1 exercise</h2>
   <p>Before <em>every</em> API call, dump the complete context — system prompt, tool
   definitions, full message history — to <code>context_log.jsonl</code>. Then run once and
   <strong>read the log</strong>. This is the rubric's exercise #1 and the whole point:</p>
@@ -139,7 +139,7 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
 
   <div class="key"><strong>What you just proved:</strong> an agent is an LLM in a bounded loop
   with a tool and a goal; the model only ever proposes text; your code executes, feeds back, and
-  rebuilds the model's world every turn. You've now <em>watched</em> the M1 sentence be true.</div>
+  rebuilds the model's world every turn. You've now <em>watched</em> the Level 1 sentence be true.</div>
 
   <h2>Self-grade — the gate check</h2>
   <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
@@ -152,12 +152,12 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
       <li><strong>You can defend the design</strong> — why the tool description says "do not do mental math", why the input is validated, why input tokens grow per turn</li>
     </ul>
     Bring the run output + a context-log excerpt to the readiness check. With this and your
-    Lesson 0001 explanation, the M1 gate is checkable.
+    Lesson 0001 explanation, the Level 1 gate is checkable.
   </div>
 
   <h2>Next</h2>
   <p><a href="0008-break-it-on-purpose.html">Lesson 0008 — Break It On Purpose</a>: overflow the
-  window with junk and measure the degradation; rewrite one vague prompt three ways. Then the M1
+  window with junk and measure the degradation; rewrite one vague prompt three ways. Then the Level 1
   readiness check.</p>
 
   <footer>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0005 — Tokens &amp; Cost</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0005</p>
+  <div class="kicker">Agentic Operations · Lesson 0005 · Level 1 · Foundations · Hands-on lab</div>
+  <h1>Tokens &amp; Cost</h1>
+  <p class="lede">The unit everything is denominated in: watch your words become tokens, and read real dollars off a real API response.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> you'll tokenize real text, predict
+  what a call will cost, and check the prediction against the usage numbers on a live response.
+  Prerequisite: <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>.</div>
+
+  <p>Lesson 0001 established that the context window is the model's entire world. This lesson
+  prices that world. Models don't read words — they read <strong>tokens</strong>, chunks of a few
+  characters each, and every API bill, rate limit, and context-window ceiling you will ever meet
+  is denominated in them. Work in a terminal at the repo root; the snippets below run in
+  <code>uv run python</code>.</p>
+
+  <h2>Checkpoint 0 · Bring your own key</h2>
+  <p>This course runs on <strong>your own</strong> Anthropic API key — it stays on your machine,
+  is never committed, and never reaches anyone else. Copy the template, then paste your key into
+  the new <code>.env</code>:</p>
+<pre><code>cp .env.example .env      # then edit .env:  ANTHROPIC_API_KEY=sk-ant-...</code></pre>
+  <p>Create a key at the <a href="https://console.anthropic.com">Anthropic Console</a> if you
+  don't have one. <code>.env</code> is gitignored, so the key can't be committed by accident.
+  Verify it's set without printing the secret:</p>
+<pre><code>uv run python -c "from dotenv import dotenv_values; print('ANTHROPIC_API_KEY' in dotenv_values('.env'))"</code></pre>
+  <div class="check"><strong>Pass:</strong> prints <code>True</code>. The whole Level 1 hands-on
+  track runs on well under a dollar of your own credit.</div>
+
+  <h2>Stage 1 · Count tokens without spending anything</h2>
+  <p>The API has a counting endpoint that tokenizes your input without running the model. Point
+  it at three different kinds of text and compare:</p>
+<pre><code>import anthropic
+client = anthropic.Anthropic()
+
+samples = {
+    "prose":   "The context window is the model's entire world. If a fact "
+               "is not in the window, it does not exist for this call.",
+    "code":    "def total(xs):\n    return sum(x.amount for x in xs if x.ok)",
+    "numbers": "3.14159 2.71828 1.41421 0.57721 6.02214",
+}
+for name, text in samples.items():
+    n = client.messages.count_tokens(
+        model="claude-opus-4-8",
+        messages=[{"role": "user", "content": text}],
+    ).input_tokens
+    print(f"{name}: {len(text)} chars -&gt; {n} tokens")</code></pre>
+  <div class="check"><strong>Pass:</strong> you can state roughly how many characters one token
+  buys in English prose (about four), and explain why code and bare numbers do worse. Then try
+  your own: paste a paragraph from Lesson 0001 and predict its count before running.</div>
+
+  <h2>Stage 2 · Predict, then spend</h2>
+  <p>This course's model, <code>claude-opus-4-8</code>, is priced at $5 per million input tokens
+  and $25 per million output tokens. Estimate before you spend: count the input, guess the output
+  length, do the arithmetic — then make the call and read the real numbers off
+  <code>response.usage</code>.</p>
+<pre><code>QUESTION = ("Explain in about 200 words why LLM APIs price input and "
+            "output tokens differently.")
+
+n_in = client.messages.count_tokens(
+    model="claude-opus-4-8",
+    messages=[{"role": "user", "content": QUESTION}],
+).input_tokens
+guess_out = 300  # ~200 words of output
+estimate = n_in / 1e6 * 5.00 + guess_out / 1e6 * 25.00
+print(f"predicted: {n_in} in, ~{guess_out} out -&gt; ${estimate:.5f}")
+
+response = client.messages.create(
+    model="claude-opus-4-8", max_tokens=2000,
+    messages=[{"role": "user", "content": QUESTION}],
+)
+u = response.usage
+actual = u.input_tokens / 1e6 * 5.00 + u.output_tokens / 1e6 * 25.00
+print(f"actual:    {u.input_tokens} in, {u.output_tokens} out -&gt; ${actual:.5f}")</code></pre>
+  <div class="check"><strong>Pass:</strong> your prediction lands within about 2× of the actual,
+  and you can point at every number: which one you controlled (<code>max_tokens</code> is a
+  ceiling, not a target), which one the model chose, and which one the counting endpoint got
+  exactly right.</div>
+
+  <h2>Stage 3 · Watch history get priced</h2>
+  <p>The model is stateless — every turn re-sends the whole conversation (Lesson 0001). That
+  sentence has a price. Run a three-turn conversation and watch input tokens climb even though
+  each new question is short:</p>
+<pre><code>messages = []
+for question in [
+    "Name three moons of Jupiter.",
+    "Which of those is the largest?",
+    "How was it discovered?",
+]:
+    messages.append({"role": "user", "content": question})
+    response = client.messages.create(
+        model="claude-opus-4-8", max_tokens=2000, messages=messages,
+    )
+    messages.append({"role": "assistant", "content": response.content})
+    print(f"turn {len(messages) // 2}: input_tokens={response.usage.input_tokens}")</code></pre>
+  <div class="check"><strong>Pass:</strong> input tokens grow every turn, and you can explain why
+  turn 3 pays for turns 1 and 2 all over again. That growth curve is statelessness, priced —
+  you'll watch it again in Lesson 0007 when you log an agent's full context every turn.</div>
+
+  <div class="key"><strong>The load-bearing sentence:</strong> tokens are the currency of this
+  whole field — every design decision in this course (what goes in context, when to retrieve,
+  when to summarize, when to spawn a subagent) eventually shows up as a token line-item on
+  somebody's bill.</div>
+
+  <h2>Self-grade</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    You own this lesson when all three are true:
+    <ul>
+      <li><strong>You can estimate</strong> — given a paragraph, you predict its token count
+      within ~25% before counting it</li>
+      <li><strong>You can price a call</strong> — from input tokens, output tokens, and the two
+      prices; nothing else needed</li>
+      <li><strong>You can explain the curve</strong> — why input tokens grow every turn, in one
+      sentence, starting from statelessness</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0006-anatomy-of-a-tool-call.html">Lesson 0006 — Anatomy of a Tool Call</a>: one
+  complete tool round-trip by hand — you'll see that a "tool call" is just structured text the
+  model proposes, and that you are the one who makes it real.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://platform.claude.com/docs/en/build-with-claude/token-counting">Token counting — Claude Platform Docs</a> (the endpoint you just used) ·
+    <a href="https://platform.claude.com/docs/en/pricing">current pricing</a>.<br>
+    Reference: <a href="../reference/level-1-vocabulary.html">Level 1 Vocabulary</a> ·
+    Sister lessons: <a href="0001-not-in-context-doesnt-exist.html">0001</a> · <a href="0006-anatomy-of-a-tool-call.html">0006</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

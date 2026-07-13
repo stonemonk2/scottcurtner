@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson 0006 — Anatomy of a Tool Call</title>
+<style>
+  :root {
+    --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
+    --accent: #a5402d; --rule: #d8d3c8; --card: #f4f0e6; --good: #2e7d4f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --paper: #16181c; --ink: #d9dce1; --muted: #8b919a;
+            --accent: #e07a5f; --rule: #33383f; --card: #1e2126; --good: #6fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font-family: Georgia, 'Times New Roman', serif; line-height: 1.6; font-size: 17px; }
+  main { max-width: 44rem; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  .kicker { font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+  h1 { font-size: 2.1rem; font-weight: normal; margin: 0 0 .4rem; line-height: 1.2; }
+  .lede { font-style: italic; color: var(--muted); margin-top: 0; }
+  h2 { font-family: system-ui, sans-serif; font-size: .8rem; letter-spacing: .12em;
+       text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 2.6rem 0 .9rem; }
+  a { color: var(--accent); }
+  .key { background: var(--card); border-left: 3px solid var(--accent);
+         padding: .9rem 1.1rem; margin: 1.4rem 0; border-radius: 0 4px 4px 0; }
+  .win { border: 1px solid var(--rule); padding: .9rem 1.1rem; border-radius: 4px;
+         font-family: system-ui, sans-serif; font-size: .92rem; margin: 1.5rem 0; }
+  .win strong { color: var(--accent); }
+  pre { background: var(--card); border: 1px solid var(--rule); border-radius: 6px;
+        padding: .8rem 1rem; overflow-x: auto; font-size: .8rem; line-height: 1.5; }
+  code { font-family: ui-monospace, Consolas, monospace; }
+  p > code, li > code { background: var(--card); padding: .1rem .3rem; border-radius: 3px; font-size: .85em; }
+  .check { border-left: 3px solid var(--good); background: var(--card);
+           padding: .6rem 1rem; margin: .8rem 0; font-family: system-ui, sans-serif;
+           font-size: .88rem; border-radius: 0 4px 4px 0; }
+  .check strong { color: var(--good); }
+  #rubric { display: none; margin-top: 1rem; }
+  .btn { font-family: system-ui, sans-serif; font-size: .85rem; margin-top: .6rem;
+         padding: .5rem .9rem; background: var(--accent); color: #fff; border: 0;
+         border-radius: 4px; cursor: pointer; }
+  footer { margin-top: 3rem; font-size: .85rem; color: var(--muted);
+           border-top: 1px solid var(--rule); padding-top: 1rem;
+           font-family: system-ui, sans-serif; }
+  ul { padding-left: 1.2rem; } li { margin: .4rem 0; }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0006</p>
+  <div class="kicker">Agentic Operations · Lesson 0006 · Level 1 · Foundations · Hands-on lab</div>
+  <h1>Anatomy of a Tool Call</h1>
+  <p class="lede">One round-trip, by hand: the model proposes, you execute — and this time, you are the tool.</p>
+
+  <div class="win"><strong>Your win for this lesson:</strong> one complete tool-call round-trip
+  executed manually in a Python REPL — no loop, no framework, no tool code. Prerequisites:
+  <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a> and
+  <a href="0005-tokens-and-cost.html">Lesson 0005</a> (your key is set up). Companion reference:
+  <a href="../reference/agent-loop-and-tool-call.html">The Agent Loop &amp; Tool-Call Round-Trip</a>.</div>
+
+  <p>Before you build an agent (next lesson), slow the machinery down to one frame at a time. A
+  "tool call" sounds like the model reaches out and runs your code. It doesn't. The model emits
+  structured text saying what it would like run; your code decides whether and how to run it; you
+  mail the result back. In this lesson you play the part of the code — by hand — so there is
+  nowhere for that fact to hide. Open a REPL at the repo root with <code>uv run python</code> and
+  keep it open for all four stages.</p>
+
+  <h2>Stage 1 · Define the tool</h2>
+  <p>A tool definition is three things: a name, a description, and a JSON Schema for the input.
+  The description is a prompt — it should say <em>when</em> to call the tool, not just what it
+  does:</p>
+<pre><code>import anthropic
+client = anthropic.Anthropic()
+
+TOOLS = [{
+    "name": "calculator",
+    "description": "Evaluate one arithmetic expression. Call this for every "
+                   "arithmetic step; do not do mental math.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"expression": {"type": "string"}},
+        "required": ["expression"],
+    },
+}]</code></pre>
+  <div class="check"><strong>Pass:</strong> you can say what each of the three parts is for, and
+  why the description says "do not do mental math" instead of just "evaluates arithmetic."</div>
+
+  <h2>Stage 2 · Trigger the proposal</h2>
+<pre><code>messages = [{"role": "user", "content": "What is 137 * 41?"}]
+response = client.messages.create(
+    model="claude-opus-4-8", max_tokens=2000,
+    tools=TOOLS, messages=messages,
+)
+print(response.stop_reason)          # tool_use
+block = next(b for b in response.content if b.type == "tool_use")
+print(block.id, block.name, block.input)</code></pre>
+  <p>Stop and look. <code>stop_reason == "tool_use"</code> means the model has paused mid-turn,
+  waiting on you. The block carries an <code>id</code> (a claim ticket), a <code>name</code>
+  (which tool), and an <code>input</code> (the arguments). Nothing has been computed. No code has
+  run anywhere. This is a proposal, written in JSON.</p>
+  <div class="check"><strong>Pass:</strong> you can point at the id, the name, and the input —
+  and say out loud what has <em>not</em> happened yet.</div>
+
+  <h2>Stage 3 · Be the tool</h2>
+  <p>Normally your code would execute the expression. Today you are the code: work out 137 × 41
+  yourself, then hand the answer back as a <code>tool_result</code> whose
+  <code>tool_use_id</code> matches the proposal's id:</p>
+<pre><code>messages.append({"role": "assistant", "content": response.content})
+messages.append({"role": "user", "content": [{
+    "type": "tool_result",
+    "tool_use_id": block.id,
+    "content": "5617",
+}]})
+final = client.messages.create(
+    model="claude-opus-4-8", max_tokens=2000,
+    tools=TOOLS, messages=messages,
+)
+print(final.stop_reason)             # end_turn
+print(next(b.text for b in final.content if b.type == "text"))</code></pre>
+  <div class="check"><strong>Pass:</strong> the model answers using <em>your</em> number. You
+  just performed, by hand, every step your agent code will automate in Lesson 0007: execute the
+  proposal, append the assistant content verbatim, append a matching tool_result, call again.</div>
+
+  <h2>Stage 4 · Break the contract</h2>
+  <p>The id-matching isn't a convention — the API enforces it. Rebuild the same follow-up with a
+  wrong id and watch the request get refused outright:</p>
+<pre><code>bad = messages[:-1] + [{"role": "user", "content": [{
+    "type": "tool_result",
+    "tool_use_id": "toolu_bogus",
+    "content": "5617",
+}]}]
+client.messages.create(model="claude-opus-4-8", max_tokens=2000,
+                       tools=TOOLS, messages=bad)
+# anthropic.BadRequestError (HTTP 400): the tool_use id has no matching result</code></pre>
+  <div class="check"><strong>Pass:</strong> you get a 400 error, not a confused answer. Every
+  proposal must be answered by id — that enforced contract is what makes the loop in the
+  reference sheet reliable.</div>
+
+  <div class="key"><strong>The load-bearing sentence:</strong> the model only ever proposes;
+  execution always happens on your side of the wire — which is why reliability (bounded loops,
+  errors returned as results) and security (never trust the model's input to a tool) are your
+  code's job, not the model's.</div>
+
+  <h2>Self-grade</h2>
+  <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
+  <div id="rubric" class="key">
+    You own this lesson when:
+    <ul>
+      <li><strong>You can narrate the round-trip</strong> — send, propose, execute, append,
+      resend — without notes</li>
+      <li><strong>You can say what a tool_use block is</strong> — structured text with a
+      claim-ticket id, not an action</li>
+      <li><strong>You can predict the failure</strong> — what happens when the id doesn't match,
+      and why the API enforces it</li>
+    </ul>
+  </div>
+
+  <h2>Next</h2>
+  <p><a href="0007-build-the-single-tool-agent.html">Lesson 0007 — Build the Single-Tool
+  Agent</a>: do it in code, with a loop — ship the agent that automates the round-trip you just
+  performed by hand, and log the world it sees on every turn.</p>
+
+  <footer>
+    <strong>Primary source for this lesson:</strong>
+    <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use with Claude — Claude Platform Docs</a> (read "How tool use works" — it is the round-trip you just did by hand).<br>
+    Reference: <a href="../reference/agent-loop-and-tool-call.html">Agent Loop &amp; Tool-Call Round-Trip</a> · <a href="../reference/level-1-vocabulary.html">Level 1 Vocabulary</a> ·
+    Sister lessons: <a href="0005-tokens-and-cost.html">0005</a> · <a href="0007-build-the-single-tool-agent.html">0007</a><br><br>
+    Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
+  </footer>
+</main>
+</body>
+</html>

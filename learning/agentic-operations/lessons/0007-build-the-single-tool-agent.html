@@ -55,8 +55,10 @@
   <p class="lede">The second half of the Level 1 gate: ship a reliable agent — and read what the model actually sees.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> a working calculator agent you
-  built and ran, plus a per-turn context log you have personally read. Prerequisite:
-  <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>. Companion reference:
+  built and ran, plus a per-turn context log you have personally read. Prerequisites:
+  <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>,
+  <a href="0005-tokens-and-cost.html">0005</a> and
+  <a href="0006-anatomy-of-a-tool-call.html">0006</a>. Companion reference:
   <a href="../reference/agent-loop-and-tool-call.html">The Agent Loop &amp; Tool-Call Round-Trip</a>.</div>
 
   <p>This is a build lesson, not a reading lesson. Work in a terminal at the repo root. A
@@ -66,24 +68,20 @@
   calculator safety, context-log serialization — passed <code>--selftest</code>; the live API
   path needs your key, which is checkpoint 0.)</p>
 
-  <h2>Checkpoint 0 · Bring your own key</h2>
-  <p>This course runs on <strong>your own</strong> Anthropic API key — it stays on your machine,
-  is never committed, and never reaches anyone else. Copy the template, then paste your key into
-  the new <code>.env</code>:</p>
-<pre><code>cp .env.example .env      # then edit .env:  ANTHROPIC_API_KEY=sk-ant-...</code></pre>
-  <p>Create a key at the <a href="https://console.anthropic.com">Anthropic Console</a> if you
-  don't have one. <code>.env</code> is gitignored, so the key can't be committed by accident.
-  Verify it's set without printing the secret:</p>
+  <h2>Checkpoint 0 · Key check</h2>
+  <p>Your Anthropic API key should already be set from
+  <a href="0005-tokens-and-cost.html">Lesson 0005 — Tokens &amp; Cost</a>. Verify without
+  printing the secret:</p>
 <pre><code>uv run python -c "from dotenv import dotenv_values; print('ANTHROPIC_API_KEY' in dotenv_values('.env'))"</code></pre>
-  <div class="check"><strong>Pass:</strong> prints <code>True</code>. The whole hands-on runs on
-  well under a dollar of your own credit — this agent's model is priced at $5 / $25 per million
-  input / output tokens, and the calculator examples spend a few thousand tokens each.</div>
+  <div class="check"><strong>Pass:</strong> prints <code>True</code>. If it doesn't, do Lesson
+  0005's Checkpoint 0 first. This build spends a few thousand tokens per run — pennies on the
+  prices you learned there.</div>
 
   <h2>Stage 1 · One call, no tools</h2>
   <p>Start a script that makes a single API call and prints the response blocks and token usage.
   Model: <code>claude-opus-4-8</code>. Note two things when it runs: the response is a <em>list of
   typed content blocks</em>, not a string; and the usage object prices the call in tokens —
-  the unit everything in this field is denominated in.</p>
+  the unit you learned to count and price in Lesson 0005.</p>
 <pre><code>response = client.messages.create(
     model="claude-opus-4-8", max_tokens=16000,
     system=SYSTEM, messages=[{"role": "user", "content": "What is 137 * 41?"}],
@@ -96,7 +94,8 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
   head — plausibly. That's the failure mode tools exist to close.</div>
 
   <h2>Stage 2 · Define the tool</h2>
-  <p>Add the calculator tool definition (see the reference sheet for the exact schema) and a
+  <p>Add the calculator tool definition — the same schema you dissected in Lesson 0006 (exact
+  version also on the reference sheet) — and a
   system prompt that says arithmetic must go through it. Remember from Lesson 0002:
   <strong>the description is a prompt</strong> — say <em>when</em> to call it ("for every
   arithmetic step; do not do mental math"), not just what it does.</p>
@@ -164,7 +163,7 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
     <strong>Primary source for this lesson:</strong>
     <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use with Claude — Claude Platform Docs</a> (the round-trip you just built, officially specified).<br>
     Reference: <a href="../reference/agent-loop-and-tool-call.html">Agent Loop &amp; Tool-Call Round-Trip</a> · <a href="../reference/level-1-vocabulary.html">Level 1 Vocabulary</a> ·
-    Sister lessons: <a href="0001-not-in-context-doesnt-exist.html">0001</a> · <a href="0008-break-it-on-purpose.html">0008</a><br><br>
+    Sister lessons: <a href="0006-anatomy-of-a-tool-call.html">0006</a> · <a href="0008-break-it-on-purpose.html">0008</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

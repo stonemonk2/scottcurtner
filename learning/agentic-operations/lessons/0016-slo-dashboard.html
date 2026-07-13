@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0014 — The SLO Dashboard</title>
+<title>Lesson 0016 — The SLO Dashboard</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -53,19 +53,19 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0014</p>
-  <div class="kicker">Agentic Operations · Lesson 0014 · Level 4 · Operational Leadership · Build</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0016</p>
+  <div class="kicker">Agentic Operations · Lesson 0016 · Level 4 · Operational Leadership · Build</div>
   <h1>The SLO Dashboard</h1>
   <p class="lede">An agent in production carries a pager. This lesson gives yours its four numbers.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> a dashboard tracking your agent's
   four SLOs against targets you set — the rubric's first M4 exercise. Prerequisites:
   <a href="0004-own-the-feedback-loop.html">Lesson 0004</a>,
-  <a href="0012-tracing-and-planted-regression.html">Lesson 0012</a> (the traces are your data source).</div>
+  <a href="0014-tracing-and-planted-regression.html">Lesson 0014</a> (the traces are your data source).</div>
 
   <h2>1 · Pick an agent you actually run</h2>
-  <p>Use your most-developed agent from this course (the multi-tool ReAct agent from 0008, ideally
-  with the 0013 verifier), or — better — a real Vernant surface you operate. M4 is about ownership;
+  <p>Use your most-developed agent from this course (the multi-tool ReAct agent from 0010, ideally
+  with the 0015 verifier), or — better — a real Vernant surface you operate. M4 is about ownership;
   own something concrete.</p>
 
   <h2>2 · Define the four SLOs</h2>
@@ -75,14 +75,14 @@
   set" and gather a week of data before committing a number (a vibe is not a target):</p>
   <table>
     <tr><th>SLI (measured)</th><th>SLO (target)</th><th>Source</th></tr>
-    <tr><td>Success rate (task correct per your 0012 evals)</td><td></td><td>eval pass/total</td></tr>
+    <tr><td>Success rate (task correct per your 0014 evals)</td><td></td><td>eval pass/total</td></tr>
     <tr><td>Latency (p50 / p95 wall-clock)</td><td></td><td>trace timing</td></tr>
     <tr><td>Cost per task ($ from tokens)</td><td></td><td>usage × price</td></tr>
     <tr><td>Escalation rate (handed to human / said "uncertain")</td><td></td><td>run outcomes</td></tr>
   </table>
 
   <h2>3 · Build the dashboard</h2>
-  <p>Aggregate your per-run trace records (Lesson 0012) into a rollup. Keep it honest, not fancy —
+  <p>Aggregate your per-run trace records (Lesson 0014) into a rollup. Keep it honest, not fancy —
   a script that reads the trace log and emits a table, or a small self-contained HTML page, is
   enough. It must show, per SLI: current value, target, and whether you're in or out of budget.</p>
 <pre><code># pseudo: read traces -> group by day -> per SLI compute value vs target
@@ -118,15 +118,15 @@ escalation_rate = escalated / total</code></pre>
   </div>
 
   <h2>Next</h2>
-  <p><a href="0015-guardrails-and-hitl.html">Lesson 0015 — guardrails &amp; the HITL
+  <p><a href="0017-guardrails-and-hitl.html">Lesson 0017 — guardrails &amp; the HITL
   checkpoint</a>: least privilege, injection defense at the tool boundary, and placing a human gate
   by risk.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://sre.google/sre-book/service-level-objectives/">Service Level Objectives — Google SRE Book, ch. 4</a> (SLI vs SLO vs SLA; read "agent run" for "request").<br>
-    Reference: <a href="../reference/m4-core-vocabulary.html">Level 4 Vocabulary</a> ·
-    Sister lessons: <a href="0013-critic-verifier-step.html">0013</a> · <a href="0015-guardrails-and-hitl.html">0015</a><br><br>
+    Reference: <a href="../reference/level-4-vocabulary.html">Level 4 Vocabulary</a> ·
+    Sister lessons: <a href="0015-critic-verifier-step.html">0015</a> · <a href="0017-guardrails-and-hitl.html">0017</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

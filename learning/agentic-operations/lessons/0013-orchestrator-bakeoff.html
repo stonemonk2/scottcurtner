@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0011 — The Orchestrator Bake-Off</title>
+<title>Lesson 0013 — The Orchestrator Bake-Off</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -53,8 +53,8 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0011</p>
-  <div class="kicker">Agentic Operations · Lesson 0011 · Level 3 · Advanced · Experiment</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0013</p>
+  <div class="kicker">Agentic Operations · Lesson 0013 · Level 3 · Advanced · Experiment</div>
   <h1>The Orchestrator Bake-Off</h1>
   <p class="lede">Prove multi-agent beats one agent on a decomposable task — with traces — or admit it doesn't.</p>
 
@@ -62,7 +62,7 @@
   traces, showing whether an orchestrator + subagents actually beats a single agent on your task —
   and an honest verdict either way. The rubric's first M3 exercise. Prerequisites:
   <a href="0003-traces-before-prompts.html">Lesson 0003</a>,
-  <a href="0008-react-multi-hop-build.html">Lesson 0008</a>.</div>
+  <a href="0010-react-multi-hop-build.html">Lesson 0010</a>.</div>
 
   <h2>1 · Pick a genuinely decomposable task</h2>
   <p>Multi-agent's one real advantage is <strong>context isolation</strong> (Lesson 0003), so the
@@ -79,7 +79,7 @@
     (each a fresh <code>messages</code> list — that's the isolation), collects the structured
     results, and synthesizes the report. Keep the subagent prompt identical across the five.</li>
   </ul>
-  <p>Instrument both (you'll formalize this in Lesson 0012): log per-arm total tokens, wall-clock,
+  <p>Instrument both (you'll formalize this in Lesson 0014): log per-arm total tokens, wall-clock,
   number of model calls, and the final quality score against a rubric you write first.</p>
 
   <h2>3 · Run the bake-off</h2>
@@ -121,15 +121,15 @@
   </div>
 
   <h2>Next</h2>
-  <p><a href="0012-tracing-and-planted-regression.html">Lesson 0012 — tracing &amp; the planted
+  <p><a href="0014-tracing-and-planted-regression.html">Lesson 0014 — tracing &amp; the planted
   regression</a>: build the observability you leaned on here, and an eval that catches a bug you
   hide on purpose.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system — Anthropic</a> (what multi-agent actually cost them, and what it bought).<br>
-    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
-    Sister lessons: <a href="0010-episodic-memory.html">0010</a> · <a href="0012-tracing-and-planted-regression.html">0012</a><br><br>
+    Reference: <a href="../reference/level-3-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0012-episodic-memory.html">0012</a> · <a href="0014-tracing-and-planted-regression.html">0014</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

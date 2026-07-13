@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0008 — The ReAct Multi-Hop Build</title>
+<title>Lesson 0010 — The ReAct Multi-Hop Build</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -49,8 +49,8 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0008</p>
-  <div class="kicker">Agentic Operations · Lesson 0008 · Level 2 · Developing · Guided build</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0010</p>
+  <div class="kicker">Agentic Operations · Lesson 0010 · Level 2 · Developing · Guided build</div>
   <h1>The ReAct Multi-Hop Build</h1>
   <p class="lede">Thought → action → observation, looped — the workhorse pattern, built and logged by hand.</p>
 
@@ -58,7 +58,7 @@
   single lookup can answer, with a logged thought/action/observation trace you can replay — the
   rubric's first M2 exercise. Prerequisites:
   <a href="0002-match-the-pattern-to-the-problem.html">Lesson 0002</a>,
-  <a href="0005-build-the-single-tool-agent.html">Lesson 0005</a>.</div>
+  <a href="0007-build-the-single-tool-agent.html">Lesson 0007</a>.</div>
 
   <h2>1 · The corpus (offline, deterministic)</h2>
   <p>No web APIs needed — the pattern is the point. Create
@@ -71,11 +71,11 @@
   pipeline workers?"</em></p>
 
   <h2>2 · Two tools</h2>
-  <p>Extend your 0005 loop with two tools (same schema discipline — descriptions say <em>when</em>):</p>
+  <p>Extend your 0007 loop with two tools (same schema discipline — descriptions say <em>when</em>):</p>
 <pre><code>search_notes(query)  ->  filenames whose content matches the query terms
 read_note(filename)  ->  the file's full text</code></pre>
   <p>Implementation stays boring: substring/keyword match for search; path-validate
-  <code>read_note</code> against the notes directory (untrusted input — 0005's rule).</p>
+  <code>read_note</code> against the notes directory (untrusted input — 0007's rule).</p>
 
   <h2>3 · Elicit the pattern</h2>
   <p>ReAct is interleaved reasoning and acting
@@ -120,14 +120,14 @@ read_note(filename)  ->  the file's full text</code></pre>
   </div>
 
   <h2>Next</h2>
-  <p><a href="0009-rag-build-and-break.html">Lesson 0009 — RAG build &amp; break</a>: grounding
+  <p><a href="0011-rag-build-and-break.html">Lesson 0011 — RAG build &amp; break</a>: grounding
   at scale, and what happens when chunking is wrong.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://arxiv.org/abs/2210.03629">ReAct: Synergizing Reasoning and Acting in Language Models</a> (Yao et al.) — compare their published traces with yours.<br>
-    Reference: <a href="../reference/m2-core-vocabulary.html">Level 2 Vocabulary</a> · <a href="../reference/agent-loop-and-tool-call.html">Agent Loop</a> ·
-    Sister lessons: <a href="0007-structured-prompting-and-the-injection-lab.html">0007</a> · <a href="0009-rag-build-and-break.html">0009</a><br><br>
+    Reference: <a href="../reference/level-2-vocabulary.html">Level 2 Vocabulary</a> · <a href="../reference/agent-loop-and-tool-call.html">Agent Loop</a> ·
+    Sister lessons: <a href="0009-structured-prompting-and-the-injection-lab.html">0009</a> · <a href="0011-rag-build-and-break.html">0011</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

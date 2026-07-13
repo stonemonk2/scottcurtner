@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0013 — The Critic/Verifier Step</title>
+<title>Lesson 0015 — The Critic/Verifier Step</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -53,8 +53,8 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0013</p>
-  <div class="kicker">Agentic Operations · Lesson 0013 · Level 3 · Advanced · Build → gate</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0015</p>
+  <div class="kicker">Agentic Operations · Lesson 0015 · Level 3 · Advanced · Build → gate</div>
   <h1>The Critic/Verifier Step</h1>
   <p class="lede">Agents fail silently and confidently. A critic converts silent failures into caught ones — and you measure by how many.</p>
 
@@ -62,11 +62,11 @@
   and a measured reduction in silent wrong answers — the rubric's third M3 exercise — then the M3
   readiness check. Prerequisites:
   <a href="0003-traces-before-prompts.html">Lesson 0003</a>,
-  <a href="0012-tracing-and-planted-regression.html">Lesson 0012</a> (you need the eval set).</div>
+  <a href="0014-tracing-and-planted-regression.html">Lesson 0014</a> (you need the eval set).</div>
 
   <h2>1 · Establish the baseline</h2>
   <p>Run your agent across a test set that includes hard cases where it sometimes produces
-  plausible-but-wrong answers (the dangerous M3 failure — Lesson 0003). Using your 0012 evals,
+  plausible-but-wrong answers (the dangerous M3 failure — Lesson 0003). Using your 0014 evals,
   record the <strong>silent wrong rate</strong>: answers that were wrong but looked confident and
   well-formed (no crash, no "I'm not sure").</p>
   <div class="check"><strong>Pass:</strong> you have a baseline number — e.g. "4 of 20 answers
@@ -96,13 +96,13 @@
   articulate, not just an instinct.</div>
 
   <div class="key"><strong>The M3 arc, complete:</strong> single-agent-default and the multi-agent
-  bar (0011), tracing and trajectory evals (0012), self-correction measured (0013). You've turned
+  bar (0013), tracing and trajectory evals (0014), self-correction measured (0015). You've turned
   "agents fail silently" from a warning into an instrumented, mitigated, quantified property of
   your system.</div>
 
   <h2>4 · The M3 readiness check</h2>
   <p>Bring to your teaching agent: a failing agent you can <strong>debug from traces alone</strong>
-  (they'll hand you a broken run — or you replay a 0012 plant — and you find the fault by reading),
+  (they'll hand you a broken run — or you replay a 0014 plant — and you find the fault by reading),
   and your <strong>eval suite catching a planted regression</strong>. Both are the literal M3 gate.</p>
   <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal what the M3 check will probe</button>
   <div id="rubric" class="key">
@@ -117,14 +117,14 @@
   </div>
 
   <h2>Next</h2>
-  <p><a href="0014-slo-dashboard.html">Lesson 0014 — the SLO dashboard</a>: put your live agent
+  <p><a href="0016-slo-dashboard.html">Lesson 0016 — the SLO dashboard</a>: put your live agent
   under production targets.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://hamel.dev/blog/posts/llm-judge/">Using LLM-as-a-Judge for Evaluation — Hamel Husain</a> (building a critic you can trust; measuring its agreement with humans).<br>
-    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
-    Sister lessons: <a href="0012-tracing-and-planted-regression.html">0012</a> · <a href="0014-slo-dashboard.html">0014</a><br><br>
+    Reference: <a href="../reference/level-3-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0014-tracing-and-planted-regression.html">0014</a> · <a href="0016-slo-dashboard.html">0016</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

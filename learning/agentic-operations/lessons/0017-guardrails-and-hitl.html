@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0015 — Guardrails &amp; the HITL Checkpoint</title>
+<title>Lesson 0017 — Guardrails &amp; the HITL Checkpoint</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -53,8 +53,8 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0015</p>
-  <div class="kicker">Agentic Operations · Lesson 0015 · Level 4 · Operational Leadership · Build + Design</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0017</p>
+  <div class="kicker">Agentic Operations · Lesson 0017 · Level 4 · Operational Leadership · Build + Design</div>
   <h1>Guardrails &amp; the HITL Checkpoint</h1>
   <p class="lede">Least privilege at the tool boundary; a human gate placed by risk, its throughput cost measured.</p>
 
@@ -62,8 +62,8 @@
   defense on your agent, and a human-in-the-loop checkpoint policy for one high-stakes action with
   its throughput cost measured — the rubric's second M4 exercise. Prerequisites:
   <a href="0004-own-the-feedback-loop.html">Lesson 0004</a>,
-  <a href="0007-structured-prompting-and-the-injection-lab.html">Lesson 0007</a> (injection),
-  <a href="0014-slo-dashboard.html">Lesson 0014</a> (the SLOs a checkpoint trades against).</div>
+  <a href="0009-structured-prompting-and-the-injection-lab.html">Lesson 0009</a> (injection),
+  <a href="0016-slo-dashboard.html">Lesson 0016</a> (the SLOs a checkpoint trades against).</div>
 
   <h2>1 · Give the agent a dangerous tool</h2>
   <p>Add a tool with real-world consequence — a <em>simulated</em> one: <code>send_email(to, body)</code>
@@ -77,15 +77,15 @@
     <code>send_email</code> only reach an allowlist of recipients? Can <code>delete_record</code>
     touch only records the current task owns? Scope in your <em>code</em>, not the prompt — the
     prompt is advisory, the code is the boundary.</li>
-    <li><strong>Input/output validation:</strong> validate the tool's arguments (0005's rule,
+    <li><strong>Input/output validation:</strong> validate the tool's arguments (0007's rule,
     now with stakes) and validate the agent's final output before it leaves.</li>
-    <li><strong>Injection defense:</strong> re-run a 0007-style attack — feed the agent untrusted
+    <li><strong>Injection defense:</strong> re-run a 0009-style attack — feed the agent untrusted
     content trying to trigger <code>send_email</code> to an attacker address. Your least-privilege
     scoping should make the attack fail structurally even if the prompt defense is bypassed.</li>
   </ul>
   <div class="check"><strong>Pass:</strong> an injection that would have triggered the dangerous
   action is stopped by a code-level guard (allowlist/scope), not merely by prompt wording. You've
-  demonstrated why least privilege is the structural defense (the M1/0007 lesson at production stakes).</div>
+  demonstrated why least privilege is the structural defense (the M1/0009 lesson at production stakes).</div>
 
   <h2>3 · Place a human checkpoint — by risk</h2>
   <p>The hard part isn't adding approval; it's placing it <em>without killing throughput</em>
@@ -126,15 +126,15 @@
   </div>
 
   <h2>Next</h2>
-  <p><a href="0016-the-improvement-loop.html">Lesson 0016 — the full improvement loop</a>: catch a
+  <p><a href="0018-the-improvement-loop.html">Lesson 0018 — the full improvement loop</a>: catch a
   live regression, ship a gated fix, prove the suite would have blocked the bad version. The last
   lesson — and the M4 gate.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://genai.owasp.org/">OWASP Top 10 for LLM Applications</a> (the guardrail taxonomy: injection LLM01, excessive agency, least privilege).<br>
-    Reference: <a href="../reference/m4-core-vocabulary.html">Level 4 Vocabulary</a> ·
-    Sister lessons: <a href="0014-slo-dashboard.html">0014</a> · <a href="0016-the-improvement-loop.html">0016</a><br><br>
+    Reference: <a href="../reference/level-4-vocabulary.html">Level 4 Vocabulary</a> ·
+    Sister lessons: <a href="0016-slo-dashboard.html">0016</a> · <a href="0018-the-improvement-loop.html">0018</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

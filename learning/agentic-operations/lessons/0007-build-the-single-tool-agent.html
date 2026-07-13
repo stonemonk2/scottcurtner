@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0005 — Build the Single-Tool Agent</title>
+<title>Lesson 0007 — Build the Single-Tool Agent</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -49,8 +49,8 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0005</p>
-  <div class="kicker">Agentic Operations · Lesson 0005 · Level 1 · Foundations · Guided build</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0007</p>
+  <div class="kicker">Agentic Operations · Lesson 0007 · Level 1 · Foundations · Guided build</div>
   <h1>Build the Single-Tool Agent</h1>
   <p class="lede">The second half of the M1 gate: ship a reliable agent — and read what the model actually sees.</p>
 
@@ -61,7 +61,7 @@
 
   <p>This is a build lesson, not a reading lesson. Work in a terminal at the repo root. A
   complete, self-tested reference implementation lives at
-  <code>learning/agentic-operations/exercises/m1_agent.py</code> — type the stages yourself
+  <code>learning/agentic-operations/exercises/level1_agent.py</code> — type the stages yourself
   first and peek at it when stuck; the typing is where the learning is. (Its offline logic —
   calculator safety, context-log serialization — passed <code>--selftest</code>; the live API
   path needs your key, which is checkpoint 0.)</p>
@@ -111,7 +111,7 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
   while the stop-reason is <code>tool_use</code>. Two non-negotiables from the reference sheet:
   the tool body treats the model's input as <em>untrusted</em> (the reference script uses an AST
   whitelist — never <code>eval()</code>), and the loop is <em>bounded</em> (10 iterations).</p>
-<pre><code>uv run learning/agentic-operations/exercises/m1_agent.py
+<pre><code>uv run learning/agentic-operations/exercises/level1_agent.py
 # or your own: "What is (137 * 41) + 2**10 / 7? Work step by step."</code></pre>
   <div class="check"><strong>Pass:</strong> the agent calls the calculator (possibly several
   times), then answers. Check it: (137 × 41) + 2¹⁰ ÷ 7 = 5617 + 146.29 ≈ 5763.29.</div>
@@ -130,7 +130,7 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
   piece of it — where it came from, and what would happen if any piece were missing.</div>
 
   <h2>Stage 5 · Make it reliable</h2>
-  <p>Break it on purpose (gently — the real breaking is Lesson 0006): ask something that makes
+  <p>Break it on purpose (gently — the real breaking is Lesson 0008): ask something that makes
   the model send a bad expression, or temporarily make the tool raise. The agent must return the
   error to the model as a <code>tool_result</code> with <code>is_error: true</code> — and the
   model should recover — rather than crashing.</p>
@@ -156,15 +156,15 @@ print(response.stop_reason, response.usage.input_tokens, response.usage.output_t
   </div>
 
   <h2>Next</h2>
-  <p><a href="0006-break-it-on-purpose.html">Lesson 0006 — Break It On Purpose</a>: overflow the
+  <p><a href="0008-break-it-on-purpose.html">Lesson 0008 — Break It On Purpose</a>: overflow the
   window with junk and measure the degradation; rewrite one vague prompt three ways. Then the M1
   readiness check.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview">Tool use with Claude — Claude Platform Docs</a> (the round-trip you just built, officially specified).<br>
-    Reference: <a href="../reference/agent-loop-and-tool-call.html">Agent Loop &amp; Tool-Call Round-Trip</a> · <a href="../reference/m1-core-vocabulary.html">Level 1 Vocabulary</a> ·
-    Sister lessons: <a href="0001-not-in-context-doesnt-exist.html">0001</a> · <a href="0006-break-it-on-purpose.html">0006</a><br><br>
+    Reference: <a href="../reference/agent-loop-and-tool-call.html">Agent Loop &amp; Tool-Call Round-Trip</a> · <a href="../reference/level-1-vocabulary.html">Level 1 Vocabulary</a> ·
+    Sister lessons: <a href="0001-not-in-context-doesnt-exist.html">0001</a> · <a href="0008-break-it-on-purpose.html">0008</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

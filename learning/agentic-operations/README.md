@@ -31,10 +31,10 @@ uv run python -c "from dotenv import dotenv_values; print('ANTHROPIC_API_KEY' in
 # -> True
 
 # 4. Run the first agent (uv reads the inline dependencies; no venv setup needed):
-uv run exercises/m1_agent.py "what is 17 * 23 + 4?"
+uv run exercises/level1_agent.py "what is 17 * 23 + 4?"
 
 # Offline, no key required — verifies the calculator + safety logic:
-uv run exercises/m1_agent.py --selftest
+uv run exercises/level1_agent.py --selftest
 ```
 
 The agent walks up from its own directory to find the nearest `.env`, so it
@@ -44,9 +44,9 @@ works whether this folder is a standalone repo or nested inside a larger one.
 
 | Path | What it is |
 |---|---|
-| `lessons/*.html` | The 16 lessons (0001–0016). Start at 0001. |
+| `lessons/*.html` | The 16 lessons (0001–0018). Start at 0001. |
 | `reference/*.html` | Printable cheat-sheets: per-milestone vocabulary + the agent-loop code reference. |
-| `exercises/m1_agent.py` | The tested single-tool agent you build in Lesson 0005. |
+| `exercises/level1_agent.py` | The tested single-tool agent you build in Lesson 0007. |
 | `.env.example` | Template — copy to `.env` and add your key. |
 | `MISSION.md` · `RESOURCES.md` | Why this course exists, and the verified sources every lesson cites. |
 

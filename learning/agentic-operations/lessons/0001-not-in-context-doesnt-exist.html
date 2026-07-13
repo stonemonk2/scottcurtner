@@ -82,7 +82,7 @@
 
   <h2>1 · An LLM predicts text; it doesn't look things up</h2>
   <p>An LLM is a next-token predictor: given everything so far, it emits the statistically most
-  plausible next <a href="../reference/m1-core-vocabulary.html#token">token</a> (≈¾ of a word).
+  plausible next <a href="../reference/level-1-vocabulary.html#token">token</a> (≈¾ of a word).
   There is no database of facts inside — training compressed a huge slice of text into model
   weights, and generation is those weights producing plausible continuations
   (<a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy's one-hour intro</a> is the
@@ -90,7 +90,7 @@
   a confident wrong answer isn't a "bug" — it's a plausible continuation that happens to be false.</p>
 
   <h2>2 · Context is the model's entire world</h2>
-  <p><a href="../reference/m1-core-vocabulary.html#context">Context</a> is everything the model can
+  <p><a href="../reference/level-1-vocabulary.html#context">Context</a> is everything the model can
   see <em>right now</em>. Not "what it was told earlier" — what is in the window on <em>this</em>
   call:</p>
 
@@ -130,9 +130,9 @@
   </ul>
 
   <h2>4 · An agent is a loop around this stateless core</h2>
-  <p>An <a href="../reference/m1-core-vocabulary.html#agent">agent</a> = an LLM in a loop with
+  <p>An <a href="../reference/level-1-vocabulary.html#agent">agent</a> = an LLM in a loop with
   tools and a goal (<a href="https://www.anthropic.com/research/building-effective-agents">Anthropic,
-  Building Effective Agents</a>). A <a href="../reference/m1-core-vocabulary.html#tool-call">tool
+  Building Effective Agents</a>). A <a href="../reference/level-1-vocabulary.html#tool-call">tool
   call</a> is just structured text the model <em>proposes</em> — a name and arguments. Your code
   executes it and pastes the result back into the window; the model then continues from that
   enriched context. Call → observe → decide → repeat. Every iteration of the loop is another
@@ -222,7 +222,7 @@
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — The Busy Person's Intro to LLMs</a> (1 hr; watch before you continue to the Level 1 practice lessons if you can).<br>
-    Reference: <a href="../reference/m1-core-vocabulary.html">Level 1 Vocabulary</a> ·
+    Reference: <a href="../reference/level-1-vocabulary.html">Level 1 Vocabulary</a> ·
     Part of the <a href="../">Agentic Operations</a> course.<br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>

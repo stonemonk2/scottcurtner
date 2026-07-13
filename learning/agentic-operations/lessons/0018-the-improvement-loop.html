@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0016 — The Full Improvement Loop</title>
+<title>Lesson 0018 — The Full Improvement Loop</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -50,16 +50,16 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0016</p>
-  <div class="kicker">Agentic Operations · Lesson 0016 · Level 4 · Operational Leadership · Capstone → gate</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0018</p>
+  <div class="kicker">Agentic Operations · Lesson 0018 · Level 4 · Operational Leadership · Capstone → gate</div>
   <h1>The Full Improvement Loop</h1>
   <p class="lede">Ownership means owning the loop. Run it once, end to end — that's the last thing to prove.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> one complete improvement cycle —
   catch a live regression, ship a gated fix, and prove your eval suite would have blocked the bad
   version — the rubric's third M4 exercise, and the whole map's final proof. Prerequisites:
-  everything, especially <a href="0012-tracing-and-planted-regression.html">0012</a> (evals),
-  <a href="0014-slo-dashboard.html">0014</a> (SLOs), <a href="0015-guardrails-and-hitl.html">0015</a> (gate).</div>
+  everything, especially <a href="0014-tracing-and-planted-regression.html">0014</a> (evals),
+  <a href="0016-slo-dashboard.html">0016</a> (SLOs), <a href="0017-guardrails-and-hitl.html">0017</a> (gate).</div>
 
   <h2>The loop, run once for real</h2>
   <p>The M4 improvement loop is observe → evaluate → hypothesize → change → re-evaluate, run
@@ -67,16 +67,16 @@
   production.</p>
   <ol>
     <li><strong>Observe.</strong> Introduce a "live regression" the way reality would: bump the
-    model version, or change a prompt, or swap a tool — something plausibly innocent. Let your 0014
+    model version, or change a prompt, or swap a tool — something plausibly innocent. Let your 0016
     dashboard surface the damage: an SLO drops (success rate falls, or escalation spikes). You find
     it because you're <em>watching the metrics</em>, not because a user complained.</li>
-    <li><strong>Evaluate.</strong> Reach for the traces (0012), not the prompt. Read the failing
+    <li><strong>Evaluate.</strong> Reach for the traces (0014), not the prompt. Read the failing
     runs and locate the faulting step. This is the M3 reflex serving the M4 loop.</li>
     <li><strong>Hypothesize.</strong> State what you think broke and why, as a falsifiable claim
     ("the new prompt made the agent skip the verifier on short inputs").</li>
-    <li><strong>Change.</strong> Ship the fix — through your 0015 guardrails/gate, not around them.
+    <li><strong>Change.</strong> Ship the fix — through your 0017 guardrails/gate, not around them.
     The fix is a normal gated change, not a hero patch.</li>
-    <li><strong>Re-evaluate.</strong> Run the eval suite (0012). It must go green again — and,
+    <li><strong>Re-evaluate.</strong> Run the eval suite (0014). It must go green again — and,
     critically, <strong>add a test case that reproduces this regression</strong>, so the suite now
     catches this class forever. Prove it: run the new suite against the <em>bad</em> version and
     watch it go red.</li>
@@ -92,7 +92,7 @@
   current build, but running the machine that keeps every future build honest.</div>
 
   <h2>The M4 readiness check — and the whole arc</h2>
-  <p>Bring to your teaching agent: your <strong>SLO dashboard for a live agent</strong> (0014) and
+  <p>Bring to your teaching agent: your <strong>SLO dashboard for a live agent</strong> (0016) and
   a <strong>complete observe→fix→verify cycle you ran independently</strong> (this lesson). Those
   are the literal M4 gate — and passing it is the top of the map.</p>
   <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal the operational-ownership signals</button>
@@ -111,7 +111,7 @@
 
   <h2>The map is complete</h2>
   <p>Sixteen lessons: four mental-model spines (0001–0004) and twelve hands-on proofs
-  (0005–0016), one arc per milestone, each gated on demonstrated capability. You started at "an
+  (0007–0018), one arc per milestone, each gated on demonstrated capability. You started at "an
   LLM predicts the next token" and end owning the loop that keeps a production agent honest as the
   model shifts beneath it. There's nothing above this in the rubric — from here it's depth,
   scale, and the judgment that only real operational reps build. That's the wisdom the method
@@ -120,8 +120,8 @@
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://hamel.dev/blog/posts/evals/">Your AI Product Needs Evals — Hamel Husain</a> (the continuous eval-driven loop as the discipline of AI ownership).<br>
-    Reference: <a href="../reference/m4-core-vocabulary.html">Level 4 Vocabulary</a> ·
-    Sister lesson: <a href="0015-guardrails-and-hitl.html">0015</a> · Full arc: <a href="0001-not-in-context-doesnt-exist.html">0001</a>–0016<br><br>
+    Reference: <a href="../reference/level-4-vocabulary.html">Level 4 Vocabulary</a> ·
+    Sister lesson: <a href="0017-guardrails-and-hitl.html">0017</a> · Full arc: <a href="0001-not-in-context-doesnt-exist.html">0001</a>–0018<br><br>
     Stuck or curious? Ask your teaching agent — the loop never really ends; that's the point.
   </footer>
 </main>

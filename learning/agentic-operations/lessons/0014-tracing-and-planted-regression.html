@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lesson 0012 — Tracing &amp; the Planted Regression</title>
+<title>Lesson 0014 — Tracing &amp; the Planted Regression</title>
 <style>
   :root {
     --paper: #fdfbf5; --ink: #1f2328; --muted: #6b7075;
@@ -49,8 +49,8 @@
 </head>
 <body>
 <main>
-  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0012</p>
-  <div class="kicker">Agentic Operations · Lesson 0012 · Level 3 · Advanced · Build + Lab</div>
+  <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0014</p>
+  <div class="kicker">Agentic Operations · Lesson 0014 · Level 3 · Advanced · Build + Lab</div>
   <h1>Tracing &amp; the Planted Regression</h1>
   <p class="lede">You debug agents by reading traces. So first you build the trace — then an eval that catches a bug you hid.</p>
 
@@ -61,7 +61,7 @@
 
   <h2>1 · Instrument a real trace</h2>
   <p>A trace is the full trajectory of a run: every model call, tool call, and retrieval, with
-  inputs, outputs, and timing (Lesson 0003). Extend the logging you've built since 0005 into one
+  inputs, outputs, and timing (Lesson 0003). Extend the logging you've built since 0007 into one
   structured trace per run — one record per step:</p>
 <pre><code>{"run_id", "step", "type": "model_call|tool_call",
  "input", "output", "tokens", "latency_ms", "ts_offset"}</code></pre>
@@ -114,20 +114,20 @@
       <li><strong>Regression caught</strong> — suite goes red on your planted bug; a trajectory assertion catches at least one plant</li>
       <li><strong>You can debug from the trace</strong> — you found the broken step by reading, not re-running</li>
     </ul>
-    With this plus Lesson 0013's critic step, the M3 gate (debug from traces alone + eval catches
+    With this plus Lesson 0015's critic step, the M3 gate (debug from traces alone + eval catches
     a planted regression) is demonstrated.
   </div>
 
   <h2>Next</h2>
-  <p><a href="0013-critic-verifier-step.html">Lesson 0013 — the critic/verifier step</a>: add a
+  <p><a href="0015-critic-verifier-step.html">Lesson 0015 — the critic/verifier step</a>: add a
   self-correction stage and measure how many silent wrong answers it kills; then the M3 readiness
   check.</p>
 
   <footer>
     <strong>Primary source for this lesson:</strong>
     <a href="https://hamel.dev/blog/posts/evals/">Your AI Product Needs Evals — Hamel Husain</a> (why the eval suite is the product's spine).<br>
-    Reference: <a href="../reference/m3-core-vocabulary.html">Level 3 Vocabulary</a> ·
-    Sister lessons: <a href="0011-orchestrator-bakeoff.html">0011</a> · <a href="0013-critic-verifier-step.html">0013</a><br><br>
+    Reference: <a href="../reference/level-3-vocabulary.html">Level 3 Vocabulary</a> ·
+    Sister lessons: <a href="0013-orchestrator-bakeoff.html">0013</a> · <a href="0015-critic-verifier-step.html">0015</a><br><br>
     Stuck or curious? Ask your teaching agent — follow-up questions are part of the method, not an interruption.
   </footer>
 </main>

@@ -1,8 +1,8 @@
 # Agentic Operations — a hands-on course
 
-Sixteen short lessons that take you from *"an LLM predicts the next token"* to
+Eighteen short lessons that take you from *"an LLM predicts the next token"* to
 *owning the improvement loop that keeps a production agent honest as the model
-shifts beneath it.* Four mental-model lessons and twelve build-and-break labs,
+shifts beneath it.* Four mental-model lessons and fourteen build-and-break labs,
 one arc per milestone (Level 1 Foundational → Level 4 Operational Leader).
 
 Open `lessons/0001-not-in-context-doesnt-exist.html` in a browser to start.
@@ -44,7 +44,7 @@ works whether this folder is a standalone repo or nested inside a larger one.
 
 | Path | What it is |
 |---|---|
-| `lessons/*.html` | The 16 lessons (0001–0018). Start at 0001. |
+| `lessons/*.html` | The 18 lessons (0001–0018). Start at 0001. |
 | `reference/*.html` | Printable cheat-sheets: per-milestone vocabulary + the agent-loop code reference. |
 | `exercises/level1_agent.py` | The tested single-tool agent you build in Lesson 0007. |
 | `.env.example` | Template — copy to `.env` and add your key. |

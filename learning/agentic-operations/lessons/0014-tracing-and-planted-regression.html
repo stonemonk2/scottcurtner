@@ -55,8 +55,8 @@
   <p class="lede">You debug agents by reading traces. So first you build the trace — then an eval that catches a bug you hid.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> full tracing on your agent, plus an
-  eval set that catches a regression you deliberately introduced — the rubric's second M3 exercise,
-  and the core of the M3 gate. Prerequisite:
+  eval set that catches a regression you deliberately introduced — the rubric's second Level 3 exercise,
+  and the core of the Level 3 gate. Prerequisite:
   <a href="0003-traces-before-prompts.html">Lesson 0003</a>.</div>
 
   <h2>1 · Instrument a real trace</h2>
@@ -76,7 +76,7 @@
 
   <h2>2 · Build a small eval set</h2>
   <p>Write 8–12 test cases for your agent: input + expected outcome. Then split scoring into the
-  two M3 levels — because a right answer via a broken path breaks at scale (Lesson 0003):</p>
+  two Level 3 levels — because a right answer via a broken path breaks at scale (Lesson 0003):</p>
   <ul>
     <li><strong>Outcome checks:</strong> is the final answer correct? (assert on the value)</li>
     <li><strong>Trajectory checks:</strong> did it take a sane path? (e.g. "used the calculator
@@ -98,14 +98,14 @@
   <div class="check"><strong>Pass:</strong> your eval suite goes red on the planted regression —
   and the assertion that catches it is a <em>trajectory</em> check for at least one of your
   plants, proving why trajectory evals earn their keep. If an outcome-only suite would have stayed
-  green, you've demonstrated the exact M3 intuition.</div>
+  green, you've demonstrated the exact Level 3 intuition.</div>
 
-  <div class="key"><strong>What you now own:</strong> the two instruments of M3. Traces turn "it
+  <div class="key"><strong>What you now own:</strong> the two instruments of Level 3. Traces turn "it
   broke" into "here's the step it broke at." Evals turn "seems fine" into "the suite is green" —
   and the trajectory layer is what stops a lucky-but-broken agent from shipping. Every change from
-  here (prompt, model, tool) gets gated by this suite — the seed of the M4 improvement loop.</div>
+  here (prompt, model, tool) gets gated by this suite — the seed of the Level 4 improvement loop.</div>
 
-  <h2>Self-grade — the M3 gate is nearly closed</h2>
+  <h2>Self-grade — the Level 3 gate is nearly closed</h2>
   <button class="btn" onclick="document.getElementById('rubric').style.display='block'">Reveal grading rubric</button>
   <div id="rubric" class="key">
     <ul>
@@ -114,13 +114,13 @@
       <li><strong>Regression caught</strong> — suite goes red on your planted bug; a trajectory assertion catches at least one plant</li>
       <li><strong>You can debug from the trace</strong> — you found the broken step by reading, not re-running</li>
     </ul>
-    With this plus Lesson 0015's critic step, the M3 gate (debug from traces alone + eval catches
+    With this plus Lesson 0015's critic step, the Level 3 gate (debug from traces alone + eval catches
     a planted regression) is demonstrated.
   </div>
 
   <h2>Next</h2>
   <p><a href="0015-critic-verifier-step.html">Lesson 0015 — the critic/verifier step</a>: add a
-  self-correction stage and measure how many silent wrong answers it kills; then the M3 readiness
+  self-correction stage and measure how many silent wrong answers it kills; then the Level 3 readiness
   check.</p>
 
   <footer>

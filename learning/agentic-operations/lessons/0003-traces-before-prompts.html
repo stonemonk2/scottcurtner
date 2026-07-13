@@ -63,23 +63,23 @@
   <p style="font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted);margin:0 0 1rem;"><a href="../../" style="color:var(--muted);">Learning</a> / <a href="../" style="color:var(--muted);">Agentic Operations</a> / Lesson 0003</p>
   <div class="kicker">Agentic Operations · Lesson 0003 · Level 3 · Advanced</div>
   <h1>Traces Before Prompts</h1>
-  <p class="lede">M3 in one move: when an agent fails, you read the trajectory — and every architecture choice is a context decision at system scale.</p>
+  <p class="lede">Level 3 in one move: when an agent fails, you read the trajectory — and every architecture choice is a context decision at system scale.</p>
 
   <div class="win"><strong>Your win for this lesson:</strong> know your first three moves when an
   agent fails (trace → failure taxonomy → eval), and be able to argue <em>against</em> adding an
-  agent. Those instincts are the M3 gate on paper. (Prerequisites:
+  agent. Those instincts are the Level 3 gate on paper. (Prerequisites:
   <a href="0001-not-in-context-doesnt-exist.html">Lesson 0001</a>,
   <a href="0002-match-the-pattern-to-the-problem.html">Lesson 0002</a>.)</div>
 
-  <h2>1 · From M2 to M3</h2>
-  <p>M2 taught you to design one agent well. M3 is what happens when agents run as <em>systems</em>:
+  <h2>1 · From Level 2 to Level 3</h2>
+  <p>Level 2 taught you to design one agent well. Level 3 is what happens when agents run as <em>systems</em>:
   architectures, lifecycles, failure modes — and the observability and evaluation machinery that
   catches regressions before users do.</p>
 
   <h2>2 · Single-agent is the best default</h2>
   <p>One loop, one context: simplest, cheapest, easiest to debug. The only load-bearing reason to
   go multi-agent is <strong>context isolation</strong> — an orchestrator decomposes work and hands
-  each subagent a clean, focused window (M1's lesson, applied at system scale). It is <em>not</em>
+  each subagent a clean, focused window (Level 1's lesson, applied at system scale). It is <em>not</em>
   "more brains." ⚠️ Most teams reach for multi-agent too early: every added agent multiplies
   failure surface, coordination cost, and tokens.
   <a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic's
@@ -97,7 +97,7 @@
   crashed run resumes at the failed step instead of restarting.</p>
 
   <h2>4 · Agents fail silently and confidently</h2>
-  <p>The M3 failure taxonomy: hallucination, looping, context overflow, tool misuse, goal drift,
+  <p>The Level 3 failure taxonomy: hallucination, looping, context overflow, tool misuse, goal drift,
   and silent partial failure. ⚠️ The dangerous ones don't crash — they return
   <strong>plausible-looking wrong answers</strong>. Crashes page someone; a confident wrong answer
   ships. Self-correction patterns (reflection, verification steps, critic/validator agents) exist
@@ -116,7 +116,7 @@
   <a href="https://hamel.dev/blog/posts/llm-judge/">LLM as judge</a>, measure its agreement with
   humans before trusting it, and keep recalibrating.</p>
 
-  <div class="key"><strong>The M3 load-bearing sentence:</strong> agents fail silently and
+  <div class="key"><strong>The Level 3 load-bearing sentence:</strong> agents fail silently and
   confidently, so observability comes before debugging and evals come before shipping — and when
   you do scale the architecture, you're managing context windows, not adding brains.</div>
 
@@ -170,18 +170,18 @@
   </div>
 
   <div class="q" data-correct="1">
-    <p>6. Per the M3 intuition: every architecture decision is really a decision about…</p>
+    <p>6. Per the Level 3 intuition: every architecture decision is really a decision about…</p>
     <button>models</button>
     <button>context</button>
     <button>tooling</button>
     <button>latency</button>
-    <div class="expl">Every architecture decision is a context-management decision in disguise — orchestrator/subagent exists to isolate windows. M1's lesson never stops applying.</div>
+    <div class="expl">Every architecture decision is a context-management decision in disguise — orchestrator/subagent exists to isolate windows. Level 1's lesson never stops applying.</div>
   </div>
 
   <div id="score"></div>
 
   <h2>7 · Diagnosis plan — the gate skill</h2>
-  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">The M3 signal is
+  <p style="font-family:system-ui,sans-serif;font-size:.9rem;color:var(--muted)">The Level 3 signal is
   debugging from traces alone and building evals that catch regressions. On paper: <em>you inherit
   a multi-step agent that "mostly works" but users report occasional nonsense answers.</em> Write:
   what your traces must capture, the first three failure modes you'd hunt and why, and the eval
@@ -202,7 +202,7 @@
   <h2>Next</h2>
   <p>Hands-on from here: the orchestrator-vs-single-agent bake-off (settled with traces), full
   tracing instrumentation with a planted-regression eval, and a critic/verifier step with a
-  measured reduction in silent wrong answers. The sister M4 lesson,
+  measured reduction in silent wrong answers. The sister Level 4 lesson,
   <a href="0004-own-the-feedback-loop.html">Own the Feedback Loop</a>, takes these instruments
   into production.</p>
 

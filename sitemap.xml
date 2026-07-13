@@ -98,139 +98,151 @@
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0001-not-in-context-doesnt-exist.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0002-match-the-pattern-to-the-problem.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0003-traces-before-prompts.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0004-own-the-feedback-loop.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0005-tokens-and-cost.html</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0006-anatomy-of-a-tool-call.html</loc>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0007-build-the-single-tool-agent.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0008-break-it-on-purpose.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0009-structured-prompting-and-the-injection-lab.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0010-react-multi-hop-build.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0011-rag-build-and-break.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0012-episodic-memory.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0013-orchestrator-bakeoff.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0014-tracing-and-planted-regression.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0015-critic-verifier-step.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0016-slo-dashboard.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0017-guardrails-and-hitl.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/lessons/0018-the-improvement-loop.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/reference/level-1-vocabulary.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/reference/level-2-vocabulary.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/reference/level-3-vocabulary.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/reference/level-4-vocabulary.html</loc>
-    <lastmod>2026-07-03</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.scottcurtner.com/learning/agentic-operations/reference/agent-loop-and-tool-call.html</loc>
-    <lastmod>2026-07-04</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

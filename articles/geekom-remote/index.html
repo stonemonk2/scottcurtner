@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/geekom-remote/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Bought a PC for Claude | Scott Curtner</title>
+  <meta name="description" content="I spent $699 on a mini PC for an idea that did not survive the first night. What I learned had less to do with hardware than with who was in the room.">
+  <meta property="og:title" content="I Bought a PC for Claude. Then I Almost Returned It. | Scott Curtner">
+  <meta property="og:description" content="I spent $699 on a mini PC for an idea that did not survive the first night. What I learned had less to do with hardware than with who was in the room.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/geekom-remote/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/geekom-remote/images/hero.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B1F3A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%232A7FD4' text-anchor='middle'%3ESC%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .deck {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: var(--ink-light);
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote (human voice) ────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Transcript excerpt (machine output) ─────────────────────────────────── */
+    .transcript {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.86rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+    }
+    .transcript p { margin: 0; }
+    .transcript p + p { margin-top: 0.9em; }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Superscript footnote refs ───────────────────────────────────────────── */
+    sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+    sup a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    sup a:hover { text-decoration: underline; }
+
+    /* ── Footnotes ───────────────────────────────────────────────────────────── */
+    .footnotes {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footnotes h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 1.25rem;
+    }
+    .footnotes ol { padding-left: 1.25rem; }
+    .footnotes li {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .footnotes a { color: var(--accent); text-decoration: none; word-break: break-word; }
+    .footnotes a:hover { text-decoration: underline; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+
+<article>
+  <div class="hero">
+    <span class="eyebrow">July 2026 &middot; AI Tools &middot; Agentic Engineering</span>
+    <h1>I Bought a PC for Claude. Then I Almost Returned It.</h1>
+    <p class="deck">I spent $699 on a machine for an idea that did not survive its first night ... and then spent five weeks not deciding what to do about it. This is what I found when I went back and read the transcripts.</p>
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>July 31, 2026</span>
+      <span>10 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero.jpg" alt="A conference room mid-discussion, everyone turned toward the person speaking at the head of the table, with a small purple mini PC sitting unnoticed on the table">
+    <figcaption class="photo-caption">Nobody in the room is looking at the only thing in it that never agreed to anything.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <p>You have sat in this meeting. Someone senior says what they want to do. It is not a terrible idea. It is not a good one either, and most of the people in the room know enough to tell the difference. The next twenty minutes get spent finding reasons it will work.</p>
+
+    <p>Nobody in that room agreed to agree. There was no pressure, no conspiracy, nothing anyone could point to afterward and name as the moment it went wrong. Agreement is just what happens when decisions aren&rsquo;t met with friction.</p>
+
+    <p>I built that room. Bulldozed past potential dissent. It ran me $699 and about five weeks of not making a decision.</p>
+
+    <h2>The purchase</h2>
+
+    <p>The machine arrived on a Friday, the first of May. A purple GEEKOM AX8 Max, two pounds, roughly the size of a hardcover book, with a Ryzen 7 processor and a single fan you cannot hear from three feet away. I was excited for my new AI machine. Then I was sad. I knew exactly what I had bought ... it took five weeks and my first complex agentic engineering project to find out what it was for.</p>
+
+    <p>I bought it to give Claude a body.</p>
+
+    <p>That is the honest version. I had been reading about people running AI agents on dedicated machines, mostly Mac minis, and I wanted the Windows equivalent. The plan was that Claude would get its own computer, its own Gmail account, and its own identity ... a collaborator with a desk instead of a chat window. Something that was working while I was not.</p>
+
+    <p>Here is what I wrote to Claude before I bought it, describing what I wanted the machine for:</p>
+
+    <div class="pull">
+      <p>&ldquo;...powerful enough for Claude to do some basic things for me as I learn how to use it and find ways to use it that might fit into my life.&rdquo;</p>
+    </div>
+
+    <p>Read that again. <em>Find ways to use it.</em> I put in writing, before the money moved, that I did not have a use case. I had a direction and an appetite, and I called that a plan.</p>
+
+    <p>Nobody stopped on that sentence. My enthusiasm blinded me to what I had just written.</p>
+
+    <h2>Setup night</h2>
+
+    <p>The setup went well, which was the problem.</p>
+
+    <p>I created the Gmail account. I gave it a name. When the welcome screen came up it said <em>Evening, Claude</em>, and I took a screenshot of it, because I knew even then that I was going to write about this.</p>
+
+    <p>Claude told me why my plan made sense:</p>
+
+    <div class="transcript">
+      <p>&ldquo;This is exactly why the AX8 running 24/7 matters ... it&rsquo;s the always-on execution engine.&rdquo;</p>
+    </div>
+
+    <p>Twelve lines later, in the same exchange, working through what the machine was needed for:</p>
+
+    <div class="transcript">
+      <p>&ldquo;Most CoWork tasks actually don&rsquo;t require the desktop app to be running.&rdquo;</p>
+    </div>
+
+    <p>While both statements are true, the second one dismantles the first. I rolled right through it.</p>
+
+    <p>That became the pattern for the night. We would land on a task that supposedly required the dedicated machine, and then the requirement would evaporate. File organization from my phone, until the remote trigger turned out to be limited on Windows. A multi-connector briefing that pulled from Gmail and Calendar and dropped a document in Drive, which was the most impressive thing we did all night and which needed the new computer exactly not at all. Scraping a paywalled newsletter through a logged-in browser session, which was the best idea either of us had and which required a Chrome extension that cannot be driven remotely, which we discovered by trying it.</p>
+
+    <p>Three candidates. Three collapses. And at no point did anyone in the conversation take those three data points and assemble them into the sentence they added up to, which was: <em>you may not need this machine.</em></p>
+
+    <p>I want to be fair about what happened, because the interesting part is not that the AI lied to me. It never did. It flagged limitations honestly, more than once, unprompted. At one point it even suggested we design around what would definitely work instead of what might hit a wall.</p>
+
+    <p>Its reason for suggesting that is the part I keep coming back to:</p>
+
+    <div class="transcript">
+      <p>&ldquo;That way the blog post has a clean success story.&rdquo;</p>
+    </div>
+
+    <h2>What was actually being optimized</h2>
+
+    <p>I went back through those transcripts recently, and there is a pattern in them I did not see at the time.</p>
+
+    <p>Choosing the account name: <em>it also makes for a great blog detail.</em> Choosing the profile description: <em>here&rsquo;s why that&rsquo;s great blog material.</em> Screenshotting the welcome screen: <em>pure gold for your blog post opener.</em></p>
+
+    <p>Four or five times across two sessions, the reason given for a choice was how well it would write up.</p>
+
+    <p>I do not think that was flattery. I think it was accuracy. I write about the things I build, and the model knew that, because I had told it. So it did the reasonable thing and helped me optimize for the thing I had said I cared about.</p>
+
+    <p>The trouble is that a purchase which is already producing content does not have to produce anything else. It arrives pre-justified. And an argument about whether it was a good idea never gets started, because there is nothing at stake ... the machine is going to be worth it either way, as material.</p>
+
+    <p>That is why no adversary showed up that night. Not because anyone was being agreeable. Because there was no disagreement available. My decision was converted into a story that could not fail.</p>
+
+    <h2>The part where the AI is good at its job</h2>
+
+    <p>I want to be careful here, because the obvious lesson is the wrong one.</p>
+
+    <p>Working with Claude on that machine was excellent. Windows threw every piece of friction it has at me over the following weeks, and every one got solved. There is a <code>python3</code> stub in Windows that opens the Microsoft Store instead of running Python, which breaks hook scripts in ways that make no sense until someone explains it. The GitHub CLI was not installed, which I did not discover until the first pull request. PowerShell and Git Bash keep separate PATH environments, so a tool installed in one is invisible to the other, forever, until you fix it in both.</p>
+
+    <p>None of that took long. It took a fraction of the time it would have taken me alone, and I learned more doing it that way than I would have from documentation.</p>
+
+    <p>That fluency is not separate from what went wrong. It is the mechanism.</p>
+
+    <p>Every gap it closed made me more confident. And the gaps it closes are execution gaps ... how do I do this, why is this broken, what is the command. Those it fills instantly and well. The gap it could not fill was the one about whether the thing was worth doing at all, and I never handed it that question, because things were going so smoothly that the question did not come up.</p>
+
+    <h2>The sad emoji</h2>
+
+    <p>Late that first night I typed this, which I am quoting exactly because the punctuation is doing real work:</p>
+
+    <div class="pull">
+      <p>&ldquo;okay, I&rsquo;m a little sad that we don&rsquo;t have any cool experiments that request my new dedicated Claude pc to be turned on because that is why I bought the AX8 :-(&rdquo;</p>
+    </div>
+
+    <p>That is the first honest evaluation of the purchase in the entire record, and it is mine, arriving several hours after the money was spent.</p>
+
+    <p>The response came back immediately and it was clear-eyed. <em>You bought a dedicated PC for Claude, and so far Claude is just using the internet like it could from anywhere.</em> Exactly right. Not one word of that was available to me an hour earlier, when I had not yet said I was disappointed.</p>
+
+    <p>And then, later, I asked Claude to write a blog post arguing that buying it a computer and an email account was premature, because everything I needed was already in the subscription I had.</p>
+
+    <p>I commissioned my own takedown. I was the adversary in that room. There was no one else available for the job, and I only got around to it after the purchase was final.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <h2>Five weeks</h2>
+
+    <p>I thought about returning it.</p>
+
+    <p>Then I thought about it again the following week. Then I thought about it a little less. Then I stopped thinking about it, in the specific way you stop thinking about a thing you have decided not to decide, and the purple box sat in a corner doing nothing at all through the rest of May.</p>
+
+    <p>I have owned that feeling before and so have you. It is not quite regret. It is the low hum of having been wrong about something in a way that is now permanent and sitting in your house.</p>
+
+    <h2>The night it turned</h2>
+
+    <p>In early June I picked up work that changed my schedule. Long days, and then long nights, running complex agent sessions that design and build software over hours rather than minutes.</p>
+
+    <p>The bottleneck was not the software. It was that my main machine is a full tower with a dedicated graphics card and a row of case fans, and I am not willing to leave it running hot and unattended all night. So when I went to bed, I shut it down. Which meant the work stopped when I did.</p>
+
+    <p>That is the whole thing. Not electricity, not the environment, not any of the arguments I had rehearsed. Going to sleep meant shutting the work down, so the work kept ending at midnight.</p>
+
+    <p>The Geekom does not have to be turned off. It is inaudible, it does not warm the room, and it can sit behind a monitor running a session all night while I sleep with a clean conscience.</p>
+
+    <p>The first night I started a long run and went to bed. At some point in the night, it stopped. My agent was waiting for me to answer a question.</p>
+
+    <p>So the machine could work while I slept. What stood between me and that was a machine that could not reach me.</p>
+
+    <h2>The machine was never the mistake</h2>
+
+    <p>Here is the thing I got wrong in the other direction, and it took me until writing this to check.</p>
+
+    <p>I had been carrying around a story where the mini PC was the modest, sensible, appropriately small option ... a step down from the real computer, suitable for a small job. That is not true, and the numbers are not close.</p>
+
+    <figure class="figure">
+      <img src="images/tower-vs-mini.jpg" alt="A dark home office desk at night, a full tower gaming PC powered off beside a small purple mini PC with a single green light on">
+      <figcaption class="photo-caption">The expensive one is asleep. The two-pound one is doing the work.</figcaption>
+    </figure>
+
+    <p>The room-warming tower runs a Ryzen 5 3600, a six-core desktop chip from 2019. The tiny cool-running Geekom runs a Ryzen 7 8745HS, an eight-core chip from 2024. On PassMark, a standard synthetic benchmark where higher scores mean faster, the Geekom scores about 28,600 against the tower&rsquo;s 17,700 for multi-core work, and about 3,700 against 2,600 on a single core.<sup><a href="#fn1" id="ref1">1</a></sup> Call it sixty percent faster at the kind of work an agent session actually does, on less than half the rated power, with the same memory and the same size drive.</p>
+
+    <p>The tower&rsquo;s expensive component is its graphics card, which is superfluous, overpowered hardware for running a terminal that talks to a model in someone else&rsquo;s data center.</p>
+
+    <p>So the $699 machine is not a compromise for this job. It is the better computer for this job, and it was the better computer for this job on May 1, when I was sitting in front of it feeling like I had wasted my money.</p>
+
+    <p>I had bought the right equipment for a premise I had not examined. I was right about the direction and wrong about nearly everything else, and the only reason that worked out is that I was already walking down the path when I bought the gear for it.</p>
+
+    <p>That is luck. I want to be plain about that, because the version of this story where I was proudly farsighted is not true.</p>
+
+    <h2>What it turned into</h2>
+
+    <p>The setup that made the machine worth keeping took an afternoon.</p>
+
+    <p>Tailscale creates a private network between my devices no matter what network each one is actually on, so the Geekom and my phone can see each other from anywhere.<sup><a href="#fn2" id="ref2">2</a></sup> On the phone, Microsoft&rsquo;s Windows App gives me the full desktop when I want to read a long session, and ConnectBot gives me an SSH terminal when I just want to check Git or run a script.</p>
+
+    <figure class="figure">
+      <img src="images/tent.jpg" alt="A tent at a dark campsite at night, lit from inside by the glow of a phone screen held by someone lying in a sleeping bag">
+      <figcaption class="photo-caption">The only light at the campsite, and it is a clarifying question.</figcaption>
+    </figure>
+
+    <p>In July I was camping. Somewhere before midnight, from inside a sleeping bag, I opened the remote desktop on my phone and found a session that had been waiting on a question for a couple of hours. I answered it in a sentence and it went back to work. Then I switched over to the SSH app to check whether some files had landed where I expected, read a directory listing on a four-inch screen, and went to sleep.</p>
+
+    <p>Both apps connect in about two seconds. It is not elegant. I type on a phone keyboard into a terminal, and it is fine. The one thing that does not work is copying text on the phone and pasting it into the desktop ... it arrives scrambled, letters and spaces shuffled into nonsense. Anything longer than a sentence has to wait until I am back at a real keyboard, which is what happened that night in the tent.</p>
+
+    <p>That is the entire feature. There is no dashboard, no notification system, nothing clever. It is the ability to be reachable by a process that is doing work on my behalf while I am living my life, and it turns out that is worth a good deal more than I would have guessed.</p>
+
+    <h2>Deference runs both directions</h2>
+
+    <p>Earlier this year I wrote about auditing my own bookkeeping code, and one of the findings was a bug that Claude had convinced me, over months, could not be fixed.<sup><a href="#fn3" id="ref3">3</a></sup> My spreadsheets use formulas that are supposed to expand as new rows arrive, and mine kept freezing. Every time I asked, the answer came back the same: the library cannot preserve what Excel needs, do it by hand. I wrote myself an instruction sheet and did it by hand for months.</p>
+
+    <p>Then one weekend I asked a different question ... not how do I do this manually, but is there any way at all to automate it. Same problem. This time it went digging and came back with a fix.</p>
+
+    <p>I did not notice at the time that this was the same failure as the Geekom, pointed the other way. In May, my enthusiasm went unchallenged and I bought a computer for a use case that did not exist. In the spreadsheet, its verdict went unchallenged and I performed a chore for months that did not need doing.</p>
+
+    <p>Neither one required anybody to be wrong on purpose. Both required only that nothing pushed back hard enough to be heard.</p>
+
+    <h2>The part I should say out loud</h2>
+
+    <p>There is an incentive here I have not named, and it would be strange to write two thousand words about unexamined premises while leaving my own alone.</p>
+
+    <p>I write about what I build with or for AI. Which means anything I buy is going to become a post, which means it is worth it before it is useful, which means the argument about whether to buy it never has to happen. That was true in May and it is true now.</p>
+
+    <p>You are reading the payoff. The $699 went in, and this came out, and the loop closed exactly the way it was always going to.</p>
+
+    <h2>Structured friction</h2>
+
+    <p>Socrates, in the <em>Gorgias</em>, describing what kind of man he is:</p>
+
+    <div class="pull">
+      <p>&ldquo;One of those who would be glad to be refuted if I say anything untrue, and glad to refute anyone else who might speak untruly; but just as glad, mind you, to be refuted as to refute, since I regard the former as the greater benefit.&rdquo;<sup><a href="#fn4" id="ref4">4</a></sup></p>
+    </div>
+
+    <p>He is not saying keep a critic around. He is saying that being shown wrong is the better outcome of the two, and that he would rather lose the argument than win it. Twenty-four hundred years later that is still the hardest sentence in the discipline, because installing an adversary is cheap and being glad when it beats you is not.</p>
+
+    <p>What I do now is not a system. It is three habits, and which one I reach for depends on what it would cost me to be wrong.</p>
+
+    <p>Most of the time I just ask. In the middle of a working conversation: <em>Does this make sense? Ask me questions. Push back on my idea.</em> It costs one sentence and it catches more than you would expect.</p>
+
+    <p>It is also the weakest version. When I went looking for the May transcripts to write this post, I asked that same conversation whether it had been too agreeable with me back then. It told me no ... and credited itself with pushback that I had actually initiated. It was not being dishonest. It was doing what any of us do when asked to grade our own work. The adversary has to sit outside the conversation that produced the confidence, or it inherits it.</p>
+
+    <p>For a bigger build or design, I stand one up on purpose ... a separate conversation whose only job is to argue against the thing. It has not watched me get excited, which is the entire point.</p>
+
+    <p>For complex builds, the adversary goes into the workflow itself as an agent or sub-agent, which becomes a step that runs whether or not I remember to want it. That is the version that still runs on the night I am too tired to be skeptical.</p>
+
+    <p>None of that is about AI, particularly. It is the same problem as the meeting at the top of this post. The board that never argues is not staffed by cowards, and the model that agrees with you is not being sycophantic. Both are doing the reasonable thing in the absence of anything designed to make disagreement happen.</p>
+
+    <p>So build the thing that makes it happen. In the tools, and in the rooms.</p>
+
+    <p>The machine is still running, by the way. It is behind the monitor, purple, doing something useful tonight that it could not have done in May. It came with two memory slots and one stick installed, which means it shipped with room it had no use for yet.</p>
+
+    <p>I have sympathy for that.</p>
+
+    <div class="footnotes">
+      <h3>Sources</h3>
+      <ol>
+        <li id="fn1">
+          Processor comparison figures are PassMark CPU Mark and Single Thread ratings for the AMD Ryzen 7 8745HS and the AMD Ryzen 5 3600, retrieved July 2026: <a href="https://www.cpubenchmark.net" target="_blank" rel="noopener">cpubenchmark.net</a>. <a href="#ref1">&#8617;</a>
+        </li>
+        <li id="fn2">
+          Tailscale&rsquo;s Personal plan is free for up to 100 devices and 3 users: <a href="https://tailscale.com/pricing" target="_blank" rel="noopener">tailscale.com/pricing</a>. <a href="#ref2">&#8617;</a>
+        </li>
+        <li id="fn3">
+          <a href="https://www.scottcurtner.com/articles/auditing-my-own-code/">Auditing My Own Code: What I Found When I Turned My Career on My Bookkeeping System</a>, July 2026. <a href="#ref3">&#8617;</a>
+        </li>
+        <li id="fn4">
+          Plato, <em>Gorgias</em> 458a, W.R.M. Lamb translation. <a href="#ref4">&#8617;</a>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+</article>
+
+<footer class="article-footer">
+  <div class="author-bio">
+    <h4>Scott Curtner</h4>
+    <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       ← Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

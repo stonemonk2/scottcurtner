@@ -1,0 +1,41 @@
+# robots.txt for scottcurtner.com
+
+User-agent: *
+Disallow: /google3daeab9f4ca3935f.html
+
+# AI search crawlers — explicitly allowed so citation eligibility does not
+# depend on implicit default-allow. Each named group is matched independently
+# and does not inherit the wildcard group, so the Disallow above is repeated
+# in every group below.
+
+# OpenAI — ChatGPT Search index
+User-agent: OAI-SearchBot
+Disallow: /google3daeab9f4ca3935f.html
+Allow: /
+
+# OpenAI — user-initiated fetches from ChatGPT
+User-agent: ChatGPT-User
+Disallow: /google3daeab9f4ca3935f.html
+Allow: /
+
+# Anthropic — Claude search index
+User-agent: ClaudeBot
+Disallow: /google3daeab9f4ca3935f.html
+Allow: /
+
+# Anthropic — user-initiated fetches from Claude
+User-agent: Claude-User
+Disallow: /google3daeab9f4ca3935f.html
+Allow: /
+
+# Perplexity — search index
+User-agent: PerplexityBot
+Disallow: /google3daeab9f4ca3935f.html
+Allow: /
+
+# Perplexity — user-initiated fetches
+User-agent: Perplexity-User
+Disallow: /google3daeab9f4ca3935f.html
+Allow: /
+
+Sitemap: https://www.scottcurtner.com/sitemap.xml

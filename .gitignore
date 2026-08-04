@@ -4,3 +4,11 @@ drafts/
 
 # Research/source material inbox (may contain NDA or private third-party detail).
 docs/inbox/
+
+# Claude Code workspace. Track only the skills that must reach the second
+# publishing machine — not local settings, and not vendored skills like sssf
+# (which ships a whole Vue app and a lockfile).
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/publish/

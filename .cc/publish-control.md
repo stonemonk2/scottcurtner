@@ -1,91 +1,41 @@
 ---
-# publish-control
+# publish-control — MIGRATED 2026-08-04
 
-Execute the scottcurtner.com publish protocol.
-Claude Code (CC) executes all steps without asking for
-confirmation, then produces a structured output log.
+This protocol has moved. Do not execute the steps that used to live here.
 
-## Step 0 — Load Protocol from Wiki
+## Use instead
 
-Attempt to read `scottcurtner-website-publish-protocol.md`
-from the Open Brain MCP wiki at:
-https://raw.githubusercontent.com/stonemonk2/scottcurtner-wiki/main/scottcurtner-website-publish-protocol.md
+**`/publish`** — the skill at `.claude/skills/publish/SKILL.md`, tracked in
+git and available on every machine after a `git pull`. Same two-agent loop,
+same wiki-first-with-fallback design, plus mechanical verification.
 
-If successful: follow that document as the authoritative
-protocol for all execution steps.
+## What changed
 
-If unreachable: log the following before executing anything,
-then execute the hardcoded fallback protocol below:
+1. **`articles/index.html` is now a required surface.** The old protocol
+   covered `sitemap.xml`, `llms.txt`, and the homepage — never the `/articles/`
+   hub. Three published articles silently fell off it. The skill updates it as
+   step 4.
 
-  [FALLBACK] Wiki unreachable — executing hardcoded
-             fallback protocol. Reason: [error or timeout]
+2. **`[DONE]` is now verified, not asserted.** Every run ends with
+   `python scripts/check_site.py`, which reads the filesystem and checks each
+   surface, SEO tag, internal link, and robots.txt group. A step is not done
+   until the checker confirms it. Claude chat validation still runs, but it
+   judges the writing, not the bookkeeping.
 
-Regardless of whether wiki loaded or fallback fired,
-run a divergence check between the hardcoded fallback
-steps in this skill and the wiki protocol, and log:
+3. **The wiki is unchanged as the authority.** It gained the hub step and the
+   verification step; the divergence check in the skill still compares against
+   it on every run.
 
-  [CHECK] Skill fallback vs wiki alignment:
-          Wiki loaded: YES / NO
-          Match: YES / NO
-          If NO — [list each step that differs]
+## If you are somewhere without skill support
 
-After all execution steps complete, prompt Scott to paste
-the output log into Claude chat with:
-"Paste this log into Claude chat and say:
-Validate CC publish log against wiki protocol"
+The checker is plain stdlib Python and runs anywhere, from any directory:
 
----
+```bash
+python scripts/check_site.py
+```
 
-## Fallback Protocol (execute if wiki unreachable)
+Exit 0 means every article on disk is present on every metadata surface with
+valid tags. Exit 1 lists exactly what is missing. Fix, re-run, then publish.
 
-**1. sitemap.xml**
-Add a <url> entry:
-- <loc>: canonical URL provided
-- <lastmod>: today's date YYYY-MM-DD
-- <changefreq>: monthly
-- <priority>: 0.8 for articles, 1.0 for index.html only
-- Never include google3daeab9f4ca3935f.html
-
-**2. llms.txt**
-Add under ## Writing (newest-first):
-- Format: - [Title](URL): Description.
-- Description = the page's meta description content exactly
-
-**3. index.html Writing section**
-Add article card before first existing card (newest-first):
-- Match existing article-card div pattern exactly
-- Include article-date, article-title, article-excerpt, arrow
-- Date format: Month YYYY · scottcurtner.com
-- href must match canonical URL
-
-**4. SEO check on new HTML file**
-Confirm all present — add if missing:
-- <link rel="canonical"> as first tag in <head>
-- <meta name="description"> under 160 characters
-- <title> under 60 characters
-- og:title, og:description, og:url, og:type
-- Inline SVG favicon
-- Connect footer block before </body>
-- Flag as [WARN] anything that cannot be auto-fixed
-
----
-
-## Output Log Format
-
-Produce this exact format after all steps complete:
-
-PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
-[FALLBACK] Wiki unreachable — executing hardcoded fallback.
-           Reason: [error] (only if fallback fired)
-[CHECK] Skill fallback vs wiki alignment:
-        Wiki loaded: YES / NO
-        Match: YES / NO
-        If NO — [list each step that differs]
-[DONE] sitemap.xml — added [URL], lastmod [date]
-[DONE] llms.txt — added entry under ## Writing
-[DONE] index.html — article card added at position 1
-[DONE] SEO check — canonical, OG tags, favicon,
-        meta description, connect footer all present
-[WARN] [anything flagged but not auto-fixed]
-[SKIP] og:image — deferred pending hero image project
----
+The authoritative protocol text is always the wiki:
+`https://raw.githubusercontent.com/stonemonk2/scottcurtner-wiki/main/scottcurtner-website-publish-protocol.md`

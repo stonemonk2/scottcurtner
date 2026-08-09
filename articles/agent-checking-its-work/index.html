@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/agent-checking-its-work/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is Your AI Agent Checking Its Work? | Scott Curtner</title>
+  <meta name="description" content="My publish control ran its protocol correctly every time, and four articles still fell off my site. Nothing in the loop had ever opened a file.">
+  <meta property="og:title" content="Is Your AI Agent Checking Its Work, or Just Describing It? | Scott Curtner">
+  <meta property="og:description" content="My publish control ran its protocol correctly every time, and four articles still fell off my site. Nothing in the loop had ever opened a file.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/agent-checking-its-work/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/agent-checking-its-work/images/hero.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B1F3A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%232A7FD4' text-anchor='middle'%3ESC%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "Is your AI agent checking its work, or just describing it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If nothing in the loop ever opens a file, it is describing it. An agent's log is an account of its own work, and a second agent reviewing that log is reviewing the account, which will pass every time, because a description is always consistent with itself. What settles the question is deterministic code that reads the real state of the system and fails loudly when the claim and the reality disagree."
+      }
+    }]
+  }
+  </script>
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    /* ── Quick-answer dek ────────────────────────────────────────────────────── */
+    .quick-answer {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--gold);
+      padding: 22px 26px;
+      margin-bottom: 32px;
+    }
+    .quick-answer h2 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 10px;
+      line-height: 1.5;
+    }
+    .quick-answer p {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      line-height: 1.72;
+      color: var(--ink-light);
+      margin: 0;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote (human voice) ────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Transcript excerpt (machine output) ─────────────────────────────────── */
+    .transcript {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.86rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+      overflow-x: auto;
+    }
+    .transcript p { margin: 0; white-space: pre; }
+
+    /* ── Data tables ─────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 2.2em 0; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    thead th {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 500;
+      text-align: left;
+      padding: 0 14px 10px 0;
+      border-bottom: 1px solid var(--rule);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 11px 14px 11px 0;
+      border-bottom: 1px solid var(--rule);
+      color: var(--ink-light);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody td:first-child { color: var(--ink); font-family: 'Source Code Pro', monospace; font-size: 0.78rem; }
+    td .miss { color: var(--accent-warm); font-weight: 600; }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Credit block ────────────────────────────────────────────────────────── */
+    .credit {
+      background: var(--paper-aged);
+      border-radius: 2px;
+      padding: 22px 26px;
+      margin: 3em 0 0;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+    }
+    .credit p { margin: 0; }
+    .credit strong { color: var(--ink); }
+
+    /* ── Superscript footnote refs ───────────────────────────────────────────── */
+    sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+    sup a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    sup a:hover { text-decoration: underline; }
+
+    /* ── Footnotes ───────────────────────────────────────────────────────────── */
+    .footnotes {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footnotes h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 1.25rem;
+    }
+    .footnotes ol { padding-left: 1.25rem; }
+    .footnotes li {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .footnotes a { color: var(--accent); text-decoration: none; word-break: break-word; }
+    .footnotes a:hover { text-decoration: underline; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+
+<article>
+  <div class="hero">
+    <span class="eyebrow">August 2026 &middot; AI Governance &middot; Tech Audit</span>
+    <h1>Is Your AI Agent Checking Its Work, or Just Describing It?</h1>
+
+    <div class="quick-answer">
+      <h2>Is your AI agent checking its work, or just describing it?</h2>
+      <p>If nothing in the loop ever opens a file, it is describing it. An agent&rsquo;s log is an account of its own work, and a second agent reviewing that log is reviewing the account ... which will pass every time, because a description is always consistent with itself. What settles the question is deterministic code that reads the real state of the system and fails loudly when the claim and the reality disagree.</p>
+    </div>
+
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>August 8, 2026</span>
+      <span>10 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero.jpg" alt="A stamped and signed report lying squared on a sunlit wooden desk, beside the large manila envelope it was reporting on, still sealed, with a clean letter opener and a layer of dust on the envelope but none on the report">
+    <figcaption class="photo-caption">The review is complete. The thing being reviewed was never opened.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <p>My publish control told me it was done. It wasn&rsquo;t.</p>
+
+    <p>I found out by accident, in the middle of a conversation about something else. I had been asking Claude Code whether a heavier agent-orchestration framework was worth adopting for blog work. The answer was mostly no, which is what I expected and roughly what I wanted to hear. But the reasoning went through my git history on the way to getting there, and it came back with this:</p>
+
+    <div class="transcript">
+      <p>7eb45ad Update index.html
+d43bc68 index llms and sitemap update
+97ad429 Fix stale README counts and exercise-script run path
+23c5455 Fix stale spelled-out lesson counts after renumber
+6da1cb3 Fix broken closing anchors, wire next-lesson links
+8c30f0e Standardize favicons on 5 article pages</p>
+    </div>
+
+    <p>Every one of those commits is the same failure class. Publish something, watch the site&rsquo;s metadata drift out of sync with it, ship a follow-up commit to close the gap. Six visible instances of a recurring cleanup that I had never named as a category, because each one had looked like a one-off tidy at the time.</p>
+
+    <p>I was talking myself out of adopting more automation when I found it. That detail matters to me more than it probably should. I did not run a scheduled review. I did not have a hunch. I got handed a pattern in my own history while arguing for less machinery, and then I went and checked the site against itself for the first time.</p>
+
+    <h2>Four articles, drifting in two directions</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Article</th><th>Homepage</th><th>/articles/ hub</th><th>sitemap.xml</th><th>llms.txt</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>geekom-remote</td><td>present</td><td><span class="miss">missing</span></td><td>present</td><td>present</td></tr>
+          <tr><td>auditing-my-own-code</td><td>present</td><td><span class="miss">missing</span></td><td>present</td><td>present</td></tr>
+          <tr><td>rewired-memory</td><td>present</td><td><span class="miss">missing</span></td><td>present</td><td>present</td></tr>
+          <tr><td>agentic-engineering</td><td><span class="miss">missing</span></td><td>present</td><td>present</td><td><span class="miss">missing</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The first three had fallen off <code>/articles/</code>, which is the hub ... the page a reader lands on when they click &ldquo;Writing&rdquo; in my nav. Anyone who browsed my archive that way saw a collection that stopped in early July. Three of the most recent things I had written were not on it.</p>
+
+    <p>The fourth one jumped out at me, because it drifted the opposite way. It was on the hub and missing from the homepage, and it was missing from <code>llms.txt</code>, the file AI crawlers read to understand what a site contains. Same site, same protocol, same month, failing in the reverse direction.</p>
+
+    <p>There is no consistent pattern to watch for. That is the part that killed the option of just being more careful.</p>
+
+    <h2>I already had a control</h2>
+
+    <p>This is the part where the story would be simpler if I had been publishing by hand.</p>
+
+    <p>In June I wrote an article about how <a href="https://www.scottcurtner.com/articles/publish-control/">I don&rsquo;t publish articles ... I release them through an AI control</a>.<sup id="ref1"><a href="#fn1">1</a></sup> It was a two-agent loop, and I was pleased with it. Claude Code executed the dependency updates for a new post, produced a structured log, and then prompted me to paste that log into Claude chat, where it got validated against the authoritative protocol stored in my Open Brain wiki. Executor on one side, validator on the other.</p>
+
+    <p>Between June 14 and August 2 I published five more articles through it. Every run produced a clean log. Every <code>[DONE]</code> line in every one of those logs was accurate about what the agent believed it had done.</p>
+
+    <p>So the question in front of me was not why I had no control. I had a control, it had a second reviewer, and it passed six times in a row while three articles quietly walked off the hub. If you are about to tell me that I discovered unit tests, hold that for a minute, because the review layer is the interesting part...</p>
+
+    <h2>The step did not exist to be skipped</h2>
+
+    <p>The first failure is the simpler one, and it is the kind of thing that shows up in audit work constantly.</p>
+
+    <p>My protocol covered <code>sitemap.xml</code>, <code>llms.txt</code>, and the homepage Writing section. It never named <code>articles/index.html</code>.</p>
+
+    <p>So those three articles were published correctly. Not sloppily, not in a rush, not with a step skipped because it was late and I wanted to hit publish. They were published in full compliance with the protocol as written, and the protocol was wrong. The step was not skipped. The step did not exist to be skipped.</p>
+
+    <p>No amount of diligence in execution finds a missing requirement. Only something that checks the outcome does.</p>
+
+    <p>If you test controls for a living you have already written this finding about somebody else. A control matrix that never maps a risk produces immaculate testing results for the risks it does map, and the immaculate results are what makes it dangerous ... you come away more confident than when you started.</p>
+
+    <h2>A control whose evidence was testimony</h2>
+
+    <p>The second failure is the one worth the article.</p>
+
+    <p>My publish logs ended with lines like this:</p>
+
+    <div class="transcript">
+      <p>[DONE] sitemap.xml &mdash; added [URL], lastmod [date]
+[DONE] llms.txt &mdash; added entry under ## Writing
+[DONE] index.html &mdash; article card added at position 1</p>
+    </div>
+
+    <p>Then I pasted that log into Claude chat and asked it to validate the run against my wiki protocol. Which it did, carefully, every time.</p>
+
+    <p>Neither model ever opened a file.</p>
+
+    <p>One agent asserted it had done the work. A second agent read the assertion and confirmed the assertion was well-formed, complete, and consistent with the protocol. Both of those things were true. Neither of them was evidence. A review whose only input is the executor&rsquo;s account of its own work will pass forever, because an account is always consistent with itself ... that is what makes it an account.</p>
+
+    <p>I had built a control whose evidence was testimony.</p>
+
+    <p>The audit parallel is exact and it is not flattering. Taking management&rsquo;s representation as evidence without independently verifying it is a finding I have written about other people, in reports. I did it to myself in my own publishing pipeline and then wrote a well-received article about the architecture.</p>
+
+    <p>Which brings me to the closing line of that article:</p>
+
+    <div class="pull">
+      <p>The separation of executor from validator isn&rsquo;t just good workflow hygiene. It&rsquo;s the minimum viable architecture for any process where errors compound.</p>
+    </div>
+
+    <p>I still think that is right. It is also not enough, and I had the proof sitting in my own repo while I wrote it. I had the separation. Both halves were language models, and both of them were reading the same description. Segregation of duties assumes the second party can see something the first party cannot. Mine couldn&rsquo;t. It could only see what the first one had said.</p>
+
+    <h2>Moving the control plane out of the prompt</h2>
+
+    <p>The fix came from a premise I picked up from <a href="https://www.youtube.com/@indydevdan" target="_blank" rel="noopener">IndyDevDan</a>, who works this problem publicly on YouTube and shared the repo for his Super Simple Software Factory.<sup id="ref2"><a href="#fn2">2</a></sup> The premise is one line: <strong>move the control plane out of the prompt and into Python.</strong></p>
+
+    <p>I looked at his framework and did not adopt it. It is more machinery than a static HTML site with no build step needs, and one of his own stated principles is to listen to feedback and then think for yourself, so I took the idea and left the package. The idea is the hinge of everything below. Sequencing, the pass/fail decision, and verification stop being things an agent is <em>asked</em> to do in a prompt and become things deterministic code <em>does</em>. The agent keeps the work that needs reading and judgment.</p>
+
+    <p>What that turned into is <code>scripts/check_site.py</code>. Plain Python, standard library only, no dependencies, no virtualenv, resolving its paths from its own location so it runs from any directory on either of the two machines I publish from. A little over two hundred lines.</p>
+
+    <p>The design principle that carries it: <strong>the filesystem is the source of truth.</strong> The script does not read a list of what should exist. It walks the repo, finds every article page that <em>does</em> exist on disk, and then proves that each one appears on every metadata surface with the tags it needs. Right now that is fifteen pages. When it is sixteen, the script will know without being told, because nobody has to remember to update it. There is nothing in it to maintain and nothing in it to go stale.</p>
+
+    <p>It runs five groups of checks:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Group</th><th>What it proves</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>surfaces</td><td>Every article appears in <code>sitemap.xml</code>, <code>llms.txt</code>, the homepage, and the <code>/articles/</code> hub. Every sitemap <code>&lt;loc&gt;</code> resolves to a file that exists. The Google verification file never appears in the sitemap.</td></tr>
+          <tr><td>seo</td><td>Canonical tag present and matching the real URL; title and description lengths; all four Open Graph tags; <code>og:image</code> wherever a page has images; favicon; a footer block a reader can connect through; the structured-data blocks parse, and where a page opens with a quick answer, the question in its schema is the same sentence as the one on the page.</td></tr>
+          <tr><td>links</td><td>Every relative <code>href</code> and <code>src</code> on every page resolves to a file that exists.</td></tr>
+          <tr><td>tags</td><td>No malformed closing tags; no leftover renamed terminology in the course tree.</td></tr>
+          <tr><td>robots</td><td>All six AI crawler groups still carry <code>Allow: /</code>; every group still disallows the verification file; the sitemap line is present.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Exit 0 clean, exit 1 with every violation named. The publish skill can no longer write <code>[DONE]</code> against a step the checker did not confirm, which is the whole point of building it.</p>
+
+    <h2>The first run was mostly my fault</h2>
+
+    <p>First execution reported nineteen violations and seven warnings. Roughly half of them were the checker being wrong, not the site.</p>
+
+    <p>Two are worth showing, because they are the ordinary texture of standing up a new test and nobody writes about them.</p>
+
+    <p>The footer check. I told it to look for <code>class="connect-footer"</code>. My archive turned out to have four generations of footer markup ... <code>connect-footer</code>, <code>article-footer</code>, <code>site-footer</code>, and <code>author-footer</code> ... plus three early pages that style the identical block inline with no class on it at all. Every one of those pages was fine. My check was matching the markup of the week instead of the thing I actually cared about, which is a closing block with a way to reach me. I rewrote it to look for the block and the LinkedIn link, version-agnostic.</p>
+
+    <p>Reference forms. My surfaces link to articles four different ways: absolute URL, root-relative, relative to the site root, and relative to <code>/articles/</code>. My first pass knew two of them and reported perfectly healthy pages as missing.</p>
+
+    <p>Nineteen violations, then nine, then two, then zero.</p>
+
+    <p>A new control&rsquo;s first run is mostly noise, and separating real findings from your own bad test logic is the actual work. Anyone who has stood up a monitoring rule or written a new audit test knows the feeling. Treat that first output as gospel and you will spend a week chasing ghosts. Get tired of it and start loosening thresholds and you end up somewhere worse ... a control that passes because it no longer looks.</p>
+
+    <p>Two of the nineteen were not defects at all. They were policy questions wearing a violation&rsquo;s clothes: should my three earliest pages, which live at the site root rather than under <code>/articles/</code>, appear on the hub? That needed a decision from me, not a fix from the script. The answer was yes, and I migrated them.</p>
+
+    <p>And four of my titles run past sixty characters on purpose, because the full phrasing does more for the piece than the search snippet loses. Those four are recorded in an <code>ACCEPTED_LONG_TITLES</code> set in the script, dated and reasoned, and a fifth long title still warns. Recording an accepted exception and silencing a control produce the same quiet output on the next run. Only one of them survives someone asking why.</p>
+
+    <h2>Three records, all wrong, and the disk</h2>
+
+    <p>Here is the thing that made me go hmmm.</p>
+
+    <p>My June protocol contained an AI &ldquo;hand-maintained&rdquo; <strong>Page Inventory</strong> table. Every URL, with checkmarks for sitemap, <code>llms.txt</code>, and the homepage card. A coverage table. The control for exactly the drift I had just found.</p>
+
+    <p>It had drifted. Last refreshed June 27. It had never listed three of the articles. It carried three separate notes reading &ldquo;reconcile on a future lint pass,&rdquo; and no future lint pass had ever come.</p>
+
+    <p>A hand-maintained coverage table cannot be the control for coverage drift. It drifts the same way and more quietly, because a stale checkmark looks exactly like a fresh one.</p>
+
+    <p>So I retired it. The checker derives that same coverage from disk on every run, which removes the reconciliation work rather than scheduling it.</p>
+
+    <p>Then I went one layer out and found it again. My blog pipeline tracker, the wiki page where I count published posts against a goal, was missing two published articles and reporting the wrong live count ... partly because a 2016 piece hosted on LinkedIn was logged in a way that read like a page on my own site.</p>
+
+    <p>And there was very nearly a third. I publish from two machines, and while rebuilding this I wanted to keep a copy of the protocol somewhere convenient, like a doc in Drive. That would have been a second source of truth for the same information, which is the same disease with better ergonomics. Git is the sync mechanism now. The wiki documents where the files live in the repo instead of holding copies of them, and the local skill carries a fallback plus a divergence check against the wiki ... which means changing the local copy first fires that check on both machines, correctly, so the wiki had to move first. A control catching me doing things in the wrong order is a small, happy piece of evidence that the design works.</p>
+
+    <p>Three layers of records about the same fifteen articles. All three had drifted. The only one that was right was the disk.</p>
+
+    <h2>What each half is for</h2>
+
+    <p>The division that came out of this is the thing I would keep if I had to throw the rest away.</p>
+
+    <p>The Python checker mechanically provides facts. Which files contain which strings, whether a tag is present, whether a link resolves, whether an exit code is zero. Questions with one right answer, checked identically every time, by something with no stake in the result and no ability to be persuaded.</p>
+
+    <p>The model owns judgment. Does this excerpt represent what the piece actually says. Is this description honest. Is the framing right. Does the meta description promise something the article doesn&rsquo;t deliver.</p>
+
+    <p>Before, I had one model doing both, and it was doing the first job badly enough to make the second job worthless.</p>
+
+    <p>The checker cannot tell me whether an excerpt represents a piece. It will confirm that a description exists, that it is under a hundred and sixty characters, and that it matches the string in <code>llms.txt</code> exactly, and it has no opinion whatsoever about whether the sentence is true. That is still my job and the model&rsquo;s. I want to be plain about it, because a verifier that passes clean is a good feeling and good feelings are how you stop reading your own work.</p>
+
+    <h2>The auditability of it</h2>
+
+    <p>Every post in this series ends with the control I added, so here it is stated as a control rather than a story.</p>
+
+    <p>The evidence changed form. What used to be a representation ... an agent&rsquo;s account of its run ... is now a verifier execution with an exit code, and its real output goes into the publish log. Exceptions are recorded rather than silenced: the long-title allowlist is dated, reasoned, and still warns on anything new. The coverage record derives from the system instead of sitting alongside it, so there is no reconciliation left to schedule and nothing to forget. And the segregation of duties is finally worth the name, in a narrow way ... the thing that does the work no longer attests to the work.</p>
+
+    <p>None of that makes the pipeline correct. It makes the pipeline checkable, which is a smaller claim and the only one I can support.</p>
+
+    <h2>What I actually want</h2>
+
+    <p>I have spent a lot of time lately close to systems built to a particular standard: narrow and well-defined in scope, outputs a person can verify, data lineage you can document, and logic a human can interrogate and explain out loud without hedging. Not systems that are trusted because they sound right. Systems whose output arrives with something underneath it.</p>
+
+    <p><code>check_site.py</code> is about as small an example of that as exists. Two hundred lines, no dependencies, one exit code. It has all four of those properties, which is exactly why I trust it and why I no longer trust a log line that says <code>[DONE]</code>. The difference between those two is not intelligence. The agent is far more capable than the script. The script opens the file.</p>
+
+    <p>What I don&rsquo;t have a good general answer for is how you build that at a scale where nobody can read all of it. My site is fifteen pages and a static host, and the verifier fits on a screen. If your agents are touching customer records, ledger entries, or anything a regulator will eventually ask you about, what does the equivalent look like ... and who checks that <em>it</em> ran? I have been circling that question for a while and I expect to be writing about it for a while longer.</p>
+
+    <p>Start with the small version. Pick the one claim your automation makes that you have been taking on faith, and go write the twenty lines that open the file.</p>
+
+    <div class="credit">
+      <p><strong>Credit.</strong> The premise behind the fix ... moving the control plane out of the prompt and into Python ... came from IndyDevDan: <a href="https://www.youtube.com/@indydevdan" target="_blank" rel="noopener">youtube.com/@indydevdan</a>. The specific video is <a href="https://www.youtube.com/watch?v=haUfb1ievTE&amp;t=381s" target="_blank" rel="noopener">youtube.com/watch?v=haUfb1ievTE&amp;t=381s</a> and the repo he shared publicly is <a href="https://github.com/disler/super-simple-software-factory" target="_blank" rel="noopener">github.com/disler/super-simple-software-factory</a>. I didn&rsquo;t adopt the framework, and the idea is doing all the work in this piece. Thanks for putting it out where people can take it.</p>
+    </div>
+
+    <div class="footnotes">
+      <h3>Sources</h3>
+      <ol>
+        <li id="fn1">
+          Scott Curtner, <a href="https://www.scottcurtner.com/articles/publish-control/">I Don&rsquo;t Publish Articles. I Release Them Through an AI Control.</a>, June 14, 2026 &mdash; the predecessor control this post corrects. <a href="#ref1">&#8617;</a>
+        </li>
+        <li id="fn2">
+          IndyDevDan, <a href="https://www.youtube.com/@indydevdan" target="_blank" rel="noopener">youtube.com/@indydevdan</a>; the video is <a href="https://www.youtube.com/watch?v=haUfb1ievTE&amp;t=381s" target="_blank" rel="noopener">youtube.com/watch?v=haUfb1ievTE&amp;t=381s</a>; Super Simple Software Factory, <a href="https://github.com/disler/super-simple-software-factory" target="_blank" rel="noopener">github.com/disler/super-simple-software-factory</a>. <a href="#ref2">&#8617;</a>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+</article>
+
+<footer class="article-footer">
+  <div class="author-bio">
+    <h4>Scott Curtner</h4>
+    <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       ← Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

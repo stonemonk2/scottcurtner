@@ -80,9 +80,16 @@ rel="canonical">` first in `<head>`; `<meta name="description">` under 160
 chars; `<title>` under 60; `og:title`, `og:description`, `og:url`, `og:type`;
 `og:image` (absolute URL, if a hero image exists in `articles/[slug]/images/`
 — `[WARN]` if not); inline SVG favicon; a footer block carrying the LinkedIn
-connect link before `</body>`; Organization JSON-LD on the homepage only (verify,
-don't re-add); FAQ JSON-LD if the post has a quick-answer dek (`[SKIP]` with
-reason if not). `[WARN]` anything not auto-fixable.
+connect link before `</body>`; site-entity JSON-LD on the homepage only (`Person`
+plus `WebSite` — verify, don't re-add); FAQ JSON-LD if the post has a quick-answer
+dek (`[SKIP]` with reason if not). `[WARN]` anything not auto-fixable.
+
+> Schema used to be the one item on this list that nothing verified, so the
+> `[DONE] SEO check` line asserted it exactly the way the old log asserted
+> surfaces. As of 2026-08-08 `check_site.py`'s `seo` group proves it: the
+> homepage carries a `Person` or `Organization` node, every JSON-LD block
+> parses, and any page with a quick-answer dek has FAQ schema whose question
+> is the same sentence as the dek heading.
 
 **6. robots.txt** — confirm `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`,
 `Claude-User`, `PerplexityBot`, `Perplexity-User` all still carry `Allow: /`,

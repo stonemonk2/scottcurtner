@@ -11,6 +11,8 @@ Exit:   0 clean, 1 violations found.
 """
 import re
 import sys
+import html
+import json
 import pathlib
 from urllib.parse import urlparse, unquote
 
@@ -143,6 +145,68 @@ def check_seo(articles):
             warnings.append(f"{where}: has images/ but no og:image")
 
 
+def json_ld_nodes(text: str, where: str) -> list:
+    """Every JSON-LD node on a page, flattened out of any @graph. Unparseable is a violation."""
+    nodes = []
+    for m in re.finditer(
+        r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', text, re.S
+    ):
+        try:
+            data = json.loads(m.group(1))
+        except json.JSONDecodeError as e:
+            errors.append(f"{where}: JSON-LD does not parse ({e.msg} at line {e.lineno})")
+            continue
+        for item in data if isinstance(data, list) else [data]:
+            nodes.extend(item.get("@graph", [item]) if isinstance(item, dict) else [])
+    return nodes
+
+
+def check_schema(articles):
+    """The homepage declares the site entity; any page with a dek carries matching FAQ schema.
+
+    Step 5 of the protocol has always required these. Nothing verified them, so the
+    publish log's SEO line was asserting them the same way it used to assert surfaces.
+    """
+    home = read(ROOT / "index.html")
+    home_types = {n.get("@type") for n in json_ld_nodes(home, "index.html")}
+    if not home_types & {"Person", "Organization"}:
+        errors.append("index.html: no Person or Organization JSON-LD (site entity schema)")
+    if "WebSite" not in home_types:
+        warnings.append("index.html: no WebSite JSON-LD node")
+
+    for page, url in articles:
+        text = read(page)
+        where = page.relative_to(ROOT).as_posix()
+        nodes = json_ld_nodes(text, where)
+
+        dek = re.search(
+            r'<div class="quick-answer">\s*<h2>(.*?)</h2>', text, re.S
+        )
+        if not dek:
+            continue  # no quick-answer dek, so no FAQ schema is owed
+
+        # Entities in the markup ("agent&rsquo;s") must compare equal to the plain
+        # text a schema question carries, so unescape before matching.
+        heading = html.unescape(re.sub(r"<[^>]+>", "", dek.group(1)))
+        heading = re.sub(r"\s+", " ", heading).strip()
+        faq = [n for n in nodes if n.get("@type") == "FAQPage"]
+        if not faq:
+            errors.append(f"{where}: has a quick-answer dek but no FAQPage JSON-LD")
+            continue
+
+        questions = [
+            q.get("name", "")
+            for n in faq
+            for q in (n.get("mainEntity") or [])
+            if isinstance(q, dict)
+        ]
+        if not any(q.strip() == heading for q in questions):
+            errors.append(
+                f"{where}: FAQ question does not match the dek heading "
+                f"(schema {questions!r} vs dek {heading!r})"
+            )
+
+
 def check_links():
     """Every relative href/src resolves to a file that exists."""
     for page in sorted(ROOT.glob("**/*.html")):
@@ -223,6 +287,7 @@ def main() -> int:
         check_surfaces(articles)
     if "seo" in requested:
         check_seo(articles)
+        check_schema(articles)
     if "links" in requested:
         check_links()
     if "tags" in requested:

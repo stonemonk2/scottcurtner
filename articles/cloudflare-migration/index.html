@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/cloudflare-migration/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why I Left Network Solutions for Cloudflare | Scott Curtner</title>
+  <meta name="description" content="Four domains, two stale accounts, and about $246 a year I had never once audited. Plus the DNS record inventory I now build before touching anything.">
+  <meta property="og:title" content="Why I Left Network Solutions for Cloudflare | Scott Curtner">
+  <meta property="og:description" content="Four domains, two stale accounts, and about $246 a year I had never once audited. Plus the DNS record inventory I now build before touching anything.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/cloudflare-migration/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/cloudflare-migration/images/hero-same-page.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B1F3A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%232A7FD4' text-anchor='middle'%3ESC%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "Is it worth moving your domains from Network Solutions to Cloudflare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For me it was about $246 a year. Four domains that cost roughly $285 at Network Solutions now run about $39 at Cloudflare, mostly because redirects and WHOIS privacy are billed as add-ons at one and included at the other. The migration is straightforward for any domain where nothing breaks if DNS goes wrong. The one that routes your email is a different job, and it is the one worth slowing down for."
+      }
+    }]
+  }
+  </script>
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    /* ── Quick-answer dek ────────────────────────────────────────────────────── */
+    .quick-answer {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--gold);
+      padding: 22px 26px;
+      margin-bottom: 32px;
+    }
+    .quick-answer h2 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 10px;
+      line-height: 1.5;
+    }
+    .quick-answer p {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      line-height: 1.72;
+      color: var(--ink-light);
+      margin: 0;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote (human voice) ────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Data tables ─────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 2.2em 0; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+    thead th {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      font-weight: 500;
+      text-align: left;
+      padding: 0 14px 10px 0;
+      border-bottom: 1px solid var(--rule);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 11px 14px 11px 0;
+      border-bottom: 1px solid var(--rule);
+      color: var(--ink-light);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody td:first-child { color: var(--ink); font-family: 'Source Code Pro', monospace; font-size: 0.78rem; }
+    td .up { color: var(--accent-warm); font-weight: 600; }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure.screenshot img { max-width: 498px; margin: 0 auto; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Credit block ────────────────────────────────────────────────────────── */
+    .credit {
+      background: var(--paper-aged);
+      border-radius: 2px;
+      padding: 22px 26px;
+      margin: 3em 0 0;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--ink-light);
+    }
+    .credit p { margin: 0; }
+    .credit strong { color: var(--ink); }
+
+    /* ── Superscript footnote refs ───────────────────────────────────────────── */
+    sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+    sup a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    sup a:hover { text-decoration: underline; }
+
+    /* ── Footnotes ───────────────────────────────────────────────────────────── */
+    .footnotes {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footnotes h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 1.25rem;
+    }
+    .footnotes ol { padding-left: 1.25rem; }
+    .footnotes li {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .footnotes a { color: var(--accent); text-decoration: none; word-break: break-word; }
+    .footnotes a:hover { text-decoration: underline; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+
+<article>
+  <div class="hero">
+    <span class="eyebrow">August 2026 &middot; Website Migration &middot; Cloudflare</span>
+    <h1>Why I Left Network Solutions for Cloudflare</h1>
+
+    <div class="quick-answer">
+      <h2>Is it worth moving your domains from Network Solutions to Cloudflare?</h2>
+      <p>For me it was about $246 a year. Four domains that cost roughly $285 at Network Solutions now run about $39 at Cloudflare, mostly because redirects and WHOIS privacy are billed as add-ons at one and included at the other. The migration is straightforward for any domain where nothing breaks if DNS goes wrong. The one that routes your email is a different job, and it is the one worth slowing down for.</p>
+    </div>
+
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>August 18, 2026</span>
+      <span>9 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero-same-page.jpg" alt="A stack of a dozen identical printed invoices on a lamp-lit home desk beside a closed laptop, pushed aside as finished">
+    <figcaption class="photo-caption">The same page, every year. Crisp at the top, yellowed at the bottom.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <p>A friend I worked alongside at Bank of America for about fourteen years, someone I&rsquo;ve been snowboarding with, a super smart guy I respect, left this comment under my post about building scottcurtner.com from scratch:</p>
+
+    <div class="pull">
+      <p>&ldquo;All of my sites are now hosted on GitHub. All of them created with Claude. Including a blog with comments which was pretty cool. Better tip. Just use your host to point to Cloudflare and do all the configuration there. Better security and easier configurations.&rdquo;</p>
+    </div>
+
+    <figure class="figure screenshot">
+      <img src="images/marcs-comment.png" alt="LinkedIn comment from Marc David recommending pointing DNS at Cloudflare, with Scott&rsquo;s reply thanking him">
+      <figcaption class="photo-caption">Forty words, left under an article about something else.</figcaption>
+    </figure>
+
+    <p>That was <a href="https://www.linkedin.com/in/marccdavid/" target="_blank" rel="noopener">Marc David</a>, a Staff Security Engineer and CISSP who also created <a href="https://bytesizedsecurity.show/" target="_blank" rel="noopener">Byte Sized Security</a>, and it took him about forty words to say something I should have already known. I&rsquo;d just spent an entire post walking readers through a Network Solutions DNS problem nobody warns you about. Marc read it. The tip he left wasn&rsquo;t about the DNS problem. It was about the fact that I was still doing business with the company that caused it.</p>
+
+    <p>I&rsquo;ve spent thirty years auditing other people&rsquo;s technology. Billion-dollar banks, payment systems, identity infrastructure, the kind of engagements where a control weakness gets written up, tracked, and remediated on a deadline. I wasn&rsquo;t running that discipline against my own domain bills. Not because they were beneath my notice ... I saw the charges every year, and I knew in a general way what was sitting in there. I left them alone because I had a pretty accurate idea of what it would take to do anything about it.</p>
+
+    <p>Marc&rsquo;s comment inspired me to don my AI mechsuit and fix some long overdue nagging website problems.</p>
+
+    <h2>What I actually found</h2>
+
+    <p>I own four domains. They were scattered across two separate Network Solutions accounts, which I didn&rsquo;t know until I went looking ... one holding three of them, a second, older account holding the fourth almost by accident. Untangling which domain lived where was step one, and it told me something before I&rsquo;d looked at a single dollar figure. Not that any of it was news. I knew what I owned. I had just never sat down and mapped it.</p>
+
+    <p>Then I pulled the billing history.</p>
+
+    <p>&ldquo;Web Forwarding&rdquo; ... a redirect, one domain pointing at another ... was billed as its own line item. $20.99 a year on one domain, $18.99 on another, and a five-year block on a third at $79.95, which works out to $15.99 a year. Cloudflare includes it for no extra cost. &ldquo;Domain Privacy + Protection,&rdquo; which masks your name and address in the public WHOIS record, ran $21.99 a year per domain. Cloudflare includes that too, at no extra charge. And sitting quietly on the older account, a Weebly hosting package from a FatCow account I set up many years ago,<sup><a href="#fn1" id="ref1">1</a></sup> and an email box I hadn&rsquo;t touched in years, both still renewing, both still being paid for. So much waste hiding behind my hesitancy to delve into such a mess.</p>
+
+    <p>I&rsquo;ve been seeing these same line items hit my credit card year after year. Marc provided the magic words I needed to hear, and with AI at my side, I was finally ready to conquer these beasts that had been lurking in my books for far too long!</p>
+
+    <p>Domain Privacy first shows up on my account in June 2024 at $11.99 per domain, typed on the invoice as an acquisition. April 2025 it renewed at $19.99. April 2026 it renewed at $21.99. That&rsquo;s an eighty-three percent increase in under two years, on a service my new registrar gives away. Such price increases are tailor-made for the customer who is too afraid to look for competitors, or too overwhelmed with more pressing parts of life to take notice. Web Forwarding on one domain went $16.99, then $18.99, then $20.99 ... two dollars a year, every year, like a metronome of stealth price creeps just below the noticeable threshold. You&rsquo;ve seen this with all kinds of recurring subscription services, right?</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Line item</th><th>First seen</th><th>Next renewal</th><th>Most recent</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Domain Privacy + Protection</td><td>$11.99 <span style="white-space:nowrap">(Jun 2024)</span></td><td>$19.99 <span style="white-space:nowrap">(Apr 2025)</span></td><td class="up">$21.99 <span style="white-space:nowrap">(Apr 2026)</span></td></tr>
+          <tr><td>Web Forwarding</td><td>$16.99 <span style="white-space:nowrap">(Apr 2024)</span></td><td>$18.99 <span style="white-space:nowrap">(Apr 2025)</span></td><td class="up">$20.99 <span style="white-space:nowrap">(Apr 2026)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>This wasn&rsquo;t hidden from me. Every one of those numbers sat in a billing history I glanced at maybe once a year for a decade.</p>
+
+    <p>Across the main account, those add-ons alone came to $99.95 a year, and none of them were the domains themselves. Add the registrations, plus the Weebly package and the mailbox on the older account, and I was somewhere around $285 a year across four domains, for a mix of things I needed and things I&rsquo;d been meaning to deal with for years.<sup><a href="#fn2" id="ref2">2</a></sup> The same four domains, now with Cloudflare, run me about $39 a year total.</p>
+
+    <p>Cloudflare&rsquo;s registrar sells domains at cost. AT COST! Not a discount, not an introductory rate that resets in year two ... they charge what the registry charges them and make their money elsewhere. For a .com right now that&rsquo;s about $10.46: a $10.26 Verisign registry fee plus ICANN&rsquo;s twenty cents.<sup><a href="#fn3" id="ref3">3</a></sup> Worth knowing that &ldquo;at cost&rdquo; doesn&rsquo;t mean a forever fixed price, but dang, it is so refreshing! Verisign&rsquo;s fee goes to $10.97 on November 1, 2026, and Cloudflare&rsquo;s price will go up with it ... by exactly that amount and no more.<sup><a href="#fn3">3</a></sup></p>
+
+    <p>So roughly $246 a year recovered, for as long as I hold these domains, because my buddy Marc spent thirty seconds typing a comment.</p>
+
+    <h2>The part that was almost enjoyable</h2>
+
+    <p>Somewhere in the middle of this, Network Solutions stopped being a billing problem and became a user experience worth documenting.</p>
+
+    <p>The DNS settings for any given domain sit behind a full page of upsells. Find the nameserver field and a modal appears, warning you in slightly ominous language that changing it will disable &ldquo;the suite of Network Solutions services&rdquo; you are in the middle of trying to leave.</p>
+
+    <p>The best moment came when I requested the transfer authorization code. That&rsquo;s the code that proves you own a domain and lets another registrar claim it, and ICANN requires your registrar to hand it over within five calendar days of your asking.<sup><a href="#fn4" id="ref4">4</a></sup> You cannot be held. Before sending it, their system offered me a discount to stay: $19.99 to renew right then... Uhm, that&rsquo;s still nearly double what Cloudflare charges for the same year. I declined. The code arrived about twenty-four hours later, which is inside the window their own completion notice tells you to expect<sup><a href="#fn5" id="ref5">5</a></sup> ... a small honest detail buried inside an otherwise adversarial process.</p>
+
+    <p>More than once, changing a domain&rsquo;s nameservers produced two emails inside the same minute. Kudos to Network Solutions for that! One confirmed the change had succeeded. The other said it had failed. Both were describing the same event. I refreshed the page to find the truth and each time the change had gone through fine.</p>
+
+    <p>None of it was dangerous. It was friction layered on friction, on infrastructure that has been acquired and re-acquired for decades. One domain&rsquo;s old nameservers pointed at WorldNic, which is Network Solutions&rsquo; own nameserver brand and has been for about as long as they&rsquo;ve had one. Another pointed to my old FatCow.</p>
+
+    <p>I set that domain up at FatCow myself, decades ago. I knew that. What I hadn&rsquo;t thought about in a long time was that the nameserver line still said so.</p>
+
+    <figure class="figure">
+      <img src="images/door-names.jpg" alt="A building directory where one suite line carries three stacked company name strips, the newest crisp and white, the older ones yellowed and warped">
+      <figcaption class="photo-caption">One suite. Three names. Everyone else moved out.</figcaption>
+    </figure>
+
+    <p>FatCow was a competitor back then, a different company selling against Network Solutions, and Endurance International Group bought them in 2005. Endurance&rsquo;s web presence division and Web.com Group ... which had owned Network Solutions since 2011 ... were folded together by a pair of private equity firms in February 2021 into a new parent called Newfold Digital.<sup><a href="#fn6" id="ref6">6</a></sup> Sixteen years and two acquisitions sit between the company I signed up with and the company that was sending me the bill, and I never moved that domain. That FatCow mooooved around me.</p>
+
+    <h2>The one domain where this actually mattered</h2>
+
+    <p>Three of the four migrations were low stakes. Nothing lived on them that would break in a way anyone would notice.</p>
+
+    <p>The fourth routes my email. Getting a single DNS record wrong there doesn&rsquo;t produce an inconvenience. It produces a broken inbox.</p>
+
+    <p>If I break a web page, I know within a minute, because I go look at it and it&rsquo;s broken. If I break mail delivery, everything on my end keeps working. My inbox opens. My old messages are all there. I can send. What stops is other people&rsquo;s messages from reaching me.</p>
+
+    <p>Before touching anything, I had Claude pull every existing record into a written inventory. Three address records ... the A records that point a name at an actual server. Five subdomain aliases, CNAMEs, for calendar, documents, mail, sites, and video. And five MX records, the ones that tell the rest of the internet where to deliver mail, each carrying a priority number that sets the order servers try them in. Thirteen records total, captured in full, before a single change was made.</p>
+
+    <p>Cloudflare scans your existing DNS when you add a domain and imports whatever it finds. That scan is convenient and it is not authoritative. It reads what is published, which means anything already misconfigured gets imported exactly as misconfigured, and it arrives looking like a clean result. So when the scan finished, Claude compared it against the inventory, record by record, priority by priority, and came back thirteen for thirteen.</p>
+
+    <p>Which, if you read my <a href="https://www.scottcurtner.com/articles/agent-checking-its-work/">last post</a>, is exactly the arrangement I warned about. The thing that captured the inventory is the thing that checked the import against it. I had a written artifact instead of a vibe, which beats nothing and is not the same as an independent check.</p>
+
+    <p>So I sent a test message from outside and waited for it to land... fingers crossed.</p>
+
+    <p>It arrived!</p>
+
+    <h2>Is it worth moving your domains from Network Solutions to Cloudflare?</h2>
+
+    <p>On the money, for me, plainly yes. Two hundred forty-six dollars a year is not life-changing and it is also not nothing, and it recurred quietly year after year while I held some of these domains for more than two decades.</p>
+
+    <p>The money for domains I wasn&rsquo;t using was a minor annoyance. The finding underneath it is the one that excites me. I run this exact kind of review for a living. I do it well. And I still let that money go out the door year after year ... not because I forgot it was there, and not because I decided it was too small to matter. I knew the number was wrong. I put it off because I knew what fixing it would cost me.</p>
+
+    <p>That part gets misdiagnosed a lot, and I think it&rsquo;s worth saying plainly. I&rsquo;m a tech generalist. Thirty years of knowing a little about a great many things means I can look at a job like this and price it accurately, and the price was always the same: a string of evenings learning registrar mechanics and DNS minutiae I would use exactly once and never need again. So every year I looked at it, understood it, and decided not tonight. Knowing enough to estimate the cost is what kept me away from it. And I don&rsquo;t think knowing less would have helped. The people I talk to who know less about this stuff than I do aren&rsquo;t charging in where I hesitated. They mostly don&rsquo;t know the job is available to them at all. If they&rsquo;re using AI at the edges, they don&rsquo;t know what to ask, and they can&rsquo;t judge the answer well enough to act on what it points them toward. Opposite reasons, same result: the thing doesn&rsquo;t get done.</p>
+
+    <figure class="figure">
+      <img src="images/tuesday-evening.jpg" alt="A man leaning back relaxed at a tidy home desk late in the evening, the work already finished">
+      <figcaption class="photo-caption">A thing I had accepted as permanently out of reach turns out to be a Tuesday evening.</figcaption>
+    </figure>
+
+    <p>What changed is the mental mechsuit. Migrating a domain, rebuilding a site, evolving it afterward ... all of that still takes time, but it no longer takes specialist knowledge I don&rsquo;t have, because AI unlocks that part for me. It cut straight through the Network Solutions opacity and the scare tactics and got me to the thing I actually wanted. I keep having this experience lately, and I have not gotten used to it: a thing I had accepted as permanently out of reach turns out to be a Tuesday evening.</p>
+
+    <p>If I saw such stale accounts during an audit, I&rsquo;d have written up an observation. Recurring charges and services renewing years past the point anyone used them. An asset inventory so incomplete the owner couldn&rsquo;t say which account held which domain. Those are ordinary findings. It was long overdue for me to correct such observations for my own situation. I guess when the charges are small enough, no threshold ever trips.</p>
+
+    <p>The control I put in place afterward is small and it&rsquo;s now permanent. Before I touch infrastructure that anything real depends on, I have Claude capture what exists into <a href="https://www.scottcurtner.com/articles/2nd-brain-wiki/">the MCP wiki knowledge base I built for exactly this kind of thing</a>, so there is a written record that doesn&rsquo;t live inside the tool I&rsquo;m about to change. The new state gets checked against that record rather than against the tool&rsquo;s own report of itself. And for anything that can fail silently, I still go put my own eyes on it ... the test message, the page load, the thing only a human bothering to look can confirm. That&rsquo;s the whole thing. It&rsquo;s the type of documentation and verification that I would expect any engineering team under my audits to be able to show me on request, already documented, not caught by surprise and having to research it for me. It took my buddy&rsquo;s LinkedIn comment and my new AI intellectual superpowers to correct the problem and build the control that had always been missing.</p>
+
+    <p>In case I&rsquo;m not being clear, none of this happened alone. I worked through all four migrations with Claude open in another window, doing the record-by-record work I would have skimmed, walking me through the difference between a registrar lock and a transfer confirmation. Without that, this wasn&rsquo;t a night&rsquo;s work. It was many nights, most of them spent re-reading support articles that explain nothing.</p>
+
+    <h2>What I keep coming back to</h2>
+
+    <p>It&rsquo;s easy to underestimate what a small, well-placed piece of information is worth to the person receiving it.</p>
+
+    <p>Marc wasn&rsquo;t trying to save me $246 a year when he left that comment. He was being helpful, the way people who know things sometimes are, without much thought about where it might land. It turned into real money recovered, three rebuilt websites, a control I now run every time, and a much better understanding of infrastructure I&rsquo;d been paying for and putting off for years.</p>
+
+    <p>That&rsquo;s most of why I write these. Somebody tells me a post got them to try a thing they&rsquo;d been circling for years, and it&rsquo;s the same forty words landing somewhere else.</p>
+
+    <p>Thanks, Marc.</p>
+
+    <div class="credit">
+      <p><strong>Credit.</strong> The tip that started all of this came from Marc David, who left it as a comment without being asked and without any idea where it would go: <a href="https://www.linkedin.com/in/marccdavid/" target="_blank" rel="noopener">linkedin.com/in/marccdavid</a>. He also created Byte Sized Security, <a href="https://bytesizedsecurity.show/" target="_blank" rel="noopener">bytesizedsecurity.show</a>. Thanks, Marc.</p>
+    </div>
+
+    <div class="footnotes">
+      <h3>Sources</h3>
+      <ol>
+        <li id="fn1">
+          FatCow bundled Weebly&rsquo;s drag-and-drop website builder with its hosting plans. A contemporaneous 2013 review written from inside a FatCow account weighs &ldquo;their Weebly builder&rdquo; against the other tools in the account: <a href="https://brendanewhouse.com/website-builder-review-fat-cow" target="_blank" rel="noopener">brendanewhouse.com/website-builder-review-fat-cow</a>. Weebly also ran a reseller program for hosting providers, Weebly for Hosts: <a href="https://www.weebly.com/hosts" target="_blank" rel="noopener">weebly.com/hosts</a>. <a href="#ref1">&#8617;</a>
+        </li>
+        <li id="fn2">
+          On the figures: the per-line-item amounts and the year-over-year increases above come from Network Solutions invoices on the main account, read line by line. The roughly $285 annual total also includes charges on a second, older account I no longer had invoice-level access to, so treat that number as a reconstruction rather than a figure with an invoice behind it. The $99.95 in add-ons, the $11.99 to $21.99 privacy increase, and the $16.99 / $18.99 / $20.99 forwarding sequence are all documented. <a href="#ref2">&#8617;</a>
+        </li>
+        <li id="fn3">
+          Cloudflare Registrar prices domains at the registry&rsquo;s wholesale rate with no registrar markup. The current .com calculation is a $10.26 Verisign registry fee plus a $0.20 ICANN transaction fee; the Verisign fee rises to $10.97 effective November 1, 2026. <a href="https://www.cloudflare.com/products/registrar/" target="_blank" rel="noopener">cloudflare.com/products/registrar</a>. <a href="#ref3">&#8617;</a>
+        </li>
+        <li id="fn4">
+          ICANN, &ldquo;About Auth-Code&rdquo;: a registrar must either let the registrant generate the code themselves through a control panel, or &ldquo;provide the Auth-Code within five calendar days of a request.&rdquo; <a href="https://www.icann.org/resources/pages/auth-2013-05-03-en" target="_blank" rel="noopener">icann.org/resources/pages/auth-2013-05-03-en</a>. See also ICANN&rsquo;s registrant transfer FAQ: <a href="https://www.icann.org/resources/pages/name-holder-faqs-2017-10-10-en" target="_blank" rel="noopener">icann.org/resources/pages/name-holder-faqs-2017-10-10-en</a>. <a href="#ref4">&#8617;</a>
+        </li>
+        <li id="fn5">
+          Network Solutions&rsquo; own completion notice, shown after the transfer authorization request is submitted, advises allowing up to 24 hours for the code to arrive. <a href="#ref5">&#8617;</a>
+        </li>
+        <li id="fn6">
+          Endurance International Group acquired FatCow Web Hosting in April 2005 (Boston Business Journal, via HostSearch: <a href="https://www.hostsearch.com/news/endurance-international-acquires-fat-cow-web-hosting.asp" target="_blank" rel="noopener">hostsearch.com</a>). Web.com acquired Network Solutions in 2011. Newfold Digital was formed in February 2021 from the combination of Web.com Group (Siris Capital) and Endurance Web Presence (Clearlake Capital); its portfolio includes Network Solutions, Register.com, Domain.com, Bluehost, HostGator, and the former Endurance brands. <a href="https://www.newfold.com/newsroom/newfold-digital-launches-as-one-of-the-world-s-largest-web-solut" target="_blank" rel="noopener">newfold.com</a>. <a href="#ref6">&#8617;</a>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+</article>
+
+<footer class="article-footer">
+  <div class="author-bio">
+    <h4>Scott Curtner</h4>
+    <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       ← Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

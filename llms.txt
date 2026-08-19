@@ -20,6 +20,7 @@ and writing.
 
 ## Writing
 
+- [Why I Left Network Solutions for Cloudflare](https://www.scottcurtner.com/articles/cloudflare-migration/): Four domains, two stale accounts, and about $246 a year I had never once audited. Plus the DNS record inventory I now build before touching anything.
 - [Is Your AI Agent Checking Its Work, or Just Describing It?](https://www.scottcurtner.com/articles/agent-checking-its-work/): My publish control ran its protocol correctly every time, and four articles still fell off my site. Nothing in the loop had ever opened a file.
 - [I Bought a PC for Claude. Then I Almost Returned It.](https://www.scottcurtner.com/articles/geekom-remote/): I spent $699 on a mini PC for an idea that did not survive the first night. What I learned had less to do with hardware than with who was in the room.
 - [Auditing My Own Code: What I Found When I Turned My Career on My Bookkeeping System](https://www.scottcurtner.com/articles/auditing-my-own-code/): I audit other people's technology for a living. Here is what turned up when I pointed that same instinct at the bookkeeping system I built myself.

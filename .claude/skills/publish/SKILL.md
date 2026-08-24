@@ -13,19 +13,49 @@ The wiki is the authority. This file is the fallback and the runner.
 
 ## Step 0 — Load protocol from wiki
 
-Read `scottcurtner-website-publish-protocol.md` via the Open Brain MCP
-`read_wiki` tool, or from
-`https://raw.githubusercontent.com/stonemonk2/scottcurtner-wiki/main/scottcurtner-website-publish-protocol.md`.
+`stonemonk2/scottcurtner-wiki` is a **private** repo. There are exactly two
+paths to it and one impostor.
 
-If it loads, **it is authoritative** — follow it for all execution steps.
-If unreachable, log this and execute the Fallback Protocol below:
+**1. Primary — Open Brain MCP.** Read
+`scottcurtner-website-publish-protocol.md` via the `read_wiki` tool.
+This is the normal case. If it loads, **it is authoritative** — follow it
+for all execution steps.
+
+**2. Secondary — `gh` CLI.** If the MCP tool is unreachable, this reads the
+same file from the same repo and is equally authoritative:
+
+```bash
+gh api repos/stonemonk2/scottcurtner-wiki/contents/scottcurtner-website-publish-protocol.md   -H "Accept: application/vnd.github.raw"
+```
+
+`gh` is authenticated as `stonemonk2` with `repo` scope (verified
+2026-08-23). Run `gh auth status` if this fails.
+
+**3. If BOTH fail — STOP. Alert Scott. Execute nothing.**
+
+Scott's instruction, 2026-08-23: *"the MCP tool for the wiki should always
+be reachable, and if not, I should be alerted that I need to fix it."*
+
+An unreachable wiki is a tooling defect he wants to hear about
+immediately, not a condition to route around. Report which path failed and
+what the error was, then wait. **The Fallback Protocol below may only be
+executed with his explicit go-ahead in that session** — it is a
+stale-by-construction copy of a control standard.
+
+> **Do not use `https://raw.githubusercontent.com/stonemonk2/scottcurtner-wiki/...`.**
+> The repo is private, so that URL returns `404: Not Found` to any
+> unauthenticated request. It was this skill's documented fallback for
+> months and could never have worked — it was never exercised, because the
+> primary path never failed. Found 2026-08-23. A fallback that has never
+> been exercised is not known to work.
+
+Log which path supplied the protocol:
 
 ```
-[FALLBACK] Wiki unreachable — executing hardcoded fallback protocol.
-           Reason: [error or timeout]
+[WIKI] Protocol loaded via: read_wiki | gh api | HALTED
 ```
 
-Either way, run the divergence check and log it:
+Then run the divergence check and log it:
 
 ```
 [CHECK] Skill fallback vs wiki alignment:
@@ -33,6 +63,9 @@ Either way, run the divergence check and log it:
         Match: YES / NO
         If NO — [list each step that differs]
 ```
+
+`gh api` counts as `Wiki loaded: YES` — same file, same repo, different
+transport.
 
 ## Inputs
 
@@ -44,6 +77,10 @@ Either way, run the divergence check and log it:
 ```
 
 ## Fallback Protocol
+
+> **Requires Scott's explicit go-ahead this session.** Reaching this
+> section means both wiki paths failed — see Step 0. Do not execute it
+> because the wiki was slow.
 
 Execute without asking for confirmation. All six steps must appear in the log.
 A silent omission is a protocol failure.
@@ -97,6 +134,24 @@ and every group still disallows the verification file. This file is
 security-adjacent: if a fix is needed, **draft it and get Scott's approval
 before writing** — do not edit silently.
 
+## Execution hazard — the guard that always passes
+
+If you script the surface edits with a "skip if already present" guard,
+**guard on the article's canonical URL, never on the first line of the
+block you are inserting.**
+
+```python
+marker = new.strip().split('
+')[0]   # WRONG — '<url>' / '## Writing'
+marker = url                          # RIGHT — unique to this article
+```
+
+On 2026-08-18 the wrong version reported `SKIP` for sitemap.xml and
+llms.txt on a **first** run, and neither file was written. **A `SKIP` on a
+first publish run is a defect until proven otherwise** — every surface
+step must report a write. Step 7 catches it, but read your own stdout
+first.
+
 ## Step 7 — Verify (required)
 
 ```bash
@@ -118,7 +173,7 @@ Warnings do not block publishing. Report them; let Scott decide.
 
 ```
 PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
-[FALLBACK] ... (only if it fired)
+[WIKI] Protocol loaded via: read_wiki | gh api | HALTED
 [CHECK] Skill fallback vs wiki alignment: Wiki loaded: Y/N  Match: Y/N
 [DONE] sitemap.xml — added [URL], lastmod [date]
 [DONE] llms.txt — added entry under ## Writing

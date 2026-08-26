@@ -169,6 +169,35 @@ real tail of its output into the log.
 
 Warnings do not block publishing. Report them; let Scott decide.
 
+## Step 8 — Commit summary for Scott (required)
+
+**Scott commits and pushes through GitHub Desktop. Do not run `git commit`
+or `git push` on this repo.**
+
+Scott, 2026-08-23: *"I want to commit and push via my git desktop and I
+want you to provide me with a commit summary to enter."*
+
+Your last act is to hand him a ready-to-paste summary matching GitHub
+Desktop's two fields. **A run is not complete without it** — he cannot
+finish the publish otherwise.
+
+```
+Summary:
+Publish: [article title]
+
+Description:
+[what shipped — the new page plus which surfaces changed, and anything
+someone reading the history in six months would want to know]
+```
+
+- Summary stays **under ~60 characters** and is always
+  `Publish: [article title]` for a publish run. Do not improvise a
+  cleverer one; consistency is what makes the history scannable.
+- Description is plain prose or short bullets, no markdown headers. Name
+  the surfaces touched. Say plainly if a `[WARN]` was accepted.
+- For non-publish work, use a plain imperative summary describing the
+  change, not the process.
+
 ## Output log
 
 ```
@@ -180,10 +209,18 @@ PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
 [DONE] index.html — card added at position 1
 [DONE] articles/index.html — hub card added at position 1
 [DONE] SEO check — canonical, OG tags, favicon, meta description,
-       connect footer, Organization + FAQ schema
+       connect footer, site-entity + FAQ schema
 [DONE] robots.txt — AI search crawlers confirmed allowed
 [VERIFIED] check_site.py — PASS, 0 violations, [n] warning(s)
 [WARN]  [anything flagged but not auto-fixed]
+
+[COMMIT] For GitHub Desktop — Scott pastes these, CC does not commit:
+
+  Summary:
+  Publish: [article title]
+
+  Description:
+  [surfaces touched, plus anything notable about the run]
 ```
 
 Then prompt Scott:
@@ -197,7 +234,8 @@ already settled by step 7.
 
 ## Post-publish (manual, not executable here)
 
-- Commit `Publish: [article title]` and push to main
+- **Scott:** paste the `[COMMIT]` summary into GitHub Desktop, commit,
+  and push to main. CC does not commit or push this repo — see Step 8.
 - Verify live: fetch the URL and sitemap.xml, confirm render + lastmod
   (a green push can still 404 until Pages finishes deploying)
 - Search Console: resubmit sitemap (optional nudge)

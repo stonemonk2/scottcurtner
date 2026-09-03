@@ -128,6 +128,20 @@ dek (`[SKIP]` with reason if not). `[WARN]` anything not auto-fixable.
 > parses, and any page with a quick-answer dek has FAQ schema whose question
 > is the same sentence as the dek heading.
 
+**Credential note (wiki, 2026-08-21).** Credentials in bylines and author
+bios are **dated claims and are never backdated.** Scott earned AAIA on
+2026-08-21. The homepage, the hub, and every post from that date forward read
+`CIA, CISA, AAIA, ITIL`; the nineteen earlier pages keep what was true when
+they published. **A consistency sweep that "fixes" the older pages is a
+defect, not a cleanup** — do not run one, and do not offer it as tidying.
+
+> Backfilled into this fallback 2026-09-02. The rule had lived only in the
+> wiki since 2026-08-21, so the six required steps matched on a divergence
+> check while the fallback silently lacked the one instruction that stops a
+> plausible-looking wrong edit. A fallback missing a prohibition is worse
+> than one missing a step: the missing step gets caught by `check_site.py`,
+> the missing prohibition does not.
+
 **6. robots.txt** — confirm `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`,
 `Claude-User`, `PerplexityBot`, `Perplexity-User` all still carry `Allow: /`,
 and every group still disallows the verification file. This file is

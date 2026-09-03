@@ -20,6 +20,7 @@ and writing.
 
 ## Writing
 
+- [Your Rental Property Has Three Numbers, Not One](https://www.scottcurtner.com/articles/three-numbers-not-one/): A correctly categorized ledger can still produce a wrong tax return. The escrow money never reached my books, and one property needs three numbers.
 - [What Actually Prepared Me for an AI Audit Certification?](https://www.scottcurtner.com/articles/aaia/): I spent $758 on ISACA's AI audit certification. The $249 question bank was necessary. Free videos and the systems I had already built are what got me through.
 - [How Do You Know If Your AI Deployment Is Actually Working?](https://www.scottcurtner.com/articles/ai-deployment-working/): A bank's frontline knew its AI wasn't working long before the tribunal did. Ten years earlier I ignored the same kind of warning about a day in the park.
 - [Why I Left Network Solutions for Cloudflare](https://www.scottcurtner.com/articles/cloudflare-migration/): Four domains, two stale accounts, and about $246 a year I had never once audited. Plus the DNS record inventory I now build before touching anything.

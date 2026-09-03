@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/three-numbers-not-one/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Rental Property Has Three Numbers | Scott Curtner</title>
+  <meta name="description" content="A correctly categorized ledger can still produce a wrong tax return. The escrow money never reached my books, and one property needs three numbers.">
+  <meta property="og:title" content="Your Rental Property Has Three Numbers, Not One | Scott Curtner">
+  <meta property="og:description" content="A correctly categorized ledger can still produce a wrong tax return. The escrow money never reached my books, and one property needs three numbers.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/three-numbers-not-one/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/three-numbers-not-one/images/hero.jpg">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B1F3A'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='bold' fill='%232A7FD4' text-anchor='middle'%3ESC%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .deck {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: var(--ink-light);
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 2.2em 0 0.6em;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote ──────────────────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Standard callout ────────────────────────────────────────────────────── */
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-size: 0.95rem;
+      color: var(--ink-light);
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio h4 {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+
+<article>
+  <div class="hero">
+    <span class="eyebrow">September 2026 &middot; Real Estate &middot; Bookkeeping &middot; Follow-up</span>
+    <h1>Your Rental Property Has Three Numbers, Not One</h1>
+    <p class="deck">Every transaction in my checking account was categorized correctly, and two properties still reported zero dollars of county property tax. The money had gone out through escrow, where my ledger could not see it ... and fixing that turned out to be the smaller half of the problem.</p>
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>September 2, 2026</span>
+      <span>9 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero.jpg" alt="Three handwritten index cards labelled Cash Flow, Economic Return and Tax Basis standing behind a single house key on a wooden desk at dusk">
+    <figcaption class="photo-caption">One property, three questions ... and three numbers that are not meant to be added together.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <p>A few days ago I had Claude look through my bookkeeping data to help me update my transactions categorization labels. It came back with an observation that made me go hmmm: two of my rental properties were reporting zero dollars of county property tax for the year.</p>
+
+    <p>They had each paid about twenty-four hundred dollars through mortgage escrow.</p>
+
+    <p>Nothing was broken. No formula had failed, no import had crashed, no rule had misfired. After my labeling refresh, every transaction in my checking account was categorized correctly, which is what I built and described in <a href="/articles/grandpaledger-to-plaid-api/">From My Grandfather&rsquo;s Ledger to the Plaid API</a>. The problem was that this particular money had never appeared in the checking accounts that I linked to the Plaid API.</p>
+
+    <p>If you are building your own custom bookkeeping system ... this is the second thing you will hit. The first is getting transactions in and categorized. That part is well covered. The second is discovering that a correctly categorized ledger can still produce wrong data for your tax return. To make end of year taxes easier, like I did to my bookkeeping ... A joyous vision stirred within that thought.</p>
+
+    <h2>The money that never touches your checking account</h2>
+
+    <p>Three of my properties have mortgages. Every month I send the bank one payment for each of them. The bank splits it four ways: principal, interest, county tax, and homeowners insurance (PITI). The last two (tax and insurance) sit in an escrow account until the bill comes due, and then the bank pays it on my behalf.</p>
+
+    <p>From my checking account&rsquo;s point of view one payment went out, the mortgage payment.</p>
+
+    <p>So my ledger recorded a mortgage payment and stopped there. The insurance the bank paid, the tax the bank paid ... invisible. Not miscategorized. Absent. And every year I would sit down with the paperwork and hand-enter them, or at least, hand-enter some of them.</p>
+
+    <figure class="figure">
+      <img src="images/escrow-statement.jpg" alt="An escrow statement showing county tax and homeowners insurance line items resting on a laptop whose spreadsheet shows a highlighted cell reading 0.00">
+      <figcaption class="photo-caption">A tax line reading zero, and the paper that knew better.</figcaption>
+    </figure>
+
+    <p>Here is the part worth knowing if you are building your own bookkeeping automation (and I recommend you try it). That data is available. I didn&rsquo;t know the Plaid API could pull this data, so I had written my assumption into a code comment: mortgage loan accounts return no transaction stream, so skip them. That was a few months ago, but then this week I asked Claude to check that assumption against the live Plaid API. Claude adjusted my API call brilliantly, and the loan accounts came back with eighteen transactions ... including line items reading <code>HOMEOWNERS INSURANCE</code> and <code>COUNTY TAX</code>, with exact amounts and exact dates. I was excited!</p>
+
+    <div class="pull">
+      <p>The bank had been telling me all along. Then finally, I told my own code to listen.</p>
+    </div>
+
+    <p>There is a general lesson in that which has nothing to do with bookkeeping. When comments in your codebase are assertions somebody made many moons ago, they should be challenged or re-tested. When you point an AI at a system you built, the highest-value thing you can ask is not &ldquo;write me a new feature.&rdquo; It is &ldquo;check whether what I wrote down is still true.&rdquo;</p>
+
+    <p>If you want the concrete first move, it is smaller than it sounds. I did not ask for a redesign. I asked Claude to read my workbook and my import scripts and tell me what it noticed. That is the whole prompt. It came back with the zero-dollar tax line, a stale comment, and a category that was reaching no tax line at all. None of those were things I was thinking to ask about. We can all be forgiven for not asking about a gap we do not know exists.</p>
+
+    <p>The second move took more planning time and thought effort, but it was worth it. I had to re-think my bookkeeping objectives through my AI designer and planner. Why I was manually booking insurance payments and then reversing them to track a payment made by escrow. Why a transfer from another household account is not income. Why one property&rsquo;s spending is capital and another&rsquo;s is maintenance. Some of those explanations held up. One of them turned out to be a workaround I had invented years ago and then forgotten was a workaround. You do not find that by reading your own spreadsheet. You find it by having to justify it to a person, or smart tool, that asks why.</p>
+
+    <h2>A property has three numbers, not one</h2>
+
+    <p>Once that escrow data started flowing, I had a second problem, and perhaps the more interesting one.</p>
+
+    <p>My property tabs each showed a single net number: income minus expenses. Simple. Easy to understand, but that number was really trying to answer three different questions at once.</p>
+
+    <p><strong>What did this property cost me this year?</strong> That is a cash question. Every dollar that left my bank counts, including the principal portion of the mortgage.</p>
+
+    <p><strong>What did this property actually earn me?</strong> That is an economics question, and it has a different answer, because paying your principal is NOT a &ldquo;cost&rdquo;. When I pay down mortgage principal, that money moves from my checking account to the home equity of my balance sheet. It is savings. Solely counting principal as a cash flow expense neglects the alternate view of owning more of your property&rsquo;s equity.</p>
+
+    <p><strong>What is deductible?</strong> That is the tax question, and it has a third answer. Interest is deductible, principal is not, and the insurance and taxes the escrow paid are deductible even though the bank writes those checks for me.</p>
+
+    <p>One property, three questions, three legitimately different numbers. So the tabs now carry all three, stacked, each labeled with the question it answers. Cash Flow. Economic Return. Tax Basis. Beautiful!</p>
+
+    <p>Here is the part a reader can reuse. Your human brain makes the connections that output a new good idea. Claude did not propose it. I said I wanted to know how much each property was costing or profiting me overall, separately from what my accountant needs, and the three-view structure fell out of taking that sentence literally. The design work was in refusing to collapse two different questions into one number because a spreadsheet row can only hold one. Thinking outside the box, literally.</p>
+
+    <p>If you build something like this, the tooling will happily give you a number. Deciding which question the number answers is 100% yours. Then seeing it get built is a wonderful payoff!</p>
+
+    <div class="callout">
+      The design decision I would encourage you to try is this: <strong>the three totals are deliberately not additive.</strong> They are three views of the same underlying money, not three components of a larger sum. Add them together and you have double-counted the escrow, which goes out to the bank, inside the mortgage payment, and comes back later as a disbursement.
+    </div>
+
+    <p>I had Claude label each block with its question directly on the sheet. The label sits above the number, so a version of me in eighteen months can easily remember why they are there.</p>
+
+    <h2>Where to put the thing a spreadsheet cannot compute</h2>
+
+    <p>Mortgage interest is not a transaction. My banks do not send me a monthly line item that says &ldquo;interest.&rdquo;, maybe yours does. For me it is arithmetic performed on a balance, and it belongs somewhere that is neither your ledger nor your tax sheet.</p>
+
+    <p>So there is now a small sheet holding one row per loan: rate, opening balance, current balance, and the computed interest. Everything else reads from it.</p>
+
+    <p>Two things about that sheet are worth stealing.</p>
+
+    <p>The first is the method. Claude tested three ways of computing the interest against the number reported by the bank API. Averaging the opening and current balances landed within about a third of a percent. This was good enough for me because I&rsquo;ll validate and correct it when I get my 1098 at the end of the year. A month-by-month amortization schedule (which sounds more rigorous) came in three times worse, because it seems my lender doesn&rsquo;t publish the escrow portion of each payment to the Plaid API. The simpler &ldquo;averaging&rdquo; method won because my portfolio is small enough not to need an exact number for this field yet.</p>
+
+    <p>The second is the sheet needs to know how many months of the year have elapsed, and the obvious formula is the current month. Claude wrote it, I approved, and it was correct every single day of the year except on January first when the formula resets to 1. So it would report one month of interest instead of twelve on the morning you sit down with your 1098 to prepare the return. It now derives the months from the tax year on the return itself rather than from today&rsquo;s date.</p>
+
+    <h2>Something has to watch the spreadsheet</h2>
+
+    <p>This is the piece I would build earlier if I were starting over, and it is the least obvious.</p>
+
+    <p>The Python that writes to my workbook uses a library called <code>openpyxl</code>, and <code>openpyxl</code> has a habit of turning live formulas into the number they last evaluated to. The cell still shows the right value. It just stops recalculating, forever, silently.</p>
+
+    <p>I found eighteen cells on my tax summary in exactly that state. Total expenses and net income for five of my six properties, all frozen, all displaying correct numbers at that moment, none of them ever going to update again.</p>
+
+    <p>There is now a script that keeps a manifest of every cell that is supposed to contain a formula and checks them after each sync. It runs automatically. When something flattens, it says so.</p>
+
+    <p>If you build a system where scripts write to a spreadsheet you also open by hand, build this second script to check the integrity of your formulas, right after you get transactions importing. It is completely undetectable by looking, and a workbook is not a thing you read closely. You glance at a total and move on. That is the entire failure mode.</p>
+
+    <h2>What stays manual on purpose</h2>
+
+    <p>There is a desire, once this is working, to automate everything. I have not.</p>
+
+    <p>Two of my mortgage lenders are smallish banks not compatible with the Plaid API (or any API that I&rsquo;m aware of), so those loan balances get typed in once a year off a statement. Those cells are marked <code>ESTIMATED</code>, and the refresh script prints a reminder every time it runs that the number is provisional and the January tax form should replace it.</p>
+
+    <p>Home Depot has no categorization rule, and will not get one. During a renovation or maintenance those charges belong to the property. Once finished they are spending I manually label for that property, so those transactions land in a review queue and I decide each one.</p>
+
+    <p>Depreciation comes from my accountant. It stays a manual cell with his name effectively on it. Maybe someday I figure this out for myself.</p>
+
+    <p>The system does not need to do everything. It needs to do the parts that are mechanical and reliable, and clearly flag the parts that aren&rsquo;t.</p>
+
+    <h2>What it added up to</h2>
+
+    <p>This week was a big upgrade to my bookkeeping automation in the third quarter of my first year of having built it. The tax summary now reports about thirty-six thousand dollars more in net income than it did last week. Not because I earned more. Because it had been double-counting the escrow, once inside the mortgage payment and again as a disbursement, and counting principal repayment as if it were an expense.</p>
+
+    <p>The county tax that started this ... four thousand seven hundred and eighty-one dollars across two properties. Finally correct in my automation for the first time.</p>
+
+    <div class="ornament">&mdash; &bull; &mdash;</div>
+
+    <p>My grandfather kept his books in a ledger, by hand, in his beautiful writing style. The thing he was teaching was that you check and understand. The tools have changed enormously since Grandpa Ray balanced his columns by hand, and what I can build in an afternoon now would have been science fiction for him. The habit underneath contains identical rigor, only faster.</p>
+
+    <p>If you are building your own and you get stuck on the escrow piece, or on where to put the arithmetic that is not a transaction, my inbox is open.</p>
+
+  </div>
+</article>
+
+<footer class="article-footer">
+  <div class="author-bio">
+    <h4>Scott Curtner</h4>
+    <p>Technology Auditor (CIA, CISA, AAIA, ITIL) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       &larr; Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

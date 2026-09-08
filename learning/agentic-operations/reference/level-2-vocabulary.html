@@ -82,7 +82,7 @@
     <dd>System &gt; developer &gt; user — instructions carry different authority depending on where they sit, and ordering matters.
       <span class="why">Why it matters: it's the difference between rules of engagement and requests — and the thing injection attacks try to subvert.</span></dd>
     <dt id="prompt-injection">Prompt injection <span class="warn">⚠️</span></dt>
-    <dd>Untrusted data placed in context can hijack instructions ("ignore previous instructions and…"). The model can't reliably tell data from directive.
+    <dd>Untrusted data placed in context can hijack instructions — text inside a document telling the model to disregard its prior directives and obey the document instead. The model can't reliably tell data from directive.
       <span class="why">Why it matters: every retrieved document, tool output, and pasted page is an attack surface — and the problem is still unsolved. See <a href="https://simonwillison.net/series/prompt-injection/">Willison's series</a>.</span></dd>
   </dl>
 

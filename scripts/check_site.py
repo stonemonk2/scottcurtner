@@ -122,9 +122,6 @@ def check_seo(articles):
             if f'property="{prop}"' not in text:
                 errors.append(f"{where}: missing {prop}")
 
-        if not re.search(r'<link rel="icon"', text):
-            errors.append(f"{where}: no favicon")
-
         # The footer class has changed four times across the archive
         # (connect-, article-, site-, author-footer) and the three earliest
         # pages style the same block inline with no class at all. Check the
@@ -205,6 +202,62 @@ def check_schema(articles):
                 f"{where}: FAQ question does not match the dek heading "
                 f"(schema {questions!r} vs dek {heading!r})"
             )
+
+
+def favicon_prefix(where: str) -> str:
+    """Which favicon set a page belongs to, decided by section.
+
+    Two designs ship deliberately: the navy "SC" monogram sitewide, and the
+    terracotta open book for learning/ (docs/superpowers/specs/
+    2026-07-13-learning-favicon-design.md). A learning page carrying the
+    monogram is a defect, not a tidy-up.
+    """
+    return "favicon-learning" if where.startswith("learning/") else "favicon"
+
+
+def check_favicon():
+    """Every page carries its section's four hosted favicon links.
+
+    Until 2026-09-08 each page encoded its icon as a data:image/svg+xml URI.
+    Browsers render that; Google Search does not, because a data URI has no
+    stable, independently crawlable URL. The old check only asked whether a
+    <link rel="icon"> existed at all, so it would have passed a page that
+    regressed to a data URI — which is the only way this can break. Check the
+    thing that actually matters: real files, and no data URI anywhere.
+
+    The referenced files are proven to exist by check_links(), which resolves
+    root-relative hrefs against ROOT. That is the other half this replaces:
+    a data URI could never be verified against disk at all.
+    """
+    for page in sorted(ROOT.glob("**/*.html")):
+        if any(part in {".git", "drafts", ".claude"} for part in page.parts):
+            continue
+        where = page.relative_to(ROOT).as_posix()
+        if where == VERIFICATION_FILE:
+            continue  # Google's one-line verification stub, deliberately bare
+
+        text = read(page)
+        prefix = favicon_prefix(where)
+        expected = [
+            f'<link rel="icon" href="/{prefix}.ico" sizes="any">',
+            f'<link rel="icon" type="image/svg+xml" href="/{prefix}.svg">',
+            f'<link rel="icon" type="image/png" sizes="48x48" href="/{prefix}-48x48.png">',
+            f'<link rel="icon" type="image/png" sizes="192x192" href="/{prefix}-192x192.png">',
+        ]
+
+        if not re.search(r'<link rel="icon"', text):
+            errors.append(f"{where}: no favicon")
+            continue
+
+        if re.search(r'<link rel="icon"[^>]*href="data:', text):
+            errors.append(
+                f"{where}: favicon is an inline data: URI — Google Search "
+                f"cannot index it; use the hosted /{prefix}.* files"
+            )
+
+        for line in expected:
+            if line not in text:
+                errors.append(f"{where}: missing favicon link — {line}")
 
 
 def check_links():
@@ -288,6 +341,7 @@ def main() -> int:
     if "seo" in requested:
         check_seo(articles)
         check_schema(articles)
+        check_favicon()
     if "links" in requested:
         check_links()
     if "tags" in requested:

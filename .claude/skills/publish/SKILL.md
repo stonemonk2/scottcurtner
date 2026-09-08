@@ -116,10 +116,34 @@ match the surrounding cards.
 rel="canonical">` first in `<head>`; `<meta name="description">` under 160
 chars; `<title>` under 60; `og:title`, `og:description`, `og:url`, `og:type`;
 `og:image` (absolute URL, if a hero image exists in `articles/[slug]/images/`
-— `[WARN]` if not); inline SVG favicon; a footer block carrying the LinkedIn
-connect link before `</body>`; site-entity JSON-LD on the homepage only (`Person`
-plus `WebSite` — verify, don't re-add); FAQ JSON-LD if the post has a quick-answer
-dek (`[SKIP]` with reason if not). `[WARN]` anything not auto-fixable.
+— `[WARN]` if not); the hosted favicon block (below); a footer block carrying
+the LinkedIn connect link before `</body>`; site-entity JSON-LD on the homepage
+only (`Person` plus `WebSite` — verify, don't re-add); FAQ JSON-LD if the post
+has a quick-answer dek (`[SKIP]` with reason if not). `[WARN]` anything not
+auto-fixable.
+
+**Favicon — hosted files, never a data URI.** Four lines, pointing at real
+files at the site root:
+
+```html
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+```
+
+A page outside `learning/` uses the `favicon` prefix (navy `#0B1F3A` "SC"
+monogram); the 25 pages under `learning/` use `favicon-learning` (terracotta
+`#a5402d` open book, per `docs/superpowers/specs/2026-07-13-learning-favicon-design.md`).
+Inherit the block from the section you are publishing into.
+
+> Revised 2026-09-08. This step used to read "inline SVG favicon," and every
+> page encoded the icon as a `data:image/svg+xml` URI. That renders fine in a
+> browser tab and **Google Search will not display it** — a data URI has no
+> stable, independently crawlable URL, and Google requires a real square file
+> that is a multiple of 48x48. Neither design changed; only where it lives.
+> `scripts/gen_favicons.ps1` regenerates the `.ico`/`.png` files from the
+> committed `.svg` sources — run it only when a design changes.
 
 > Schema used to be the one item on this list that nothing verified, so the
 > `[DONE] SEO check` line asserted it exactly the way the old log asserted

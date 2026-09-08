@@ -123,7 +123,8 @@
 
   <h2>5 · The adversary in the window</h2>
   <p>Once your agent ingests untrusted data — webpages, retrieved documents, tool outputs — that
-  data can carry instructions: <em>"ignore previous instructions and…"</em>. This is
+  data can carry instructions: text telling the model to disregard everything above it and follow
+  the document instead. This is
   <strong>prompt injection</strong> (<a href="https://simonwillison.net/series/prompt-injection/">Willison's
   series</a> — he coined the term), and it works because the model cannot reliably distinguish
   data from directive inside one window. Your defense budget lives in the

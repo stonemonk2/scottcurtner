@@ -231,6 +231,30 @@ real tail of its output into the log.
 
 Warnings do not block publishing. Report them; let Scott decide.
 
+## Step 7b — Accessibility pre-check (WARN-level, not a gate)
+
+Added 2026-09-14. Accessibility fixes live in per-page
+`a11y-contrast-2026-09-14` blocks keyed to each page's own elements, so a
+new article copied from an existing one inherits the base colors but not
+the fixes. Serve the repo (`python -m http.server 8123 --bind 127.0.0.1`,
+background) and run site-audit's axe-core check on the new article, the
+homepage and the hub, once plain and once with `--mobile`:
+
+```bash
+~/.claude/skills/site-audit/.venv/Scripts/python.exe ~/.claude/skills/site-audit/scripts/a11y.py   http://127.0.0.1:8123/articles/[slug]/ http://127.0.0.1:8123/ http://127.0.0.1:8123/articles/   --rules color-contrast,link-in-text-block,landmark-one-main,heading-order [--mobile]
+```
+
+- 0 failing elements in both modes → `[A11Y] PASS`. Anything else →
+  `[WARN]` with each element, its colors and the required ratio. Fix before
+  Scott commits unless he accepts it: use the nearest same-hue shade that
+  passes, in the page's own `<style>`.
+- Start from passing colors. In the current template use
+  `--ink-muted: #716a65` (not `#a8a29e`, 2.2–2.5:1) and `--gold: #ad5009`
+  (not `#b45309`). Wrap the content in `<main>`, and never skip a heading
+  level.
+- If site-audit is not installed on this machine, log
+  `[SKIP] a11y — site-audit not installed here`. This never blocks a publish.
+
 ## Step 8 — Commit summary for Scott (required)
 
 **Scott commits and pushes through GitHub Desktop. Do not run `git commit`
@@ -275,6 +299,7 @@ PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
        + FAQ schema
 [DONE] robots.txt — AI search crawlers confirmed allowed
 [VERIFIED] check_site.py — PASS, 0 violations, [n] warning(s)
+[A11Y] a11y.py — mobile 0, desktop 0 (new article, homepage, hub)
 [WARN]  [anything flagged but not auto-fixed]
 
 [COMMIT] For GitHub Desktop — Scott pastes these, CC does not commit:
@@ -284,6 +309,13 @@ PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
 
   Description:
   [surfaces touched, plus anything notable about the run]
+
+[NEXT] After you push, paste this into Claude Code:
+
+  Live audit for [article title]: wait for
+  https://www.scottcurtner.com/articles/[slug]/ to deploy, then run the
+  post-publish live audit from the publish protocol. Report only what
+  differs from a clean run.
 ```
 
 Then prompt Scott:
@@ -299,8 +331,14 @@ already settled by step 7.
 
 - **Scott:** paste the `[COMMIT]` summary into GitHub Desktop, commit,
   and push to main. CC does not commit or push this repo — see Step 8.
-- Verify live: fetch the URL and sitemap.xml, confirm render + lastmod
-  (a green push can still 404 until Pages finishes deploying)
+- **Live audit (CC, after Scott pushes and pastes the `[NEXT]` prompt).**
+  Wait until the new URL returns 200 with its own canonical. Then run
+  site-audit's `crawl.py https://www.scottcurtner.com` on the whole site
+  (expect 0 broken links, no missing tags, BlogPosting count equal to the
+  article count) and `pagespeed.py [new URL]` (accessibility 100). Report
+  deltas only. The whole-site crawl doubles as the drift check, so there
+  is no separate schedule. Run `security.py` after DNS changes, and
+  otherwise quarterly.
 - Search Console: resubmit sitemap (optional nudge)
 - LinkedIn: test the URL unfurl before sharing
 - Update `blog-pipeline.md` Published Articles table

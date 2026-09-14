@@ -404,6 +404,33 @@ def check_robots():
         errors.append("robots.txt: no Sitemap line")
 
 
+def check_security_txt():
+    """security.txt exists, names a contact, and has not expired.
+
+    Added 2026-09-14. RFC 9116 makes Expires mandatory, and a file past
+    its date is invalid, so readers should ignore it. A hard-coded date in
+    a file nobody opens is a control that fails silently, so this check
+    warns 60 days out and fails once the date has passed.
+    """
+    import datetime as dt
+    path = ROOT / ".well-known/security.txt"
+    if not path.exists():
+        errors.append(".well-known/security.txt: missing")
+        return
+    text = read(path)
+    if not re.search(r"(?im)^Contact:\s*\S+", text):
+        errors.append(".well-known/security.txt: no Contact line")
+    m = re.search(r"(?im)^Expires:\s*(\d{4}-\d{2}-\d{2})", text)
+    if not m:
+        errors.append(".well-known/security.txt: no Expires line")
+        return
+    days = (dt.date.fromisoformat(m.group(1)) - dt.date.today()).days
+    if days < 0:
+        errors.append(f".well-known/security.txt: expired {m.group(1)}")
+    elif days < 60:
+        warnings.append(f".well-known/security.txt: expires in {days} days ({m.group(1)}); bump it a year")
+
+
 def main() -> int:
     requested = sys.argv[1:] or ["surfaces", "seo", "links", "tags", "robots"]
     articles = discover_articles()
@@ -426,6 +453,7 @@ def main() -> int:
         check_tags()
     if "robots" in requested:
         check_robots()
+        check_security_txt()
 
     for w in warnings:
         print(f"  WARN  {w}")

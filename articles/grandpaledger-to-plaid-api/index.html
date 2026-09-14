@@ -334,7 +334,7 @@
       margin: 0 auto;
       padding: 40px 40px 80px;
     }
-    .author-bio h4 {
+    .author-bio .author-name {
       font-family: 'Lora', serif;
       font-weight: 500;
       font-size: 1.1rem;
@@ -372,6 +372,15 @@
     }
   }
   </script>
+<style>/* a11y-contrast-2026-09-14: WCAG AA contrast + link fixes, generated from axe-core. Each value is the nearest same-hue shade that passes. */
+  section > a[target="_blank"] { background-color: #2776c5 !important; }
+  section > p:nth-child(1) { color: #3f8cd9 !important; }
+  .before.time-card:nth-child(1) > .time-label, .before.time-card:nth-child(3) > .time-label { color: #6d6661 !important; }
+  .after.time-card:nth-child(2) > .time-label, .after.time-card:nth-child(4) > .time-label { color: #716a65 !important; }
+  a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
+  a[href="/"], a[href$="articles"], .opening-photo > .photo-caption, .hero-meta > span:nth-child(2), .hero-meta > span:nth-child(3), .portrait > .photo-caption, .inline-photo:nth-child(8) > .photo-caption, .ornament:nth-child(11), .ornament:nth-child(18), .ornament:nth-child(26), .ornament:nth-child(38), .ornament:nth-child(46), .inline-photo:nth-child(52) > .photo-caption, .ornament:nth-child(55) { color: #79716c !important; }
+  .dim:nth-child(1), .dim:nth-child(5), .dim:nth-child(9), .dim:nth-child(10), .dim:nth-child(11), .dim:nth-child(13) { color: #8a847c !important; }
+</style>
 </head>
 <body>
 
@@ -379,7 +388,7 @@
   <a href="/">scottcurtner.com</a>
   <a href="/articles">All articles</a>
 </header>
-
+<main>
 <div class="memorial-banner">
   In memory of Dr. Raymond M. Curtner &mdash; Army Captain, WWII &mdash; August 6, 1909 &ndash; January 7, 2004
 </div>
@@ -591,10 +600,10 @@
 
   </div>
 </article>
-
+</main>
 <footer class="article-footer">
   <div class="author-bio">
-    <h4>Scott Curtner</h4>
+    <p class="author-name">Scott Curtner</p>
     <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
   </div>
 </footer>

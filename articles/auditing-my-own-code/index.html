@@ -220,7 +220,10 @@
       display: block;
       margin-bottom: 6px;
     }
-    .finding h4 {
+    .finding h3 {
+      letter-spacing: normal;
+      text-transform: none;
+      margin-top: 0;
       font-family: 'Lora', serif;
       font-size: 1.2rem;
       font-weight: 500;
@@ -299,7 +302,7 @@
       margin: 0 auto;
       padding: 40px 40px 80px;
     }
-    .author-bio h4 {
+    .author-bio .author-name {
       font-family: 'Lora', serif;
       font-weight: 500;
       font-size: 1.1rem;
@@ -335,6 +338,14 @@
     }
   }
   </script>
+<style>/* a11y-contrast-2026-09-14: WCAG AA contrast + link fixes, generated from axe-core. Each value is the nearest same-hue shade that passes. */
+  a[target="_blank"] { background-color: #2776c5 !important; }
+  section > p:nth-child(1) { color: #3f8cd9 !important; }
+  .finding:nth-child(11) > .finding-row:nth-child(3) > .label, .finding:nth-child(11) > .finding-row:nth-child(4) > .label, .finding:nth-child(11) > .finding-row:nth-child(5) > .label, .finding:nth-child(11) > .finding-row:nth-child(6) > .label, .finding:nth-child(17) > .finding-row:nth-child(3) > .label, .finding:nth-child(17) > .finding-row:nth-child(4) > .label, .finding:nth-child(17) > .finding-row:nth-child(5) > .label, .finding:nth-child(17) > .finding-row:nth-child(6) > .label, .finding:nth-child(23) > .finding-row:nth-child(3) > .label, .finding:nth-child(23) > .finding-row:nth-child(4) > .label, .finding:nth-child(23) > .finding-row:nth-child(5) > .label, .finding:nth-child(23) > .finding-row:nth-child(6) > .label { color: #716a65 !important; }
+  a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
+  a[href="/"], a[href$="articles"], .hero-meta > span:nth-child(2), span:nth-child(3), .lead-photo > figcaption, .ornament:nth-child(5), .figure:nth-child(9) > figcaption, .figure:nth-child(14) > figcaption, .ornament:nth-child(24), .ornament:nth-child(30) { color: #79716c !important; }
+  .tag { color: #d6630b !important; }
+</style>
 </head>
 <body>
 
@@ -342,7 +353,7 @@
   <a href="/">scottcurtner.com</a>
   <a href="/articles">All articles</a>
 </header>
-
+<main>
 <article>
   <div class="hero">
     <span class="eyebrow">July 2026 &middot; Technology Audit &middot; Bookkeeping &middot; Follow-up</span>
@@ -387,7 +398,7 @@
 
     <div class="finding">
       <span class="finding-tag">Finding 01 &middot; Dynamic-Array Spill Degradation</span>
-      <h4>The property tables froze on every sync, and the fix was &ldquo;do it by hand&rdquo;</h4>
+      <h3>The property tables froze on every sync, and the fix was &ldquo;do it by hand&rdquo;</h3>
       <div class="finding-row">
         <span class="label">Condition</span>
         <span class="val">Every entity tab&rsquo;s spill table silently froze at its current size on each sync and stopped showing new rows. Keeping them current meant re-entering the formula by hand, tab by tab.</span>
@@ -421,7 +432,7 @@
 
     <div class="finding">
       <span class="finding-tag">Finding 02 &middot; Pending/Posted Duplication</span>
-      <h4>Recurring income was being double-counted, silently, for weeks</h4>
+      <h3>Recurring income was being double-counted, silently, for weeks</h3>
       <div class="finding-row">
         <span class="label">Condition</span>
         <span class="val">Pending and posted versions of the same transaction were both booked, double-counting recurring income (rent, payroll) and some expenses. No error was ever raised.</span>
@@ -452,7 +463,7 @@
 
     <div class="finding">
       <span class="finding-tag">Finding 03 &middot; Silent Exclusion of Whole Accounts</span>
-      <h4>A real expense sat outside the books, invisible by design</h4>
+      <h3>A real expense sat outside the books, invisible by design</h3>
       <div class="finding-row">
         <span class="label">Condition</span>
         <span class="val">A real, deductible renovation expense of $8,818.75 sat entirely outside the books, paid from an account the importer was configured to skip.</span>
@@ -511,10 +522,10 @@
 
   </div>
 </article>
-
+</main>
 <footer class="article-footer">
   <div class="author-bio">
-    <h4>Scott Curtner</h4>
+    <p class="author-name">Scott Curtner</p>
     <p>Technology Auditor (CIA, CISA, ITIL-F) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
   </div>
 </footer>

@@ -210,7 +210,7 @@
       margin: 0 auto;
       padding: 40px 40px 80px;
     }
-    .author-bio h4 {
+    .author-bio .author-name {
       font-family: 'Lora', serif;
       font-weight: 500;
       font-size: 1.1rem;
@@ -246,6 +246,12 @@
     }
   }
   </script>
+<style>/* a11y-contrast-2026-09-14: WCAG AA contrast + link fixes, generated from axe-core. Each value is the nearest same-hue shade that passes. */
+  a[target="_blank"] { background-color: #2776c5 !important; }
+  section > p:nth-child(1) { color: #3f8cd9 !important; }
+  a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
+  a[href="/"], a[href$="articles"], span:nth-child(2), span:nth-child(3), .lead-photo > figcaption, .figure > figcaption, .ornament { color: #79716c !important; }
+</style>
 </head>
 <body>
 
@@ -253,7 +259,7 @@
   <a href="/">scottcurtner.com</a>
   <a href="/articles">All articles</a>
 </header>
-
+<main>
 <article>
   <div class="hero">
     <span class="eyebrow">September 2026 &middot; Real Estate &middot; Bookkeeping &middot; Follow-up</span>
@@ -380,10 +386,10 @@
 
   </div>
 </article>
-
+</main>
 <footer class="article-footer">
   <div class="author-bio">
-    <h4>Scott Curtner</h4>
+    <p class="author-name">Scott Curtner</p>
     <p>Technology Auditor (CIA, CISA, AAIA, ITIL) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
   </div>
 </footer>

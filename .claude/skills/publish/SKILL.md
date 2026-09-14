@@ -191,6 +191,11 @@ and every group still disallows the verification file. This file is
 security-adjacent: if a fix is needed, **draft it and get Scott's approval
 before writing** — do not edit silently.
 
+The `robots` group also verifies `.well-known/security.txt` (added
+2026-09-14): it must exist, carry a `Contact:` line (Scott's LinkedIn), and
+have an `Expires:` date that hasn't passed. The checker warns 60 days out;
+when it does, bump `Expires` a year.
+
 ## Execution hazard — the guard that always passes
 
 If you script the surface edits with a "skip if already present" guard,

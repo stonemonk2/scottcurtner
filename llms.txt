@@ -44,6 +44,29 @@ and writing.
 ## Learning
 
 - [Agentic Operations](https://www.scottcurtner.com/learning/agentic-operations/): A hands-on, four-level course on building AI agents — from "the context window is the model's entire world" to owning SLOs for a live agent in production. Written and published as I go.
+  - [Lesson 0001 — Not in Context = Doesn't Exist](https://www.scottcurtner.com/learning/agentic-operations/lessons/0001-not-in-context-doesnt-exist.html): The one mental model everything else in this field hangs off.
+  - [Lesson 0002 — Match the Pattern to the Problem](https://www.scottcurtner.com/learning/agentic-operations/lessons/0002-match-the-pattern-to-the-problem.html): Level 2 in one move: every design choice is a justified answer to "what goes in the window, and why?"
+  - [Lesson 0003 — Traces Before Prompts](https://www.scottcurtner.com/learning/agentic-operations/lessons/0003-traces-before-prompts.html): Level 3 in one move: when an agent fails, you read the trajectory — and every architecture choice is a context decision at system scale.
+  - [Lesson 0004 — Own the Feedback Loop](https://www.scottcurtner.com/learning/agentic-operations/lessons/0004-own-the-feedback-loop.html): Level 4 in one move: reliability is engineering, the eval suite is the ground truth, and ownership means the loop runs because you run it.
+  - [Lesson 0005 — Tokens & Cost](https://www.scottcurtner.com/learning/agentic-operations/lessons/0005-tokens-and-cost.html): The unit everything is denominated in: watch your words become tokens, and read real dollars off a real API response.
+  - [Lesson 0006 — Anatomy of a Tool Call](https://www.scottcurtner.com/learning/agentic-operations/lessons/0006-anatomy-of-a-tool-call.html): One round-trip, by hand: the model proposes, you execute — and this time, you are the tool.
+  - [Lesson 0007 — Build the Single-Tool Agent](https://www.scottcurtner.com/learning/agentic-operations/lessons/0007-build-the-single-tool-agent.html): The second half of the Level 1 gate: ship a reliable agent — and read what the model actually sees.
+  - [Lesson 0008 — Break It On Purpose](https://www.scottcurtner.com/learning/agentic-operations/lessons/0008-break-it-on-purpose.html): You don't own a system until you've watched it fail. Two labs, then the Level 1 gate.
+  - [Lesson 0009 — Structured Prompting & the Injection Lab](https://www.scottcurtner.com/learning/agentic-operations/lessons/0009-structured-prompting-and-the-injection-lab.html): First you learn to spend the part of the context you control; then you attack it.
+  - [Lesson 0010 — The ReAct Multi-Hop Build](https://www.scottcurtner.com/learning/agentic-operations/lessons/0010-react-multi-hop-build.html): Thought → action → observation, looped — the workhorse pattern, built and logged by hand.
+  - [Lesson 0011 — RAG Build & Break](https://www.scottcurtner.com/learning/agentic-operations/lessons/0011-rag-build-and-break.html): Retrieval quality caps answer quality — so this lesson makes you watch it cap.
+  - [Lesson 0012 — Episodic Memory](https://www.scottcurtner.com/learning/agentic-operations/lessons/0012-episodic-memory.html): "The agent remembers" is always code choosing what to reload. Here you write that code.
+  - [Lesson 0013 — The Orchestrator Bake-Off](https://www.scottcurtner.com/learning/agentic-operations/lessons/0013-orchestrator-bakeoff.html): Prove multi-agent beats one agent on a decomposable task — with traces — or admit it doesn't.
+  - [Lesson 0014 — Tracing & the Planted Regression](https://www.scottcurtner.com/learning/agentic-operations/lessons/0014-tracing-and-planted-regression.html): You debug agents by reading traces. So first you build the trace — then an eval that catches a bug you hid.
+  - [Lesson 0015 — The Critic/Verifier Step](https://www.scottcurtner.com/learning/agentic-operations/lessons/0015-critic-verifier-step.html): Agents fail silently and confidently. A critic converts silent failures into caught ones — and you measure by how many.
+  - [Lesson 0016 — The SLO Dashboard](https://www.scottcurtner.com/learning/agentic-operations/lessons/0016-slo-dashboard.html): An agent in production carries a pager. This lesson gives yours its four numbers.
+  - [Lesson 0017 — Guardrails & the HITL Checkpoint](https://www.scottcurtner.com/learning/agentic-operations/lessons/0017-guardrails-and-hitl.html): Least privilege at the tool boundary; a human gate placed by risk, its throughput cost measured.
+  - [Lesson 0018 — The Full Improvement Loop](https://www.scottcurtner.com/learning/agentic-operations/lessons/0018-the-improvement-loop.html): Ownership means owning the loop. Run it once, end to end — that's the last thing to prove.
+  - [The Agent Loop & Tool-Call Round-Trip — Reference](https://www.scottcurtner.com/learning/agentic-operations/reference/agent-loop-and-tool-call.html): The skeleton every tool-using agent shares: the agent loop and one tool-call round-trip, distilled from the Lesson 0007 build.
+  - [Level 1 Core Vocabulary](https://www.scottcurtner.com/learning/agentic-operations/reference/level-1-vocabulary.html): The seven terms and four intuitions of Level 1 in Agentic Operations, a hands-on course in building AI agents.
+  - [Level 2 Core Vocabulary](https://www.scottcurtner.com/learning/agentic-operations/reference/level-2-vocabulary.html): The four vocabulary clusters of Level 2 in Agentic Operations, a hands-on course in building AI agents.
+  - [Level 3 Core Vocabulary](https://www.scottcurtner.com/learning/agentic-operations/reference/level-3-vocabulary.html): The four vocabulary clusters of Level 3 in Agentic Operations, a hands-on course in building AI agents.
+  - [Level 4 Core Vocabulary](https://www.scottcurtner.com/learning/agentic-operations/reference/level-4-vocabulary.html): The four vocabulary clusters of Level 4, the ownership stage of Agentic Operations, a hands-on course in building AI agents.
 
 ## Optional
 

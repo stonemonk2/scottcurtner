@@ -115,12 +115,31 @@ match the surrounding cards.
 **5. New page SEO check** — confirm present, add if missing: `<link
 rel="canonical">` first in `<head>`; `<meta name="description">` under 160
 chars; `<title>` under 60; `og:title`, `og:description`, `og:url`, `og:type`;
-`og:image` (absolute URL, if a hero image exists in `articles/[slug]/images/`
-— `[WARN]` if not); the hosted favicon block (below); a footer block carrying
-the LinkedIn connect link before `</body>`; site-entity JSON-LD on the homepage
-only (`Person` plus `WebSite` — verify, don't re-add); FAQ JSON-LD if the post
+`og:image` — an **absolute** `https://www.scottcurtner.com/...` URL to a file
+in the repo: the lead image in `articles/[slug]/images/`, or `/og/site-card.png`
+with a `[WARN]` if the post has none; the hosted favicon block (below); a footer
+block carrying the LinkedIn connect link before `</body>`; site-entity JSON-LD
+on the homepage only (`Person` plus `WebSite` — verify, don't re-add);
+**BlogPosting JSON-LD** on the article: `headline` (og:title minus the
+` | Scott Curtner` suffix), `description`, `url` and `mainEntityOfPage` (the
+canonical), `image` (the og:image), `datePublished` (YYYY-MM-DD), and `author`
+and `publisher` both `{"@type": "Person", "name": "Scott Curtner", "url":
+"https://www.scottcurtner.com/"}`, with no credentials; FAQ JSON-LD if the post
 has a quick-answer dek (`[SKIP]` with reason if not). `[WARN]` anything not
 auto-fixable.
+
+> Revised 2026-09-14. A live-site audit found shadow-ai's og:image was a
+> relative path (unfurlers ignore it) and that no article carried Article
+> schema. `check_site.py` now fails both: a relative or missing-file
+> og:image, and an article with no BlogPosting node or no ISO
+> `datePublished`.
+
+**Learning pages** (`learning/**`) are not articles and get no homepage or
+hub card. A new lesson or reference page still needs `sitemap.xml` and
+`llms.txt` entries (nested under its course in `## Learning`), plus canonical,
+meta description, the og tags, and `og:image` set to `/og/learning-card.png`,
+placed after the favicon block. `check_site.py` enforces this as of
+2026-09-14.
 
 **Favicon — hosted files, never a data URI.** Four lines, pointing at real
 files at the site root:
@@ -246,8 +265,9 @@ PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
 [DONE] llms.txt — added entry under ## Writing
 [DONE] index.html — card added at position 1
 [DONE] articles/index.html — hub card added at position 1
-[DONE] SEO check — canonical, OG tags, favicon, meta description,
-       connect footer, site-entity + FAQ schema
+[DONE] SEO check — canonical, OG tags (absolute og:image), favicon,
+       meta description, connect footer, site-entity, BlogPosting
+       + FAQ schema
 [DONE] robots.txt — AI search crawlers confirmed allowed
 [VERIFIED] check_site.py — PASS, 0 violations, [n] warning(s)
 [WARN]  [anything flagged but not auto-fixed]

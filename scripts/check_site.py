@@ -3,7 +3,9 @@
 The filesystem is the source of truth: every article page that exists on
 disk must appear on every metadata surface (sitemap.xml, llms.txt, the
 homepage Writing section, the /articles/ hub) and carry the required SEO
-tags. Turns the publish log's [DONE] lines from claims into checked facts.
+tags. Learning pages (learning/**) must carry the same head tags and appear
+in sitemap.xml and llms.txt. Turns the publish log's [DONE] lines from claims
+into checked facts.
 
 Usage:  python scripts/check_site.py [check ...]
 Checks: surfaces seo links tags robots   (default: all)
@@ -56,6 +58,69 @@ def discover_articles() -> list[tuple[pathlib.Path, str]]:
     for page in sorted(ROOT.glob("article-*.html")):
         found.append((page, f"/{page.name}"))
     return found
+
+
+def discover_learning() -> list[tuple[pathlib.Path, str]]:
+    """Every public learning page (hub, course, lessons, reference), as (file, URL)."""
+    found = []
+    for page in sorted(ROOT.glob("learning/**/*.html")):
+        rel = page.relative_to(ROOT).as_posix()
+        url = f"/{rel[:-len('index.html')]}" if page.name == "index.html" else f"/{rel}"
+        found.append((page, url))
+    return found
+
+
+def check_learning(learning):
+    """Learning pages carry the same head tags as articles and appear in sitemap + llms.txt.
+
+    Added 2026-09-14. The learning section's design spec (2026-07-03) required
+    sitemap and llms.txt entries for every lesson and reference page, and the
+    site's SEO conventions on its pages. Nothing verified either, because this
+    checker only discovered articles: 23 of 25 learning pages shipped with no
+    description, canonical or OG tags, and 22 were missing from llms.txt. A
+    live-site audit found it, not this script. Homepage and hub cards are not
+    required here; those surfaces list writing, not lessons.
+    """
+    sitemap = read(ROOT / "sitemap.xml")
+    llms = read(ROOT / "llms.txt")
+    for page, url in learning:
+        text = read(page)
+        where = page.relative_to(ROOT).as_posix()
+        for name, surface in (("sitemap.xml", sitemap), ("llms.txt", llms)):
+            if BASE + url not in surface:
+                errors.append(f"{name}: missing entry for {url}")
+        canonical = re.search(r'<link rel="canonical" href="([^"]+)"', text)
+        if not canonical:
+            errors.append(f"{where}: no <link rel=\"canonical\">")
+        elif canonical.group(1).rstrip("/") != (BASE + url).rstrip("/"):
+            errors.append(f"{where}: canonical is {canonical.group(1)}, expected {BASE + url}")
+        desc = re.search(r'<meta name="description" content="([^"]*)"', text)
+        if not desc:
+            errors.append(f"{where}: no <meta name=\"description\">")
+        elif len(desc.group(1)) > 160:
+            warnings.append(f"{where}: meta description is {len(desc.group(1))} chars (limit 160)")
+        for prop in ("og:title", "og:description", "og:url", "og:type", "og:image"):
+            if f'property="{prop}"' not in text:
+                errors.append(f"{where}: missing {prop}")
+
+
+def check_og_images(pages):
+    """og:image must be an absolute URL to a file that exists in this repo.
+
+    Added 2026-09-14. shadow-ai shipped `og:image="images/hero.jpeg"`: a
+    relative URL, which LinkedIn and every other unfurler ignore, so the
+    post shared with no picture. The old check only asked whether the tag
+    existed.
+    """
+    for page in pages:
+        text = read(page)
+        where = page.relative_to(ROOT).as_posix()
+        for img in re.findall(r'<meta property="og:image" content="([^"]+)"', text):
+            if not img.startswith(BASE + "/"):
+                errors.append(f"{where}: og:image is not an absolute {BASE} URL: {img}")
+                continue
+            if not (ROOT / unquote(urlparse(img).path).lstrip("/")).exists():
+                errors.append(f"{where}: og:image points at missing file {img}")
 
 
 def check_surfaces(articles):
@@ -175,6 +240,14 @@ def check_schema(articles):
         text = read(page)
         where = page.relative_to(ROOT).as_posix()
         nodes = json_ld_nodes(text, where)
+
+        # Added 2026-09-14: every article declares itself as one, with a date.
+        # Search engines and AI answer engines read author and date from here.
+        posts = [n for n in nodes if n.get("@type") in ("BlogPosting", "Article", "NewsArticle")]
+        if not posts:
+            errors.append(f"{where}: no BlogPosting/Article JSON-LD")
+        elif not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(posts[0].get("datePublished", ""))):
+            errors.append(f"{where}: BlogPosting has no datePublished (YYYY-MM-DD)")
 
         dek = re.search(
             r'<div class="quick-answer">\s*<h2>(.*?)</h2>', text, re.S
@@ -334,13 +407,18 @@ def check_robots():
 def main() -> int:
     requested = sys.argv[1:] or ["surfaces", "seo", "links", "tags", "robots"]
     articles = discover_articles()
-    print(f"check_site: {len(articles)} article pages discovered under {ROOT}\n")
+    learning = discover_learning()
+    print(f"check_site: {len(articles)} article pages and {len(learning)} learning pages "
+          f"discovered under {ROOT}\n")
 
     if "surfaces" in requested:
         check_surfaces(articles)
     if "seo" in requested:
         check_seo(articles)
         check_schema(articles)
+        check_learning(learning)
+        check_og_images([ROOT / "index.html", ROOT / "articles/index.html"]
+                        + [p for p, _ in articles] + [p for p, _ in learning])
         check_favicon()
     if "links" in requested:
         check_links()

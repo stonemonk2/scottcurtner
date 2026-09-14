@@ -131,6 +131,15 @@
   .article-meta > span:nth-child(1), .article-meta > span:nth-child(3), a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
   p:nth-child(28) > a[href$="www.sbefkids.org"][target="_blank"] { text-decoration: underline !important; }
 </style>
+<style>/* mobile-nav-2026-09-14: on phones the nav links ran past the navy bar, cut off and unreadable.
+   Keep them inside the bar as a sideways-scrolling strip; bar height unchanged. */
+  @media (max-width: 600px) {
+    nav > a:first-child { flex-shrink: 0; margin-right: 16px; }
+    .nav-links { min-width: 0; overflow-x: auto; scrollbar-width: none; gap: 16px; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a { white-space: nowrap; }
+  }
+</style>
 </head>
 <body>
 

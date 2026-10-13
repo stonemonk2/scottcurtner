@@ -357,6 +357,69 @@ def check_links():
                 errors.append(f"{where}: broken link {url}")
 
 
+def check_orphans():
+    """Every asset under articles/ is referenced by some page, sitemap.xml or llms.txt.
+
+    Added 2026-10-12. The Pages workflow publishes the whole articles/ tree, so
+    any file left there is live at a public URL whether a page uses it or not.
+    Twelve unused family photos sat there that way until the deploy moved to
+    GitHub Actions. An orphan is a file that would ship without anyone choosing
+    to ship it, so it fails, not warns: link it from a page or delete it.
+
+    Candidates come from git (tracked plus untracked, minus ignored), because
+    that is what a commit can carry; ignored image masters never ship.
+    """
+    import subprocess
+    listed = subprocess.run(
+        ["git", "ls-files", "-co", "--exclude-standard", "--", "articles"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    ).stdout.splitlines()
+    assets = {
+        rel for rel in listed
+        if not rel.endswith(".html")
+        and not any(part.startswith(".") for part in rel.split("/"))
+        and (ROOT / rel).exists()
+    }
+
+    referenced: set[str] = set()
+
+    def add(url: str, base: pathlib.Path):
+        url = url.strip()
+        if url.startswith(BASE):
+            url = url[len(BASE):] or "/"
+        elif url.startswith(("http://", "https://", "mailto:", "#", "data:")):
+            return
+        path_part = unquote(urlparse(url).path)
+        if not path_part:
+            return
+        target = ROOT / path_part.lstrip("/") if path_part.startswith("/") else base / path_part
+        try:
+            referenced.add(target.resolve().relative_to(ROOT).as_posix())
+        except ValueError:
+            pass  # resolves outside the repo
+
+    for page in sorted(ROOT.glob("**/*.html")):
+        if any(part in {".git", "drafts", ".claude"} for part in page.parts):
+            continue
+        text = read(page)
+        for m in re.finditer(r'(?:href|src)="([^"]+)"', text):
+            add(m.group(1), page.parent)
+        for m in re.finditer(rf'content="({re.escape(BASE)}/[^"]*)"', text):
+            add(m.group(1), page.parent)  # og:image, twitter:image
+        for m in re.finditer(r'srcset="([^"]+)"', text):
+            for candidate in m.group(1).split(","):
+                if candidate.strip():
+                    add(candidate.split()[0], page.parent)
+        for m in re.finditer(r'url\(\s*[\'"]?([^\'")]+)', text):
+            add(m.group(1), page.parent)
+    for name in ("sitemap.xml", "llms.txt"):
+        for m in re.finditer(rf"{re.escape(BASE)}[^\s<>)\]\"']*", read(ROOT / name)):
+            add(m.group(0), ROOT)
+
+    for rel in sorted(assets - referenced):
+        errors.append(f"{rel}: orphan asset, no page, sitemap.xml or llms.txt references it")
+
+
 def check_tags():
     """Malformed closing anchors and leftover milestone terms."""
     for page in sorted(ROOT.glob("**/*.html")):
@@ -449,6 +512,7 @@ def main() -> int:
         check_favicon()
     if "links" in requested:
         check_links()
+        check_orphans()
     if "tags" in requested:
         check_tags()
     if "robots" in requested:

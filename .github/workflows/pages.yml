@@ -1,0 +1,83 @@
+# Deploys www.scottcurtner.com from an explicit allowlist, so internal files
+# (CLAUDE.md, docs/, scripts/, .claude/, course notes and exercises) stay off
+# the site. Folder rules mean a new article under articles/ or a new lesson
+# under learning/ publishes without editing this file.
+name: Deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Stage public files
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=_site
+          mkdir -p "$out"
+
+          # Root: pages, favicons, headshot, infrastructure files.
+          cp ./*.html "$out"/
+          cp favicon* src.png CNAME robots.txt sitemap.xml llms.txt .nojekyll "$out"/
+          cp -r .well-known og "$out"/
+
+          # articles/: the whole tree, minus dotfiles.
+          find articles -type f -not -path '*/.*' -exec cp --parents {} "$out"/ \;
+
+          # learning/: web file types only, minus dotfiles and the course's
+          # exercises/ and learning-records/ folders.
+          find learning -type f \
+            -not -path '*/.*' \
+            -not -path '*/exercises/*' \
+            -not -path '*/learning-records/*' \
+            \( -iname '*.html' -o -iname '*.css' -o -iname '*.js' \
+               -o -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \
+               -o -iname '*.gif' -o -iname '*.webp' -o -iname '*.avif' \
+               -o -iname '*.svg' -o -iname '*.ico' -o -iname '*.pdf' \
+               -o -iname '*.webmanifest' \) \
+            -exec cp --parents {} "$out"/ \;
+
+      - name: Refuse internal files
+        shell: bash
+        run: |
+          set -euo pipefail
+          leaked=$(find _site -type f \( -iname '*.md' -o -iname '*.py' -o -iname '.env*' \
+            -o -iname '.gitignore' -o -path '*/exercises/*' -o -path '*/learning-records/*' \) )
+          if [ -n "$leaked" ]; then
+            echo "Internal files reached the artifact:"; echo "$leaked"; exit 1
+          fi
+          find _site -type f | sort
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          # .well-known/security.txt is a dotfile path; the allowlist above
+          # already decides which hidden files ship.
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -203,8 +203,7 @@ If you script the surface edits with a "skip if already present" guard,
 block you are inserting.**
 
 ```python
-marker = new.strip().split('
-')[0]   # WRONG — '<url>' / '## Writing'
+marker = new.strip().split('\n')[0]   # WRONG — '<url>' / '## Writing'
 marker = url                          # RIGHT — unique to this article
 ```
 
@@ -222,7 +221,10 @@ python scripts/check_site.py
 
 Stdlib only, no venv, runs from any directory. It reads the filesystem as the
 source of truth and checks every surface, every SEO tag, every link, and
-robots.txt.
+robots.txt. Its `links` group also fails on any asset under `articles/`
+that no page, `sitemap.xml` or `llms.txt` references: the whole
+`articles/` tree is published, so an unused file there is still live.
+Link it from a page or delete it.
 
 **A step is not done until the checker says so.** If it exits non-zero, fix
 what it reports and run it again. Never write `[DONE]` against a step the
@@ -230,6 +232,13 @@ checker did not confirm — that is the failure mode this replaces. Paste the
 real tail of its output into the log.
 
 Warnings do not block publishing. Report them; let Scott decide.
+
+> **The site publishes from an allowlist.** `.github/workflows/pages.yml`
+> ships root `*.html` and named infrastructure files, all of `articles/`
+> minus dotfiles, and only web file types under `learning/` (excluding
+> `exercises/` and `learning-records/`). A new top-level file outside the
+> root rule, or a new file type under `learning/`, will not go live until
+> `pages.yml` is updated, even when `check_site.py` passes.
 
 ## Step 7b — Accessibility pre-check (WARN-level, not a gate)
 
@@ -312,8 +321,9 @@ PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
 
 [NEXT] After you push, paste this into Claude Code:
 
-  Live audit for [article title]: wait for
-  https://www.scottcurtner.com/articles/[slug]/ to deploy, then run the
+  Live audit for [article title]: confirm the latest "Deploy Pages" run
+  succeeded (gh run list --workflow pages.yml -L 1), then confirm
+  https://www.scottcurtner.com/articles/[slug]/ returns 200, then run the
   post-publish live audit from the publish protocol. Report only what
   differs from a clean run.
 ```
@@ -332,7 +342,9 @@ already settled by step 7.
 - **Scott:** paste the `[COMMIT]` summary into GitHub Desktop, commit,
   and push to main. CC does not commit or push this repo — see Step 8.
 - **Live audit (CC, after Scott pushes and pastes the `[NEXT]` prompt).**
-  Wait until the new URL returns 200 with its own canonical. Then run
+  First confirm the latest "Deploy Pages" run succeeded with
+  `gh run list --workflow pages.yml -L 1`. Then check that the new URL
+  returns 200 with its own canonical. Then run
   site-audit's `crawl.py https://www.scottcurtner.com` on the whole site
   (expect 0 broken links, no missing tags, BlogPosting count equal to the
   article count) and `pagespeed.py [new URL]` (accessibility 100). Report

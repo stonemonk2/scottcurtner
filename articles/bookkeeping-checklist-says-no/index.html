@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/bookkeeping-checklist-says-no/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookkeeping Checklist Learned to Say No | Scott Curtner</title>
+  <meta name="description" content="A checklist runs on attention. I rebuilt my bookkeeping session as buttons that check before they act, and the first time one refused me, it was right.">
+  <meta property="og:title" content="My Bookkeeping Checklist Learned to Say No | Scott Curtner">
+  <meta property="og:description" content="A checklist runs on attention. I rebuilt my bookkeeping session as buttons that check before they act, and the first time one refused me, it was right.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/bookkeeping-checklist-says-no/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/bookkeeping-checklist-says-no/images/hero.jpg">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #a8a29e;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #b45309;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .deck {
+      font-family: 'Lora', serif;
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: var(--ink-light);
+      font-style: italic;
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    h3 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 2.2em 0 0.6em;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    /* ── Ornament divider ────────────────────────────────────────────────────── */
+    .ornament {
+      text-align: center;
+      color: var(--ink-muted);
+      letter-spacing: 0.5em;
+      margin: 2.5em 0;
+      font-size: 0.8rem;
+    }
+
+    /* ── Pull quote ──────────────────────────────────────────────────────────── */
+    .pull {
+      border-left: 3px solid var(--gold);
+      margin: 2.2em 0;
+      padding: 4px 0 4px 28px;
+    }
+    .pull p {
+      font-family: 'Lora', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--ink-light);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Standard callout ────────────────────────────────────────────────────── */
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-size: 0.95rem;
+      color: var(--ink-light);
+    }
+    .callout strong { color: var(--ink); }
+
+    /* ── Inline code ─────────────────────────────────────────────────────────── */
+    code {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.83em;
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--accent-warm);
+    }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio .author-name {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+    }
+    .quick-answer {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--gold);
+      padding: 22px 26px;
+      margin-bottom: 32px;
+    }
+    .quick-answer h2 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 10px;
+      line-height: 1.5;
+    }
+    .quick-answer p {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      line-height: 1.72;
+      color: var(--ink-light);
+      margin: 0;
+    }
+    .figure.narrow img { max-width: 440px; margin: 0 auto; }
+    .figure.narrow figcaption { max-width: 440px; margin-left: auto; margin-right: auto; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "My Bookkeeping Checklist Learned to Say No",
+    "description": "A checklist runs on attention. I rebuilt my bookkeeping session as buttons that check before they act, and the first time one refused me, it was right.",
+    "url": "https://www.scottcurtner.com/articles/bookkeeping-checklist-says-no/",
+    "mainEntityOfPage": "https://www.scottcurtner.com/articles/bookkeeping-checklist-says-no/",
+    "image": "https://www.scottcurtner.com/articles/bookkeeping-checklist-says-no/images/hero.jpg",
+    "datePublished": "2026-11-01",
+    "author": {
+      "@type": "Person",
+      "name": "Scott Curtner",
+      "url": "https://www.scottcurtner.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Scott Curtner",
+      "url": "https://www.scottcurtner.com/"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What changes when a bookkeeping checklist becomes buttons that can refuse?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The steps stop depending on my attention that day. A checklist works only if I read it and follow it in order. Buttons that check the workbook, the bank feed and the test suite before they act turn the same steps into controls, and the first time one of them refused me, it was right."
+        }
+      }
+    ]
+  }
+  </script>
+<style>/* a11y contrast: same overrides as the series' earlier pages (axe-core, 2026-09-14). */
+  a[href*="linkedin.com/in/"][target="_blank"] { background-color: #2776c5 !important; }
+  section > p:nth-child(1) { color: #3f8cd9 !important; }
+  a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
+  a[href="/"], a[href$="articles"], span:nth-child(2), span:nth-child(3), .lead-photo > figcaption, .figure > figcaption { color: #79716c !important; }
+  .quick-answer > h2 { color: #ad5009 !important; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+<main>
+<article>
+  <div class="hero">
+    <span class="eyebrow">November 2026 &middot; Real Estate &middot; Bookkeeping &middot; Follow-up</span>
+    <h1>My Bookkeeping Checklist Learned to Say No</h1>
+
+    <div class="quick-answer">
+      <h2>What changes when a bookkeeping checklist becomes buttons that can refuse?</h2>
+      <p><strong>The steps stop depending on my attention that day.</strong> A checklist works only if I read it and follow it in order. Buttons that check the workbook, the bank feed and the test suite before they act turn the same steps into controls, and the first time one of them refused me, it was right.</p>
+    </div>
+
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>November 1, 2026</span>
+      <span>13 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero.jpg" alt="A home office desk in afternoon light, a spiral notebook with a wooden ruler and pen beside a monitor showing one dialog that reads Not Yet, with a shelf of old spiral notebooks behind">
+    <figcaption class="photo-caption">A button that checks before it acts can also decline to.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <p>Behind me right now is a literal shelf of old notebooks, time captured on many spiral notebook pages in permanent black ink. Each page is a month of my rental bookkeeping in a Bic ballpoint pen: columns I drew with a ruler, handwritten totals, side notes about things to remember next year, and numbers scratched out and written again when I got one wrong. Every month began with a blank page and a wooden ruler, drawing columns by hand like a surveyor marking boundaries. There was a rhythm to writing the same property locations, the same recurring utility names, and the same categories of expense year after year. It was a meditative drudgery that transformed cold transactions into a physical history.</p>
+
+    <p>My 2026 notebook is still on my desk in its usual spot. These days I mostly don&rsquo;t touch it. Since I moved my bookkeeping onto the Plaid API and an Excel workbook (<a href="/articles/grandpaledger-to-plaid-api/">the story of that move is here</a>), the workbook keeps a running balance every time I sync, and a session takes maybe a fifth of the time the notebook did. Now the bottleneck is me looking over data and thinking about what I might do better.</p>
+
+    <p>This post is about the last piece of that system, the part that runs a session, and what happened when I replaced its checklist with buttons.</p>
+
+    <h2>A checklist I read every few weeks</h2>
+
+    <p>Since May, a session has started from a small desktop launcher. It had one big button that pulled ninety days of transactions from my banks, and under it a checklist. It started with seven items. By late August it had ten:</p>
+
+    <p>Formula check clean. Run the mortgage refresh. Did the escrow rows land? Review the rows that my code colored red for me. Copy columns A through L. Paste values into the ledger in the first empty row at the bottom. Spot-check the property tabs. Check the rent tracker. Any manual transactions? Save and close Excel.</p>
+
+    <p>I don&rsquo;t run sessions on a schedule. I run one at my convenience, which can be every weekend, every few weeks, or six weeks apart. So every session meant reading the checklist again from the top and doing each step by hand, in order, with my judgment and taste as the only thing checking any of it.</p>
+
+    <p>One of those ten lines had been wrong since the day I wrote it: the ledger stops at column K, not L. Claude caught it a few nights ago (October 27), reading my checklist against the actual workbook while we planned upgrades for my new launcher. In practice it never mattered; it was an inconsequential part of my books, but it was still wrong for five months, and nothing ever told me, because nothing downstream depended on column L.</p>
+
+    <h2>Nine steps, sorted by who can check them</h2>
+
+    <p>That evening I wrote out the launcher I wanted, as one numbered list of nine steps in the order a session happens. Every step that could be automated became a button, and every step that needed my human judgment became a checkbox. Every step was labelled &ldquo;Excel: close first&rdquo; or &ldquo;Excel: leave open,&rdquo; and I asked for one rule in particular: the launcher checks before running rather than trusting me.</p>
+
+    <p>Where the line between buttons and checkboxes fell came from two places. One was the last few months of using earlier versions of the launcher with my AI partner, learning which steps were mechanical and which needed my eyes. The other was testing. Claude had me break the spreadsheet on purpose to find the failure points: leave the workbook open when a step needed it closed, leave a cell selected and half typed, do the unexpected thing at the wrong moment. Then we worked through each of those cases until the launcher would stop, say what it found, and hand the decision back to me instead of failing. My second message to the planning session added one of those rules to the plan: if a cell is in edit mode, the button says &ldquo;finish editing the cell in Excel, then click again&rdquo; instead of throwing an error I would have to figure out.</p>
+
+    <p>What came out of that is a launcher with six buttons and three checkboxes. Syncing the bank feed (with the formula check built in), adding the reviewed rows to the ledger, refreshing balances and mortgages, handing Claude the rules-review prompt, accepting formula changes I wanted, and saving to GitHub became buttons, because a machine can check whether each one worked. Reviewing the red rows, entering anything the bank feed can&rsquo;t see, and approving the categorization rules Claude proposes, all these manual steps stayed checkboxes. Those need judgment, and the launcher can&rsquo;t check judgment.</p>
+
+    <figure class="figure narrow">
+      <img src="images/launcher.jpg" alt="The session launcher window: numbered steps 1 through 7 and 9, blue buttons for the automated steps and checkboxes for the manual ones, each button labelled Excel: leave open, with the connected-accounts line blurred">
+      <figcaption class="photo-caption">The launcher today. Step 8, accepting formula changes, only appears when the formula check finds one, so on a clean day the list runs 1 through 7, then 9. It tracks 436 formulas now; the workbook has grown since the plan counted 329. Account details blurred.</figcaption>
+    </figure>
+
+    <h2>Fifteen problems found before a line of code</h2>
+
+    <p>I didn&rsquo;t let Claude start building. We planned first, using the brainstorm and plan skills from Every&rsquo;s <a href="https://github.com/EveryInc/compound-engineering-plugin" target="_blank" rel="noopener">Compound Engineering plugin</a> for Claude Code, maintained by Kieran Klaassen and Trevin Chow. The habit I took from it is the useful part. Write the plan, then have reviewers who didn&rsquo;t write it attack it before any code exists.</p>
+
+    <p>The plan came out as eleven units of work. Three separate reviewer agents read it looking for holes, and they found fifteen. All fifteen were fixed in the plan that same evening.</p>
+
+    <p>Two of them would have hurt later. The first was in a feature I&rsquo;d asked for: a button to accept formula changes I make on purpose. As planned, Accept would have re-captured the whole record of tracked formulas. That sounds harmless until you picture a bad day. If some other formula had been lost at the same moment, accepting my change would have accepted the loss too, and the check that exists to catch lost formulas would have stopped watching that cell.</p>
+
+    <p>The second was subtler. When rows get inserted above a formula, Excel moves it down, and a checker that compares cell by cell sees the old cell empty and reports the formula as lost. The plan included a detector for formulas that had moved rather than vanished. The reviewers checked it against my real workbook and found that 74 of my 329 tracked formulas had a look-alike within twenty rows below them. A detector that matched on appearance would have reassured me that a lost formula had &ldquo;just moved.&rdquo;</p>
+
+    <p>Now Accept touches only the cells I tick. The moved-formula detector suggests a match, shows me both versions, and leaves the call to me.</p>
+
+    <p>A review of a plan is cheaper than a review of code you already built.</p>
+
+    <h2>The overnight run I stayed up for</h2>
+
+    <p>Most of the units ran during the day, one Claude Code session each, and got pushed to GitHub once they passed.</p>
+
+    <p>At 10:05 that night I had Claude draft a brief for a long unattended run so I could go to bed before work the next day. It started &ldquo;Unattended overnight run: I am asleep and cannot answer,&rdquo; and it set hard limits: don&rsquo;t start Excel, don&rsquo;t touch the real workbook, don&rsquo;t run any real scripts, don&rsquo;t push, and record the workbook&rsquo;s SHA-256 fingerprint at the start and at the end so I could see it had never been touched.</p>
+
+    <p>Claude Opus 5.5 finished two units in sixteen minutes. Its tests built the real launcher window, hidden, with every outside call faked, and they caught two bugs in its own code before it committed: a layout crash and a startup race. The fingerprint matched. I hadn&rsquo;t made it to bed yet, and I wanted to see the next step, so I pushed out my bedtime. The work itself I pushed to my GitHub repository the next morning.</p>
+
+    <p>At 10:27 I gave Claude a round of follow-up fixes. Those were committed four minutes later.</p>
+
+    <p>Building things this way is so much fun that it&rsquo;s hard to go to sleep. I always want to see the next level of what I can do with my AI mental mechsuit.</p>
+
+    <h2>One crash, and a question asked to nobody</h2>
+
+    <p>The unit that writes to my ledger through Excel didn&rsquo;t go as smoothly. At 8:29 earlier that evening, Excel started crashing every time the build tried to refresh a spill formula.</p>
+
+    <p>Claude Opus 5.5&rsquo;s recommendation was to skip that step for now and put it behind a flag to deal with later. I stopped it there and asked for a diagnosis first. Claude said it could be my machine&rsquo;s Excel, the file, or the automation. Tapping into the helpdesk days of my youth, I typed <code>=SEQUENCE(3)</code> by hand into a blank workbook. Then I typed it into a fresh copy of the real workbook, in an empty cell. It ran the refresh script, and checked the Office build.</p>
+
+    <p>Both of my hand tests worked. Claude pulled the Windows OS event log and lined it up against the clock. There had been only one Excel crash, at 8:29, and none in the previous ninety days. After a crash, Excel asks on its next start whether you want safe mode. An Excel started by a script runs hidden, so I couldn&rsquo;t see that safe mode question, and every hidden launch afterward declined it and failed. When I opened Excel by hand for my test at 8:39, the Excel safe mode question popped up in front of me and I dismissed it. After that, fourteen scripted runs in a row were clean.</p>
+
+    <figure class="figure">
+      <img src="images/safe-mode.jpg" alt="A dark, empty home office at night, the chair turned away from the desk, a monitor showing one small dialog that reads Safe Mode? with two unlabelled buttons">
+      <figcaption class="photo-caption">The same question, asked to an empty room.</figcaption>
+    </figure>
+
+    <p>So it was one crash, and every failure after it was the same question that nobody was there to answer.</p>
+
+    <p>The launcher now opens the workbook in a window I can see, the way my manual Excel double-click does, so any error window Excel raises is one I can answer. We never found the cause of the crash itself. It&rsquo;s in my plan file&rsquo;s risks section saved in the bookkeeping repo, time-stamped with a fault address, so the next session that hits it doesn&rsquo;t spend an evening finding it again.</p>
+
+    <h2>Retiring the library that started all this</h2>
+
+    <p>In my July post, <a href="/articles/auditing-my-own-code/">Auditing My Own Code</a>, the first finding was openpyxl, the Python library my bank sync used to save the workbook, which quietly froze my spill formulas at their current size every time it saved. The fix then was a button that re-spilled them afterward.</p>
+
+    <p>This time the importer itself moved off openpyxl and onto Excel. That was the change I was a bit nervous about, because the importer is the front door for every transaction.</p>
+
+    <p>So I asked for proof before the switch. Claude built a way to record one real bank pull to a file and replay it, then ran the old writer and the new one against identical copies of my workbook, with the same recording, and compared what each wrote, cell by cell. The first sample was too easy: eight rows, none flagged for review, so it never compared how the review rows get filled. I asked for a harder one, with at least thirty staged rows and at least five flagged. The second run staged 48 rows, 8 of them flagged, and the two writers agreed on all 505 cells, twice. Only then did the new writer become the default.</p>
+
+    <h2>The first time it said no</h2>
+
+    <p>The first full session with the finished launcher was the evening of October 30. Eight new transactions came in, and the rules categorized all eight, so there was nothing red to review. Excel stayed open the whole time. Then I clicked step nine, Save to GitHub.</p>
+
+    <p>It refused.</p>
+
+    <p>Before it commits anything, step nine runs the whole test suite. If a test about my bookkeeping data fails, it shows me which one, lets me confirm past it, and writes that into the commit so it can&rsquo;t be forgotten. If a test about the code fails, there&rsquo;s no override. This was code. Nine tests, all with the same error.</p>
+
+    <p>My books were fine. Step nine runs the tests with their output captured, and one module, as it loaded, reached for the console in a way that only works when a real console is there. Those tests passed every time they ran normally. They failed only inside the gate, and they&rsquo;d been written after the gate was built, so nothing had run them there until that evening.</p>
+
+    <p>I was more interested than annoyed. I wanted to see how well the launcher had logged the failure, and how fast Claude could resolve it once I pasted that log into Claude Code. It confirmed the cause and committed a fix about three minutes later, with a new test so the problem can&rsquo;t come back. I clicked step nine again. 551 tests passed, the dialog listed exactly three files, and it committed and pushed. Success... and the suite has grown to 584 tests since then. So cool!</p>
+
+    <figure class="figure">
+      <img src="images/error-log.jpg" alt="A printed error log on a desk with one line circled in pencil and a magnifying glass resting beside it, next to a mug of coffee and a spiral notebook with a wooden ruler">
+      <figcaption class="photo-caption">More interesting than annoying.</figcaption>
+    </figure>
+
+    <p>Two days later it refused again, and this time it was about money. It was November 1, and my mortgage refresh had stamped that day&rsquo;s date on my two Chase loans, while Chase&rsquo;s own figures still reflected the October payment. Crossing into a new month added a phantom month of interest, more than five hundred dollars on one loan, and the test that compares my computed interest against the lender&rsquo;s figure failed. Saving would have carried that overstated number toward the 1098 check I do every January. Claude fixed the date logic in a few minutes, I reran the refresh, and the session saved clean.</p>
+
+    <p>A gate that never refuses is decoration. In August I wrote about <a href="/articles/agent-checking-its-work/">whether an AI agent is really checking its own work</a>. This one has refused twice in its first three days, both times for a real reason.</p>
+
+    <h2>The mistake I made twice</h2>
+
+    <p>Once the new rows are in the Excel ledger, the launcher opens a status page with a table of each property&rsquo;s cash flow for the year. The first time I read it closely, a Colorado rental showed about sixteen hundred dollars in the red.</p>
+
+    <p>I knew the margins on that rental were tight, but I was tired, and the number didn&rsquo;t feel right. So I asked Claude whether I needed to raise the rent. I was partly serious. I keep that rent under market because it covers my principal, interest, taxes, and insurance while its tenant of many years has always paid for his own repairs and never calls me. Mostly, though, I suspected the calculation was wrong, and asking the question was a way to get Claude digging into the data.</p>
+
+    <p>The calculation was wrong. The page was counting the escrow twice. The mortgage payment already includes the money the bank sets aside for insurance and property tax, and the page also counted the bank paying those bills out of escrow. The real figure was about forty-one hundred dollars in the black... whew!</p>
+
+    <p>That&rsquo;s the exact problem my September post, <a href="/articles/three-numbers-not-one/">Your Rental Property Has Three Numbers, Not One</a>, was about. The property tabs in my workbook already handle it correctly, and a test guards them. The new page didn&rsquo;t, because it did its own arithmetic from the ledger instead of asking the tab. Now the page reads each property tab&rsquo;s own cash flow figure, and the two can&rsquo;t disagree.</p>
+
+    <p>When two parts of a system can each work out the same number, sooner or later one of them works it out differently. Make one of them read the other.</p>
+
+    <h2>The bank that left</h2>
+
+    <p>One more thing turned up along the way. My Bank of America accounts stopped syncing in mid-October. Bank of America moved its Plaid connections to a new API, and <a href="https://plaid.com/docs/link/oauth/" target="_blank" rel="noopener">according to Plaid&rsquo;s documentation</a>, connections that hadn&rsquo;t migrated by October 15, 2026 were disconnected. My last good sync was early that morning. Plaid&rsquo;s normal fix is to log in again, which moves the connection to the new API. Mine failed with &ldquo;This financial institution is no longer supported,&rdquo; most likely because my Plaid app isn&rsquo;t approved for Bank of America&rsquo;s new connection.</p>
+
+    <p>I was closing those accounts anyway, so I didn&rsquo;t chase the approval. Instead I had Claude read the activity on both accounts in my browser and compare it with my ledger. It found eight missing interest payments, from January, February, September and October, totaling a tiny fifty-seven cents, and no fees all year. I entered them by hand at step four, which is the step for anything the bank feed can&rsquo;t see.</p>
+
+    <h2>What stays a checkbox</h2>
+
+    <p>The launcher still has three checkboxes: review the red rows (transactions my software hasn&rsquo;t learned how to categorize), enter anything the bank feed can&rsquo;t see, and approve the new categorization rules Claude proposes when unfamiliar transactions appear (a button hands Claude the prompt; the checkbox is my sign-off).</p>
+
+    <p>Those are the places where the system needs me, and I like that they look different from everything else. A button means the launcher can check the work before it does it. A checkbox means it can&rsquo;t, and it says so. It&rsquo;s fun being part of the software mechanics I built.</p>
+
+    <p>The old openpyxl writer is still there behind a flag. The next session deletes it, as the last bit of cleanup on this upgrade: the launcher, the workbook, and the status page it opens. That session might be next weekend. It might be the weekend after. It doesn&rsquo;t much matter anymore, since it&rsquo;ll take ten minutes, or twenty if there are a lot of new charges to sort.</p>
+
+    <p>What tells me it&rsquo;s time now is the few paper bills I still get. They show up, I do the books so I can pay them and file them away.</p>
+
+    <figure class="figure">
+      <img src="images/clean-rectangle.jpg" alt="An old wooden desk with a lighter, unworn rectangle where a notebook sat for years, a wooden ruler and pen beside it and a wire tray of unopened envelopes">
+      <figcaption class="photo-caption">What the notebook will leave behind when it goes up on the shelf.</figcaption>
+    </figure>
+
+    <p>At some point the 2026 notebook goes up on the shelf with the others and leaves an empty space on my desk where it used to sit, waiting for me to do my books. I&rsquo;ve started wondering what goes in that space. Probably a browser tab ;-) Someday I&rsquo;d like this whole system off my desktop and into a secure cloud database, maybe Supabase, with web pages doing the sync and the checks. I&rsquo;m in no hurry. It works so well right now that I want to enjoy it for a while first.</p>
+
+  </div>
+</article>
+</main>
+<footer class="article-footer">
+  <div class="author-bio">
+    <p class="author-name">Scott Curtner</p>
+    <p>Technology Auditor (CIA, CISA, AAIA, ITIL) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       &larr; Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

@@ -256,7 +256,11 @@ homepage and the hub, once plain and once with `--mobile`:
 - 0 failing elements in both modes → `[A11Y] PASS`. Anything else →
   `[WARN]` with each element, its colors and the required ratio. Fix before
   Scott commits unless he accepts it: use the nearest same-hue shade that
-  passes, in the page's own `<style>`.
+  passes, in the page's own `<style>`. Name the element by class, href
+  or id, never by `nth-child` position: a new card at position 1 shifts
+  positional fixes on the homepage and hub onto the wrong cards (post
+  #22, 2026-11-01). Check an inherited block's selectors against the new
+  page's own elements.
 - Start from passing colors. In the current template use
   `--ink-muted: #716a65` (not `#a8a29e`, 2.2–2.5:1) and `--gold: #ad5009`
   (not `#b45309`). Wrap the content in `<main>`, and never skip a heading

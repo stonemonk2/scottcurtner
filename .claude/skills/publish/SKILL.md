@@ -13,16 +13,26 @@ The wiki is the authority. This file is the fallback and the runner.
 
 ## Step 0 — Load protocol from wiki
 
-`stonemonk2/scottcurtner-wiki` is a **private** repo. There are exactly two
-paths to it and one impostor.
+`stonemonk2/scottcurtner-wiki` is a **private** repo. There are three
+paths to it and one impostor. All three read the same file and are
+equally authoritative. Revised 2026-11-01 to match `okf-standard.md`
+Sections 4.0 and 4.10.
 
-**1. Primary — Open Brain MCP.** Read
-`scottcurtner-website-publish-protocol.md` via the `read_wiki` tool.
-This is the normal case. If it loads, **it is authoritative** — follow it
-for all execution steps.
+**1. Primary — local clone.** Pull, then read from disk:
 
-**2. Secondary — `gh` CLI.** If the MCP tool is unreachable, this reads the
-same file from the same repo and is equally authoritative:
+```bash
+git -C /c/dev/scottcurtner-wiki pull --ff-only
+# then read C:\dev\scottcurtner-wiki\scottcurtner-website-publish-protocol.md
+```
+
+**The pull is the read-before-write here, and it is not optional.** An
+unpulled clone is a stale copy: the wiki has four writers and the clone
+gives no signal that it has drifted. If the pull fails (unpushed local
+commits, no network) or the clone is missing, log why and go to path 2.
+
+**2. Secondary — Open Brain MCP.** Read the same file with `read_wiki`.
+
+**3. Tertiary — `gh` CLI.**
 
 ```bash
 gh api repos/stonemonk2/scottcurtner-wiki/contents/scottcurtner-website-publish-protocol.md   -H "Accept: application/vnd.github.raw"
@@ -31,16 +41,19 @@ gh api repos/stonemonk2/scottcurtner-wiki/contents/scottcurtner-website-publish-
 `gh` is authenticated as `stonemonk2` with `repo` scope (verified
 2026-08-23). Run `gh auth status` if this fails.
 
-**3. If BOTH fail — STOP. Alert Scott. Execute nothing.**
+**4. If all three fail — STOP. Alert Scott. Execute nothing.**
+Report which paths failed and the errors, then wait. **The Fallback
+Protocol below may only be executed with his explicit go-ahead in that
+session.** It is a stale-by-construction copy of a control standard.
 
-Scott's instruction, 2026-08-23: *"the MCP tool for the wiki should always
+**Report MCP health on every run, even when the clone supplied the
+protocol.** Scott, 2026-08-23: *"the MCP tool for the wiki should always
 be reachable, and if not, I should be alerted that I need to fix it."*
-
-An unreachable wiki is a tooling defect he wants to hear about
-immediately, not a condition to route around. Report which path failed and
-what the error was, then wait. **The Fallback Protocol below may only be
-executed with his explicit go-ahead in that session** — it is a
-stale-by-construction copy of a control standard.
+Reaffirmed 2026-11-01: *"yes still let me know if mcp is down."* It counts
+as down when the harness says open-brain failed to connect, or when a
+`read_wiki` call errors. A check mark in claude.ai Settings means the
+connector is enabled. It does not prove the server answered this session.
+If the two disagree, report both, with the error text.
 
 > **Do not use `https://raw.githubusercontent.com/stonemonk2/scottcurtner-wiki/...`.**
 > The repo is private, so that URL returns `404: Not Found` to any
@@ -49,10 +62,11 @@ stale-by-construction copy of a control standard.
 > primary path never failed. Found 2026-08-23. A fallback that has never
 > been exercised is not known to work.
 
-Log which path supplied the protocol:
+Log which path supplied the protocol, and MCP health:
 
 ```
-[WIKI] Protocol loaded via: read_wiki | gh api | HALTED
+[WIKI] Protocol loaded via: local clone (pulled <short-sha>) | read_wiki | gh api | HALTED
+[MCP]  open-brain: reachable | DOWN — <harness, time, error>
 ```
 
 Then run the divergence check and log it:
@@ -64,8 +78,8 @@ Then run the divergence check and log it:
         If NO — [list each step that differs]
 ```
 
-`gh api` counts as `Wiki loaded: YES` — same file, same repo, different
-transport.
+Any of the three paths counts as `Wiki loaded: YES`, because it is the same
+file from the same repo over a different transport.
 
 ## Inputs
 
@@ -301,7 +315,8 @@ someone reading the history in six months would want to know]
 
 ```
 PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
-[WIKI] Protocol loaded via: read_wiki | gh api | HALTED
+[WIKI] Protocol loaded via: local clone (pulled <sha>) | read_wiki | gh api | HALTED
+[MCP]  open-brain: reachable | DOWN — <harness, time, error>
 [CHECK] Skill fallback vs wiki alignment: Wiki loaded: Y/N  Match: Y/N
 [DONE] sitemap.xml — added [URL], lastmod [date]
 [DONE] llms.txt — added entry under ## Writing

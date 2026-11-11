@@ -1,0 +1,2 @@
+# Downloadable text files must stay byte-identical (LF, no conversion).
+*.txt text eol=lf

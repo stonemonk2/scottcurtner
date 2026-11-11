@@ -69,6 +69,10 @@ and writing.
   - [Level 3 Core Vocabulary](https://www.scottcurtner.com/learning/agentic-operations/reference/level-3-vocabulary.html): The four vocabulary clusters of Level 3 in Agentic Operations, a hands-on course in building AI agents.
   - [Level 4 Core Vocabulary](https://www.scottcurtner.com/learning/agentic-operations/reference/level-4-vocabulary.html): The four vocabulary clusters of Level 4, the ownership stage of Agentic Operations, a hands-on course in building AI agents.
 
+## Updates
+
+- [2nd Brain Update: Fix for the "URL Is Wrong" Connector Error](https://www.scottcurtner.com/2nd-brain-update/): A beginner-friendly fix for 2nd Brain connectors that show 'URL is wrong' or 'server isn't responding' in Claude. Paste one prompt and Claude guides you.
+
 ## Optional
 
 - [LinkedIn](https://www.linkedin.com/in/scottcurtner/):

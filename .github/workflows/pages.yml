@@ -36,6 +36,9 @@ jobs:
           cp favicon* src.png CNAME robots.txt sitemap.xml llms.txt .nojekyll "$out"/
           cp -r .well-known og "$out"/
 
+          # Support pages and plain-text downloads outside articles/.
+          cp -r 2nd-brain-update downloads "$out"/
+
           # articles/: the whole tree, minus dotfiles.
           find articles -type f -not -path '*/.*' -exec cp --parents {} "$out"/ \;
 

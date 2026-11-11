@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/2nd-brain-update/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2nd Brain Update: "URL Is Wrong" Fix | Scott Curtner</title>
+  <meta name="description" content="A beginner-friendly fix for 2nd Brain connectors that show 'URL is wrong' or 'server isn't responding' in Claude. Paste one prompt and Claude guides you.">
+  <meta property="og:title" content="2nd Brain Update: Fix for the &quot;URL Is Wrong&quot; Connector Error | Scott Curtner">
+  <meta property="og:description" content="A beginner-friendly fix for 2nd Brain connectors that show 'URL is wrong' or 'server isn't responding' in Claude. Paste one prompt and Claude guides you.">
+  <meta property="og:url" content="https://www.scottcurtner.com/2nd-brain-update/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/og/site-card.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #716a65;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #ad5009;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 44px 40px 72px;
+    }
+    p { margin-bottom: 1.5em; }
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.45rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.2em 0 0.8em;
+      line-height: 1.25;
+    }
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+
+    .callout {
+      background: var(--paper-warm);
+      border-left: 3px solid var(--accent);
+      padding: 18px 24px;
+      margin: 2em 0;
+      font-size: 0.95rem;
+      color: var(--ink-light);
+    }
+    .callout p { margin: 0; }
+    .callout strong { color: var(--ink); }
+
+    /* ── Prompt block ── */
+    .prompt-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .prompt-label {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+    }
+    .copy-btn {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      background: var(--accent);
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 22px;
+      min-height: 44px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: #163a51; }
+    .copy-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    .prompt-block {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 18px 20px;
+      max-height: 26em;
+      overflow: auto;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      max-width: 100%;
+    }
+    .download { margin-top: 14px; font-size: 1rem; }
+    .copy-status { font-size: 0.9rem; color: var(--ink-light); min-height: 1.4em; margin: 6px 0 0; }
+
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio .author-name {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer { padding-left: 16px; padding-right: 16px; }
+      .site-header { padding: 16px; }
+      h1 { font-size: 1.75rem; }
+      .prompt-block { font-size: 13px; padding: 14px; }
+      .connect { padding: 48px 16px !important; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "2nd Brain Update: Fix for the \"URL Is Wrong\" Connector Error",
+    "description": "A beginner-friendly fix for 2nd Brain connectors that show 'URL is wrong' or 'server isn't responding' in Claude. Paste one prompt and Claude guides you.",
+    "url": "https://www.scottcurtner.com/2nd-brain-update/",
+    "mainEntityOfPage": "https://www.scottcurtner.com/2nd-brain-update/",
+    "image": "https://www.scottcurtner.com/og/site-card.png",
+    "datePublished": "2026-11-11",
+    "author": {
+      "@type": "Person",
+      "name": "Scott Curtner",
+      "url": "https://www.scottcurtner.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Scott Curtner",
+      "url": "https://www.scottcurtner.com/"
+    }
+  }
+  </script>
+<style>/* a11y contrast: same overrides as the series' earlier pages (axe-core, 2026-09-14). */
+  .connect a[href*="linkedin.com/in/"][target="_blank"] { background-color: #2776c5 !important; }
+  .connect > p.connect-kicker { color: #3f8cd9 !important; }
+  .connect a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles/">All articles</a>
+</header>
+<main>
+<article>
+  <div class="hero">
+    <span class="eyebrow">November 2026 &middot; 2nd Brain &middot; Update</span>
+    <h1>2nd Brain Update: Fix for the &ldquo;URL Is Wrong&rdquo; Connector Error</h1>
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>November 11, 2026</span>
+      <span>Windows installs</span>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <p>If you set up a 2nd Brain from my install guide and Claude now says your connector&rsquo;s URL (its web address) is wrong, or that the server isn&rsquo;t responding, your URL is fine. The problem was a bug in the server code the guide installed. When Claude checks a connector it sends several requests at once, and the old code could only answer the first one. I fixed it on November 10, 2026.</p>
+
+    <p>The fix replaces that one piece of server code in your own Supabase account. Your saved memories, your access key, your connector URL and your settings stay exactly as they are. It takes about 10 minutes on the Windows computer you used for setup.</p>
+
+    <p>You don&rsquo;t need to be technical. Copy the prompt below, paste it into a new Claude chat, and Claude walks you through each step one at a time, waiting for you between steps. It never asks for your passwords or keys... and if you paste one by accident, it tells you to stop.</p>
+
+    <div class="callout">
+      <p><strong>Who needs this:</strong> anyone who installed before November 10, 2026, and anyone whose connector shows one of those two errors. New installs already include the fix.</p>
+    </div>
+
+    <h2 id="prompt-heading">The prompt</h2>
+    <div class="prompt-head">
+      <span class="prompt-label">Paste into a new Claude chat</span>
+      <button type="button" class="copy-btn" id="copy-btn" aria-describedby="copy-status">Copy prompt</button>
+    </div>
+<pre class="prompt-block" id="prompt" tabindex="0" aria-labelledby="prompt-heading">You are my patient guide for a one-time update to my Open Brain "2nd Brain" (a personal memory system I installed from Scott Curtner's setup guide at scottcurtner.com). I am not technical. Treat me as a complete beginner.
+
+WHY: My 2nd Brain connector in Claude may show "URL is wrong" or "server isn't responding" even though my URL is correct. The cause is a bug in the server code that was installed on my Supabase account. Scott published a fixed file. I need to download it and redeploy it. My saved memories, access key, URL and connector settings do not change. Only the server code is replaced.
+
+HOW TO GUIDE ME:
+- Give me ONE step at a time. Wait for me to tell you the result before giving the next step.
+- For every step, tell me in one plain sentence what it does, exactly what to type or click, and what success looks like.
+- When I need to run a command, give it as a single line in a copyable block, and tell me which program to type it into. All commands run in Windows PowerShell on my own PC. To open it: click Start, type PowerShell, press Enter. I do not need "Run as administrator".
+- If I get an error, ask me to paste only the error text. Explain what it means in plain words, then give me the fix.
+- NEVER ask me for passwords, my access key, my Supabase secret key, my OpenRouter key, or my connector URL (it contains my access key). If I paste one by accident, tell me to stop, and explain that the key should be replaced using Steps 5 and 6.7 of my setup guide.
+- You cannot run commands for me. I run them and report back.
+
+THE STEPS:
+
+Step 1. Find my install folder. This is the folder I created in Step 6.1 of my setup guide (often named my-2ndbrain inside a folder called open-brain). Have me try this command to look inside it:
+  Get-ChildItem $HOME/open-brain
+If that fails, have me search my PC with this command (it can take a minute):
+  Get-ChildItem -Path $HOME -Recurse -Directory -Filter open-brain-mcp -ErrorAction SilentlyContinue
+The result shows a path ending in supabase, then functions, then open-brain-mcp. My install folder is the folder that CONTAINS the supabase folder. Have me go into it with the cd command, using forward slashes and quotes if the path has spaces, for example:
+  cd "C:/Users/MyName/open-brain/my-2ndbrain"
+
+Step 2. Find my Project Ref (my project's short ID code in Supabase). Have me run:
+  supabase projects list
+If it says I am not logged in, have me run supabase login, which opens a web browser where I approve the login, and then repeat the list command. Help me find the row named open-brain and copy its REFERENCE ID (a string of about 20 letters). Remember it for Step 5.
+
+Step 3. Download the updated server file:
+  Invoke-WebRequest -Uri https://raw.githubusercontent.com/stonemonk2/OB1/main/server/index.ts -OutFile supabase/functions/open-brain-mcp/index.ts
+
+Step 4. Check that I got the new version. This command should print one line containing v1.2.1:
+  Select-String -Path supabase/functions/open-brain-mcp/index.ts -Pattern "v1.2.1"
+If it prints nothing, STOP. Tell me the update has not been published yet, and that I should ask Scott Curtner (scottcurtner.com) before going further. Do not continue to Step 5.
+
+Step 5. Redeploy the server using my Project Ref from Step 2. The --no-verify-jwt part is required (it switches off JSON Web Token checking so Claude can connect), so never leave it out:
+  supabase functions deploy open-brain-mcp --no-verify-jwt --project-ref MY_PROJECT_REF
+Success looks like a line starting with: Deployed Functions on project. If I see a 403 error, have me run supabase login and repeat this step.
+
+Step 6. Reconnect the connector in Claude. Have me open Claude, then Settings, then Connectors, and find my 2nd Brain connector. If it shows an error, have me remove it and add it again as a custom connector. For the URL, have me copy the connection URL from cell 6.13 of my setup guide and paste it straight into the connector form, NOT into this chat. Choose "No sign-in", add no request headers, and leave Advanced alone. Screen labels may differ a little, so ask me what I see if something does not match.
+
+Step 7. Test. Have me start a brand new chat with the 2nd Brain connector switched on and ask: "Search my 2nd Brain for my name." If it answers without errors, we are done. If the connector still shows an error, have me remove it, wait one minute, and add it again.
+
+Do not use a custom header or an OAuth Client ID at any point. Open Brain does not need either one. When we finish, give me a two-line summary of what was updated, and remind me to keep my access key private. If I get stuck at any point, tell me to contact Scott Curtner at scottcurtner.com.
+</pre>
+    <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+    <p class="download"><a href="/downloads/2nd-brain-update-prompt.txt">Download as a text file</a></p>
+
+    <p>Stuck at any step? Reach me through <a href="https://www.scottcurtner.com/">scottcurtner.com</a> or on <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" rel="noopener">LinkedIn</a>.</p>
+
+  </div>
+</article>
+</main>
+<footer class="article-footer">
+  <div class="author-bio">
+    <p class="author-name">Scott Curtner</p>
+    <p>Technology Auditor (CIA, CISA, AAIA, ITIL) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section class="connect" style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p class="connect-kicker" style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin:0 0 16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this fix, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       &larr; Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-btn');
+  var pre = document.getElementById('prompt');
+  var status = document.getElementById('copy-status');
+  var timer;
+  function done(ok) {
+    btn.textContent = ok ? 'Copied' : 'Copy prompt';
+    status.textContent = ok ? 'Prompt copied. Paste it into a new Claude chat.' : 'Copy did not work here. Select the text in the box and copy it, or use the download link.';
+    clearTimeout(timer);
+    timer = setTimeout(function () { btn.textContent = 'Copy prompt'; status.textContent = ''; }, 2500);
+  }
+  function fallback(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    done(ok);
+  }
+  btn.addEventListener('click', function () {
+    var text = pre.textContent;
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { fallback(text); });
+    } else {
+      fallback(text);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

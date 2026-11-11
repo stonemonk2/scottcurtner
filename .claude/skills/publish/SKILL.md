@@ -269,7 +269,7 @@ homepage and the hub, once plain and once with `--mobile`:
 
 - 0 failing elements in both modes → `[A11Y] PASS`. Anything else →
   `[WARN]` with each element, its colors and the required ratio. Fix before
-  Scott commits unless he accepts it: use the nearest same-hue shade that
+  committing unless Scott accepts it: use the nearest same-hue shade that
   passes, in the page's own `<style>`. Name the element by class, href
   or id, never by `nth-child` position: a new card at position 1 shifts
   positional fixes on the homepage and hub onto the wrong cards (post
@@ -282,34 +282,40 @@ homepage and the hub, once plain and once with `--mobile`:
 - If site-audit is not installed on this machine, log
   `[SKIP] a11y — site-audit not installed here`. This never blocks a publish.
 
-## Step 8 — Commit summary for Scott (required)
+## Step 8 — Commit and push (CC, required)
 
-**Scott commits and pushes through GitHub Desktop. Do not run `git commit`
-or `git push` on this repo.**
+**CC commits and pushes this repo, and only after step 7 passes.** Revised
+2026-11-11, Scott: *"this instruction was outdated... you commit and
+push."* It replaces the 2026-08-23 GitHub Desktop hand-off.
 
-Scott, 2026-08-23: *"I want to commit and push via my git desktop and I
-want you to provide me with a commit summary to enter."*
-
-Your last act is to hand him a ready-to-paste summary matching GitHub
-Desktop's two fields. **A run is not complete without it** — he cannot
-finish the publish otherwise.
+1. Work on a short-lived branch. Stage only the files this run changed, by
+   name (never `git add -A`), and commit.
+2. Fast-forward `main` to the branch and `git push origin main`. Pages
+   deploys only from `main`.
+3. Watch the "Deploy Pages" run to completion
+   (`gh run watch <id> --exit-status`, id from
+   `gh run list --workflow pages.yml -L 1`), then run the live audit under
+   Post-publish in the same session.
 
 ```
-Summary:
 Publish: [article title]
 
-Description:
-[what shipped — the new page plus which surfaces changed, and anything
+[what shipped: the new page plus which surfaces changed, and anything
 someone reading the history in six months would want to know]
+
+Co-Authored-By: [the attribution line the harness supplies]
 ```
 
-- Summary stays **under ~60 characters** and is always
+- The subject stays **under ~60 characters** and is always
   `Publish: [article title]` for a publish run. Do not improvise a
   cleverer one; consistency is what makes the history scannable.
-- Description is plain prose or short bullets, no markdown headers. Name
+- The body is plain prose or short bullets, no markdown headers. Name
   the surfaces touched. Say plainly if a `[WARN]` was accepted.
-- For non-publish work, use a plain imperative summary describing the
+- For non-publish work, use a plain imperative subject describing the
   change, not the process.
+- Match the here-doc to the shell tool you invoked: Bash takes
+  `git commit -F - <<'MSG'`, PowerShell takes `-m @'...'@` with the
+  closing token at column 0. Check `git log --oneline -1` before pushing.
 
 ## Output log
 
@@ -330,21 +336,10 @@ PUBLISH RUN — [YYYY-MM-DD] — [Article Title]
 [A11Y] a11y.py — mobile 0, desktop 0 (new article, homepage, hub)
 [WARN]  [anything flagged but not auto-fixed]
 
-[COMMIT] For GitHub Desktop — Scott pastes these, CC does not commit:
-
-  Summary:
-  Publish: [article title]
-
-  Description:
-  [surfaces touched, plus anything notable about the run]
-
-[NEXT] After you push, paste this into Claude Code:
-
-  Live audit for [article title]: confirm the latest "Deploy Pages" run
-  succeeded (gh run list --workflow pages.yml -L 1), then confirm
-  https://www.scottcurtner.com/articles/[slug]/ returns 200, then run the
-  post-publish live audit from the publish protocol. Report only what
-  differs from a clean run.
+[COMMIT] <short-sha> "Publish: [article title]" — pushed to main
+[DEPLOY] Deploy Pages run <id>: success | failure
+[LIVE]  https://www.scottcurtner.com/articles/[slug]/ — 200, canonical
+        matches; crawl and PageSpeed deltas from a clean run (or "none")
 ```
 
 Then prompt Scott:
@@ -358,9 +353,7 @@ already settled by step 7.
 
 ## Post-publish (manual, not executable here)
 
-- **Scott:** paste the `[COMMIT]` summary into GitHub Desktop, commit,
-  and push to main. CC does not commit or push this repo — see Step 8.
-- **Live audit (CC, after Scott pushes and pastes the `[NEXT]` prompt).**
+- **Live audit (CC, right after its own push in Step 8).**
   First confirm the latest "Deploy Pages" run succeeded with
   `gh run list --workflow pages.yml -L 1`. Then check that the new URL
   returns 200 with its own canonical. Then run
@@ -374,3 +367,14 @@ already settled by step 7.
 - LinkedIn: test the URL unfurl before sharing
 - Update `blog-pipeline.md` Published Articles table
 - LinkedIn packaging per `blog-content-development.md`
+
+## Support and update pages (not a publish run)
+
+Added 2026-11-11. A fix or update page for readers of older articles
+(first one: `/2nd-brain-update/`) is not a post. It gets its own top-level
+folder (not `articles/`), a `pages.yml` copy line so it deploys, a
+`sitemap.xml` entry, an `llms.txt` entry under `## Updates`, the article
+head pattern with `TechArticle` JSON-LD, and no homepage or hub card. The
+source articles get a dated `Update, Month YYYY:` note as the last child of
+the hero wrapper, so their positional a11y selectors do not shift. Full
+rules are in the wiki protocol's "Support and update pages" section.

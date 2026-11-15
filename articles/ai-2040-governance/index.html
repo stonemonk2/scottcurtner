@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://www.scottcurtner.com/articles/ai-2040-governance/" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Does AI 2040 Teach AI Governance? | Scott Curtner</title>
+  <meta name="description" content="AI 2040's Plan A counts compute, then rechecks a random sample instead of trusting reports. Inside a company, AI governance starts the same way.">
+  <meta property="og:title" content="What Does AI 2040 Teach AI Governance? | Scott Curtner">
+  <meta property="og:description" content="AI 2040's Plan A counts compute, then rechecks a random sample instead of trusting reports. Inside a company, AI governance starts the same way.">
+  <meta property="og:url" content="https://www.scottcurtner.com/articles/ai-2040-governance/">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://www.scottcurtner.com/articles/ai-2040-governance/images/hero.jpg">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:        #1c1917;
+      --ink-light:  #57534e;
+      --ink-muted:  #716a65;
+      --paper:      #fdfcfb;
+      --paper-warm: #f5f0e8;
+      --paper-aged: #ede9df;
+      --rule:       #e7e0d5;
+      --accent:     #1e4d6b;
+      --accent-warm:#9a3b26;
+      --gold:       #ad5009;
+      --max-width:  740px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 300;
+      font-size: 19px;
+      line-height: 1.8;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    /* ── Site header ─────────────────────────────────────────────────────────── */
+    .site-header {
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .site-header a {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .site-header a:hover { color: var(--accent); }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      max-width: var(--max-width);
+      margin: 64px auto 0;
+      padding: 0 40px;
+    }
+
+    .eyebrow {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      line-height: 1.2;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+
+    .hero-meta {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 12px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      display: flex;
+      gap: 20px;
+      padding: 14px 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .hero-meta .name { color: var(--ink); font-weight: 500; font-family: 'Source Sans 3', sans-serif; }
+
+    /* ── Body ────────────────────────────────────────────────────────────────── */
+    .body {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 52px 40px 80px;
+    }
+
+    p { margin-bottom: 1.5em; }
+
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: 1.65rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 2.8em 0 0.8em;
+      line-height: 1.25;
+    }
+
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-warm); }
+    strong { font-weight: 600; }
+    em { font-style: italic; }
+
+    sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+    sup a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+    sup a:hover { text-decoration: underline; }
+
+    /* ── Photos ──────────────────────────────────────────────────────────────── */
+    .lead-photo { max-width: 900px; margin: 44px auto 0; padding: 0 40px; }
+    .lead-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .figure { margin: 2.6em 0; }
+    .figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); border-radius: 2px; }
+    .photo-caption {
+      font-family: 'Source Code Pro', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    /* ── Quick answer ────────────────────────────────────────────────────────── */
+    .quick-answer {
+      background: var(--paper-warm);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--gold);
+      padding: 22px 26px;
+      margin-bottom: 32px;
+    }
+    .quick-answer h2 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 10px;
+      line-height: 1.5;
+    }
+    .quick-answer p {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 1rem;
+      line-height: 1.72;
+      color: var(--ink-light);
+      margin: 0;
+    }
+
+    /* ── Sources ─────────────────────────────────────────────────────────────── */
+    .footnotes {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footnotes h2 {
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin: 0 0 1.25rem;
+    }
+    .footnotes ol { padding-left: 1.25rem; }
+    .footnotes li {
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .footnotes a { color: var(--accent); text-decoration: underline; word-break: break-word; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────────── */
+    .article-footer {
+      border-top: 1px solid var(--rule);
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+    .author-bio .author-name {
+      font-family: 'Lora', serif;
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .author-bio p { font-size: 0.9rem; color: var(--ink-light); margin: 0; }
+
+    @media (max-width: 600px) {
+      .hero, .body, .article-footer, .lead-photo { padding-left: 24px; padding-right: 24px; }
+      .site-header { padding: 16px 24px; }
+      h1 { font-size: 1.75rem; }
+      .hero-meta { flex-wrap: wrap; gap: 4px 20px; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "What Does AI 2040 Teach AI Governance?",
+    "description": "AI 2040's Plan A counts compute, then rechecks a random sample instead of trusting reports. Inside a company, AI governance starts the same way.",
+    "url": "https://www.scottcurtner.com/articles/ai-2040-governance/",
+    "mainEntityOfPage": "https://www.scottcurtner.com/articles/ai-2040-governance/",
+    "image": "https://www.scottcurtner.com/articles/ai-2040-governance/images/hero.jpg",
+    "datePublished": "2026-11-15",
+    "author": {
+      "@type": "Person",
+      "name": "Scott Curtner",
+      "url": "https://www.scottcurtner.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Scott Curtner",
+      "url": "https://www.scottcurtner.com/"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does AI 2040 teach enterprise AI governance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Count everything, then check a sample yourself instead of trusting the report. The AI Futures Project's Plan A builds that for frontier AI across the whole world, starting with an inventory of computing power. Inside a company the same work starts with an inventory of AI use cases and evidence traced back to its source."
+        }
+      }
+    ]
+  }
+  </script>
+<style>/* a11y: connect-section overrides shared with the series (axe-core, 2026-09-14), keyed by href and class, never by position. */
+  a[href*="linkedin.com/in/"][target="_blank"] { background-color: #2776c5 !important; }
+  .connect-label { color: #3f8cd9 !important; }
+  a[href$="scottcurtner.com/"] { color: #758ba8 !important; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/">scottcurtner.com</a>
+  <a href="/articles">All articles</a>
+</header>
+<main>
+<article>
+  <div class="hero">
+    <span class="eyebrow">November 2026 &middot; AI Governance</span>
+    <h1>What Does AI 2040 Teach Enterprise AI Governance?</h1>
+
+    <div class="quick-answer">
+      <h2>What does AI 2040 teach enterprise AI governance?</h2>
+      <p><strong>Count everything, then check a sample yourself instead of trusting the report.</strong> The AI Futures Project&rsquo;s Plan A builds that for frontier AI across the whole world, starting with an inventory of computing power. Inside a company the same work starts with an inventory of AI use cases and evidence traced back to its source.</p>
+    </div>
+
+    <div class="hero-meta">
+      <span class="name">Scott Curtner</span>
+      <span>November 15, 2026</span>
+      <span>12 min read</span>
+    </div>
+  </div>
+
+  <figure class="lead-photo">
+    <img src="images/hero.jpg" width="1800" height="951" alt="A wooden table in a sunny coffee shop with two half-full mugs and two empty chairs, and a paper napkin with a pen doodle of a small flying saucer beside the circled word They?">
+    <figcaption class="photo-caption">Two mugs, two empty chairs, and a question about a pronoun.</figcaption>
+  </figure>
+
+  <div class="body">
+
+    <h2>Space aliens at Philz</h2>
+
+    <p>An old friend and I served together on the San Bruno Education Foundation board. After every monthly meeting we would end up standing in the parking lot next to our cars, deep in a conversation about technology or politics, before anyone got around to leaving. When my friend retired from the foundation, those conversations stopped. So I was delighted when he reached out this month and asked if I wanted to sit down for coffee at our local Philz.</p>
+
+    <p>My friend worked at Google early enough to use its chatbot internally, back when it was still called Bard. Somewhere in our second hour of conversation he told me about something he did with it.</p>
+
+    <p>There is a classic puzzle in language research called a Winograd schema. My friend&rsquo;s example: <em>The city council rejected the permit submitted by the protesters because they were worried about possible damage.</em> Who is &ldquo;they&rdquo;? The council. Now change the ending: <em>&hellip;because they had been too violent in the past.</em> Now &ldquo;they&rdquo; is the protesters. Nothing in the sentence tells you which. You know because you know how city councils and protests work.</p>
+
+    <p>His example is a close cousin of the original. Terry Winograd used councilmen, demonstrators and a permit in 1972, and Hector Levesque turned puzzles like it into a formal test of machine intelligence in 2011.<sup><a href="#fn1" id="ref1">1</a></sup> For almost fifty years they were held up as evidence that a system reading only the sentence could not understand it, because the answer is not in the sentence. Around 2019, language models started passing them with better than 90 percent accuracy.<sup><a href="#fn2" id="ref2">2</a></sup></p>
+
+    <p>So my friend gave Bard a Winograd schema, and it got it right. He was not impressed. The only schemas he knew were published ones, and published ones were almost certainly in the training data. The model was not reasoning about councils and protesters. It was remembering an answer key.</p>
+
+    <p>So he wrote his own. Space aliens came to Earth and did this and that, with pronouns scattered through every sentence, in combinations no paper had ever printed. It still worked them out. That was when he decided, in his words, &ldquo;okay, now we&rsquo;re on to something.&rdquo;</p>
+
+    <p>When I got home, his story was still on my mind, because it holds a useful idea about testing AI. <strong>Testing an AI system with evidence it has already seen is like giving a student the answer key before the midterm.</strong></p>
+
+    <h2>The engineer who thought it was alive</h2>
+
+    <p>A few minutes later my friend brought up a news story about a Google engineer who believed its chatbot was conscious.</p>
+
+    <p>That was Blake Lemoine. In June 2022 Google put Lemoine on paid leave after he claimed LaMDA, the conversational model that came before Bard, was sentient.<sup><a href="#fn3" id="ref3">3</a></sup> Just before he lost access to his account he sent a message to a 200-person internal machine learning mailing list with the subject line &ldquo;LaMDA is sentient.&rdquo;<sup><a href="#fn4" id="ref4">4</a></sup> Google fired him on July 22, 2022, calling his claims &ldquo;wholly unfounded&rdquo; and citing its employment and data security policies.<sup><a href="#fn5" id="ref5">5</a></sup></p>
+
+    <p>I don&rsquo;t think Lemoine was right, but I started thinking about how the question got settled. It was decided inside one company, by that company&rsquo;s own review, with the evidence on that company&rsquo;s servers. Nobody outside could rerun his conversations or test the model with questions of their own. Whatever the right answer was, the only party able to check it was a party with a stake in the answer.</p>
+
+    <p>That is the space-alien problem at institutional scale. When the only evidence available is evidence the system&rsquo;s owner controls, outsiders are left taking the owner&rsquo;s word for it.</p>
+
+    <p>Then I asked my friend whether he had been following AI 2027 and AI 2040 from the AI Futures Project. He wasn&rsquo;t familiar with them.</p>
+
+    <h2>A plan for the whole world</h2>
+
+    <p>In April 2025, the AI Futures Project, a nonprofit led by former OpenAI researcher Daniel Kokotajlo, published <em>AI 2027</em>, a month-by-month scenario in which AI systems learn to do AI research and progress snowballs into a US-China race.<sup><a href="#fn6" id="ref6">6</a></sup> It has two endings. In one, humans lose control. In the other, they slow down and stay in control.</p>
+
+    <p>On July 9, 2026, the same group published <em>AI 2040: Plan A</em>.<sup><a href="#fn7" id="ref7">7</a></sup> The authors call it &ldquo;primarily a recommendation, not a prediction.&rdquo; Its core proposal is an international deal, starting with the United States and China in 2029, that makes AI research public, brings dozens of companies to the frontier instead of one or two, pauses at the level of top human experts in 2035, and only scales to superintelligence in 2040. Without a deal, they expect fully automated AI research around 2030.</p>
+
+    <p>When I read about it a few months ago, my first reaction was that I wished this debate were a bigger part of the conversation on the world stage, not only in the United States but in every country building or buying these systems. Careful development is a question countries should be working through now, instead of waiting until the last minute.</p>
+
+    <p>My second reaction was that it had little to do with my job. My week involves testing different technologies and tracking an inventory of AI use cases, not chip export controls. But I follow the public material on this closely, and the more I read about how Plan A is supposed to work, the more it looked like a solid control framework.</p>
+
+    <p><strong>It starts with an inventory.</strong> The deal begins by counting computing power. Major datacenter owners and chip suppliers declare large purchases and sales, and each side sends inspectors to the other&rsquo;s sites. The stated goal is confidence that neither side &ldquo;isn&rsquo;t hiding more than about 1% of AI compute.&rdquo;<sup><a href="#fn7">7</a></sup></p>
+
+    <p><strong>Then it samples instead of trusting.</strong> Datacenters can keep running approved models, but verification devices confirm they are not secretly training new ones by recomputing &ldquo;a random sample of a small percentage of the workloads.&rdquo;<sup><a href="#fn7">7</a></sup> Why? You do not take the operator&rsquo;s word for what the chips are doing. You rerun a piece of the work yourself, on a sample the operator did not choose.</p>
+
+    <p><strong>The builder carries the burden of proof.</strong> Before a more capable model is deployed, its developers must make a safety case, and the case has to survive scrutiny from rival companies and outside auditors.<sup><a href="#fn7">7</a></sup> The people who want to ship are the ones who have to show it is safe.</p>
+
+    <p><strong>The monitors answer to someone else.</strong> Because research is public, &ldquo;rival companies, third-party auditors, etc., can notice and raise the alarm.&rdquo;<sup><a href="#fn7">7</a></sup> A reviewer who does not work for the team under review is harder to talk out of a finding.</p>
+
+    <p><strong>Cheating has to cost more than complying.</strong> Under the authors&rsquo; &ldquo;mutually assured compute destruction,&rdquo; each side builds its new datacenters where the other could seize them: China&rsquo;s in Canada and America&rsquo;s in Mongolia. If the deal collapses, each owner destroys its own compute rather than let it fall into the rival&rsquo;s hands.<sup><a href="#fn7">7</a></sup> To be clear, I am not recommending that anyone wire a datacenter to blow up. Honestly, it is easier to imagine today&rsquo;s companies and countries rationalizing dangerous risks as necessary progress than agreeing to anything like this. The principle survives the change of scale, though: a control holds when breaking it costs more than following it.</p>
+
+    <figure class="figure">
+      <img src="images/mongolia-2040.jpg" width="1800" height="951" loading="lazy" alt="Open grassland at dawn with a white ger and three grazing horses in the foreground, a long windowless datacenter behind them, and a person in a yellow hard hat carrying a clipboard walking toward it">
+      <figcaption class="photo-caption">Plan A&rsquo;s siting rule, imagined: an American datacenter in Mongolia, and an inspector walking in.</figcaption>
+    </figure>
+
+    <p><strong>And it admits a blind spot.</strong> The authors acknowledge that research needing little compute &ldquo;is not transparent and therefore probably won&rsquo;t be regulated at all.&rdquo;<sup><a href="#fn7">7</a></sup> Every company has the same gap. In June I wrote about where it shows up inside an organization, and the name for it is <a href="/articles/shadow-ai/">shadow AI</a>.</p>
+
+    <h2>My Monday</h2>
+
+    <p>Part of my job is keeping an inventory of AI use cases and reporting to audit leadership every week on what has come in, so they can plan new use cases into future audit coverage. Plan A begins by counting compute because nothing after that step works without it. You cannot sample, test or assign an owner for something nobody has counted. My weekly AI inventory report is not glamorous, but important audit coverage depends on it.</p>
+
+    <p>Counting is the first step. Checking comes after it.</p>
+
+    <figure class="figure">
+      <img src="images/dice.jpg" width="1800" height="951" loading="lazy" alt="An office desk in afternoon light with a closed laptop and a mug of coffee, and a printed list on a manila folder with several rows ticked in pencil and two dice resting on the page">
+      <figcaption class="photo-caption">Chosen at random, not by the system being checked.</figcaption>
+    </figure>
+
+    <p>I recently helped with a walkthrough of one of those use cases. A team uses an LLM-based tool to suggest standard contract language. A person has to accept each suggestion before it goes into the draft, and the finished contract then needs approval from two more levels of reviewers before it can go to a customer. Three human checkpoints. On paper that is a well-designed control, and the tool did a good job. It made the person using it faster.</p>
+
+    <p>Here is the part you might already be experiencing&hellip; The better the AI&rsquo;s suggestions get, the easier they are to accept, and an accept button that is almost always pressed starts to behave like a rubber stamp. The two review levels downstream are then reviewing a draft whose clauses no person chose so much as approved. The walkthrough had no data on how often anyone rejected or edited a suggestion, because the tool did not report it. Our feedback to the business was to work with the vendor to start collecting it. That rejection and edit rate is the evidence of how the first checkpoint is operating, and it helps answer two questions: how good is the LLM, and how engaged is the person reviewing it? Until it exists, we know the control was designed with three checkpoints, and we have only anecdotal information about how hard the first one pushes back.</p>
+
+    <p>I wrote about the AI-to-AI version of this problem <a href="/articles/agent-checking-its-work/">in August</a>: a check that runs is not the same as a check that proves anything. The contract tool is the AI-to-human version. Agreement is cheap, and an approval rate near 100 percent can mean the tool is excellent or that nobody is looking.</p>
+
+    <p>I am on the other side of this as well. I use Microsoft Copilot every day, in Word and Excel and on its own, and it has changed how I read systems I did not build. For example, on a recent review of a reporting process, I gave it a dozen SQL scripts and a dozen XML configuration files and asked it to explain, in plain business language, how a Python script used a JSON instruction file to bring them together into one process. Copilot can take in all of those files at once, which gets me to a working picture far faster than reading every file cold, and it is good at pointing out themes and the places that need more research.</p>
+
+    <p>But Copilot&rsquo;s explanation is where my testing starts. For that process, the critical step was taking samples and tracing them from their source through to the final report. That is my friend&rsquo;s test in audit form. The model gave me an account of how the process works, and I checked that account against data the model did not produce and could not have seen.</p>
+
+    <h2>No template is coming</h2>
+
+    <p>The first version of this post, which I built with Claude from a voice session, cited SR 11-7. For fifteen years that Federal Reserve letter was the reference point for model risk management, the discipline of reviewing a model before a bank relies on it. When I had Claude check every claim against primary sources, it came back with news I had missed: in April 2026, the Fed, OCC and FDIC replaced SR 11-7 with SR 26-2.<sup><a href="#fn8" id="ref8">8</a></sup></p>
+
+    <p>The new guidance is clearer and more risk-based. It also says, in footnote 3, that generative and agentic AI models &ldquo;are not within the scope of this guidance,&rdquo; and that a bank&rsquo;s own risk management and governance practices should determine the controls for them.<sup><a href="#fn9" id="ref9">9</a></sup></p>
+
+    <p>Europe moved in the same direction on timing. The EU AI Act treats AI used to recruit or screen job applicants, and to evaluate creditworthiness, as high-risk.<sup><a href="#fn10" id="ref10">10</a></sup> Those obligations were due in August 2026. The EU&rsquo;s Digital Omnibus, adopted this summer, moved them to December 2, 2027.<sup><a href="#fn11" id="ref11">11</a></sup></p>
+
+    <p>I do not read either change as a retreat. Generative models are moving fast, and a regulator that writes detailed rules for them this year will be rewriting them next year. But the practical effect for anyone running a program is the same. For now, two of the most developed rulebooks have handed the hardest AI cases back to each firm.</p>
+
+    <p>The frameworks are still there. The NIST AI Risk Management Framework organizes the work into Govern, Map, Measure and Manage, and describes Govern as a cross-cutting function &ldquo;infused throughout&rdquo; the other three.<sup><a href="#fn12" id="ref12">12</a></sup> ISO/IEC 42001 requires an AI system impact assessment alongside the AI risk assessment.<sup><a href="#fn13" id="ref13">13</a></sup> Both tell you what a program should contain. Neither counts your use cases or pulls your sample.</p>
+
+    <h2>One use case, start to finish</h2>
+
+    <p>Here is how I would take a single use case through that work. The example is an AI tool that screens job applicants, because many companies already use one and the EU calls it high-risk.</p>
+
+    <p>It starts at intake. Before anyone signs a contract, the use case goes into the inventory: what the tool does, who owns it, which vendor and model it runs on, what data it touches, and who is affected by its output. For a screener, the affected people are applicants who will never see the tool and cannot appeal to it.</p>
+
+    <p>Then I rate the inherent risk, before any controls. This one rates high on almost every factor. It influences a decision about someone&rsquo;s livelihood. It processes personal data at scale. It is hard to explain why one r&eacute;sum&eacute; ranked above another. It sits inside a named high-risk category. Autonomy is easy to misjudge. A screener that ranks a thousand applicants and shows a recruiter the top twenty is making nine hundred and eighty decisions on its own, whatever the process diagram says about a human in the loop.</p>
+
+    <p>The rating assigns a tier, and the tier drives everything after it. A low-tier tool might need only an approved vendor and user training. This one is high.</p>
+
+    <p>High tier means controls matched to the risk, and this is where Plan A&rsquo;s lessons apply directly. Test for accuracy and bias on applicants the vendor has never seen, because the vendor&rsquo;s own test set is the published Winograd schema. Have a person review a sample of rejected applications, chosen at random, not by the tool. Track how often recruiters override the ranking from the first day, because the contract walkthrough was a reminder that asking a vendor for a missing report after launch means waiting for it, with no promise it arrives. Monitor for drift, keep an off switch plan that is tested regularly, and require sign-off from the accountable risk owner before go-live. That package is the enterprise safety case.</p>
+
+    <p>Last, someone with authority formally accepts the remaining risk, and the use case is reassessed on a schedule and whenever something material changes. A new model version from the vendor counts as material, even when nothing on the screen looks different.</p>
+
+    <h2>An interesting question</h2>
+
+    <p>Plan A asks two superpowers to accept checks that neither of them controls. The authors are candid that the deal itself is &ldquo;not what we actually expect to happen.&rdquo;<sup><a href="#fn7">7</a></sup> Inside a company the ask is much smaller, and nobody has to switch off a datacenter. It is still the same ask: count everything, test with evidence the system has not seen, and give the check to someone who does not answer to the team being checked.</p>
+
+    <p>The AI systems I find easiest to imagine governing well are the ones built to be checked: narrow, well-defined scope, verifiable outputs with clear instructions for reperformance, documented data lineage, and logic a person can interrogate and explain. I&rsquo;m optimistic, because I&rsquo;m already seeing AI tools chosen for that property at least as often as for their capability.</p>
+
+    <p>Lemoine&rsquo;s question was settled by the one party that could see the evidence. Which of the tools in your inventory could pass my friend&rsquo;s space-alien test today, and how would you know?</p>
+
+    <p><em>Thanks to my brilliant friend for the coffee, the space aliens, and the conversation that started this. I have learned a great deal from our conversations over the years, and I value every one of them.</em></p>
+
+    <div class="footnotes">
+      <h2>Sources</h2>
+      <ol>
+        <li id="fn1">Terry Winograd&rsquo;s 1972 councilmen example and the Winograd Schema Challenge: Hector J. Levesque, Ernest Davis and Leora Morgenstern, &ldquo;The Winograd Schema Challenge,&rdquo; <a href="https://cdn.aaai.org/ocs/4492/4492-21843-1-PB.pdf" target="_blank" rel="noopener">KR 2012 (AAAI)</a>; challenge proposed by Levesque in 2011, per <a href="https://commonsensereasoning.org/winograd.html" target="_blank" rel="noopener">Commonsense Reasoning</a>. <a href="#ref1">&#8617;</a></li>
+        <li id="fn2">Vid Kocijan, Ernest Davis, Thomas Lukasiewicz, Gary Marcus and Leora Morgenstern, &ldquo;The Defeat of the Winograd Schema Challenge,&rdquo; <em>Artificial Intelligence</em> 325 (2023), <a href="https://arxiv.org/abs/2201.02387" target="_blank" rel="noopener">arXiv:2201.02387</a>. <a href="#ref2">&#8617;</a></li>
+        <li id="fn3">Nitasha Tiku, &ldquo;The Google engineer who thinks the company&rsquo;s AI has come to life,&rdquo; <a href="https://www.washingtonpost.com/technology/2022/06/11/google-ai-lamda-blake-lemoine/" target="_blank" rel="noopener">Washington Post</a>, June 11, 2022; also <a href="https://nypost.com/2022/06/12/google-engineer-blake-lemoine-claims-ai-bot-became-sentient/" target="_blank" rel="noopener">New York Post</a>, June 12, 2022. <a href="#ref3">&#8617;</a></li>
+        <li id="fn4">Washington Post, June 11, 2022, as quoted in &ldquo;Google fires engineer who claimed LaMDA chatbot is a sentient person,&rdquo; <a href="https://arstechnica.com/tech-policy/2022/07/google-fires-engineer-who-claimed-lamda-chatbot-is-a-sentient-person/" target="_blank" rel="noopener">Ars Technica</a>, July 2022. <a href="#ref4">&#8617;</a></li>
+        <li id="fn5">Reuters, &ldquo;Google fires software engineer who claimed its AI chatbot is sentient,&rdquo; <a href="https://www.cnbc.com/2022/07/23/google-fires-software-engineer-who-claimed-its-ai-chatbot-is-sentient.html" target="_blank" rel="noopener">CNBC</a>, July 23, 2022; <a href="https://www.washingtonpost.com/technology/2022/07/22/google-ai-lamda-blake-lemoine-fired/" target="_blank" rel="noopener">Washington Post</a>, July 22, 2022. <a href="#ref5">&#8617;</a></li>
+        <li id="fn6">AI Futures Project, <em>AI 2027</em>, April 3, 2025, <a href="https://ai-2027.com/" target="_blank" rel="noopener">ai-2027.com</a>. <a href="#ref6">&#8617;</a></li>
+        <li id="fn7">Thomas Larsen, Romeo Dean, Brendan Halstead, Eli Lifland, Ryan Greenblatt and Daniel Kokotajlo, <em>AI 2040: Plan A</em>, AI Futures Project, July 9, 2026, <a href="https://ai-2040.com/" target="_blank" rel="noopener">ai-2040.com</a> (<a href="https://ai-2040.com/AI-2040.pdf" target="_blank" rel="noopener">PDF</a>). All quotations from the PDF. <a href="#ref7">&#8617;</a></li>
+        <li id="fn8">Board of Governors of the Federal Reserve System, OCC and FDIC, <a href="https://www.federalreserve.gov/supervisionreg/srletters/SR2602.htm" target="_blank" rel="noopener">SR 26-2, Revised Guidance on Model Risk Management</a>, April 17, 2026, superseding SR 11-7 (April 4, 2011). <a href="#ref8">&#8617;</a></li>
+        <li id="fn9">SR 26-2 attachment, <a href="https://www.federalreserve.gov/supervisionreg/srletters/SR2602a1.pdf" target="_blank" rel="noopener">Revised Guidance on Model Risk Management</a>, footnote 3. <a href="#ref9">&#8617;</a></li>
+        <li id="fn10">EU Artificial Intelligence Act, <a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/annex-3" target="_blank" rel="noopener">Annex III</a>, points 4(a) and 5(b). <a href="#ref10">&#8617;</a></li>
+        <li id="fn11"><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32026R1744" target="_blank" rel="noopener">Regulation (EU) 2026/1744</a> (Digital Omnibus), amending Article 113 of the AI Act. <a href="#ref11">&#8617;</a></li>
+        <li id="fn12">National Institute of Standards and Technology, <a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf" target="_blank" rel="noopener">Artificial Intelligence Risk Management Framework (AI RMF 1.0), NIST AI 100-1</a>. <a href="#ref12">&#8617;</a></li>
+        <li id="fn13">ISO/IEC 42001:2023, clauses 6.1.2 (AI risk assessment) and 6.1.4 (AI system impact assessment). The standard is paywalled; confirmed through the <a href="https://cloudsecurityalliance.org/articles/how-to-assess-and-treat-ai-risks-and-impacts-with-iso-iec-42001-2023" target="_blank" rel="noopener">Cloud Security Alliance&rsquo;s summary</a>. <a href="#ref13">&#8617;</a></li>
+      </ol>
+    </div>
+
+  </div>
+</article>
+</main>
+<footer class="article-footer">
+  <div class="author-bio">
+    <p class="author-name">Scott Curtner</p>
+    <p>Technology Auditor (CIA, CISA, AAIA, ITIL) at Wells Fargo&rsquo;s Enterprise Technology Audit Group. Real estate investor since 1999. Board member, San Bruno Education Foundation for 13+ years. Writing about what happens when decades of technology experience meets the AI moment. Proud grandson of Dr. Raymond M. Curtner, Army Captain, WWII.</p>
+  </div>
+</footer>
+
+<section style="background:#0B1F3A;padding:64px 80px;text-align:center;">
+  <p class="connect-label" style="font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:#2A7FD4;margin-bottom:14px;">
+     Connect
+  </p>
+  <h2 style="font-family:'DM Serif Display',serif;font-size:32px;color:#FFFFFF;margin-bottom:16px;">
+      Let's talk technology audit
+  </h2>
+  <p style="font-size:16px;color:#A8B8CC;max-width:480px;margin:0 auto 36px;line-height:1.85;">
+     Questions about this article, the tools I used, or just want to connect? Find me on LinkedIn.
+  </p>
+  <a href="https://www.linkedin.com/in/scottcurtner/" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:#2A7FD4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:500;padding:14px 28px;border-radius:6px;letter-spacing:0.02em;">
+    Connect on LinkedIn
+  </a>
+  <p style="margin-top:28px;">
+    <a href="https://www.scottcurtner.com/" style="font-size:13px;color:#5a7190;text-decoration:none;">
+       &larr; Back to scottcurtner.com
+    </a>
+  </p>
+</section>
+
+</body>
+</html>

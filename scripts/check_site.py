@@ -333,6 +333,30 @@ def check_favicon():
                 errors.append(f"{where}: missing favicon link — {line}")
 
 
+def check_font_display():
+    """Google Fonts loads with display=optional, never swap or block.
+
+    Switched sitewide 2026-11-15. With display=swap the page first paints in
+    the fallback font, then reflows when the web fonts land; on mobile that
+    pushed the hero image down and PageSpeed measured CLS 0.106 on the AI 2040
+    post. display=optional keeps the fallback for that visit if the fonts are
+    late, so nothing moves. A page built from an old template would bring swap
+    back silently, so this warns. It does not block a publish.
+    """
+    for page in sorted(ROOT.glob("**/*.html")):
+        if any(part in {".git", "drafts", ".claude"} for part in page.parts):
+            continue
+        where = page.relative_to(ROOT).as_posix()
+        for href in re.findall(r"""https://fonts\.googleapis\.com/css2?\?[^"'\s>]+""", read(page)):
+            m = re.search(r"display=(\w+)", href)
+            if not m or m.group(1) != "optional":
+                found = m.group(1) if m else "none"
+                warnings.append(
+                    f"{where}: Google Fonts display={found}; use display=optional "
+                    f"to avoid font-swap layout shift"
+                )
+
+
 def check_links():
     """Every relative href/src resolves to a file that exists."""
     for page in sorted(ROOT.glob("**/*.html")):
@@ -510,6 +534,7 @@ def main() -> int:
         check_og_images([ROOT / "index.html", ROOT / "articles/index.html"]
                         + [p for p, _ in articles] + [p for p, _ in learning])
         check_favicon()
+        check_font_display()
     if "links" in requested:
         check_links()
         check_orphans()

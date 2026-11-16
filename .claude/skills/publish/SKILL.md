@@ -279,6 +279,9 @@ homepage and the hub, once plain and once with `--mobile`:
   `--ink-muted: #716a65` (not `#a8a29e`, 2.2–2.5:1) and `--gold: #ad5009`
   (not `#b45309`). Wrap the content in `<main>`, and never skip a heading
   level.
+- Load Google Fonts with `display=optional`, never `display=swap`
+  (sitewide since 2026-11-15; `swap` reflowed the hero, mobile CLS
+  0.106). `check_site.py` warns on any page that regresses.
 - If site-audit is not installed on this machine, log
   `[SKIP] a11y — site-audit not installed here`. This never blocks a publish.
 
